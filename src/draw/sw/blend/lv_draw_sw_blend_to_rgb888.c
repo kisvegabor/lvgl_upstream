@@ -491,19 +491,19 @@ LV_ATTRIBUTE_FAST_MEM static inline void blend_non_normal_pixel(uint8_t * dest, 
     uint8_t res[3] = {0, 0, 0};
     switch(mode) {
         case LV_BLEND_MODE_ADDITIVE:
-            res[0] = LV_MIN(dest[0] + src.red, 255);
+            res[0] = LV_MIN(dest[0] + src.blue, 255);
             res[1] = LV_MIN(dest[1] + src.green, 255);
-            res[2] = LV_MIN(dest[2] + src.blue, 255);
+            res[2] = LV_MIN(dest[2] + src.red, 255);
             break;
         case LV_BLEND_MODE_SUBTRACTIVE:
-            res[0] = LV_MAX(dest[0] - src.red, 0);
+            res[0] = LV_MAX(dest[0] - src.blue, 0);
             res[1] = LV_MAX(dest[1] - src.green, 0);
-            res[2] = LV_MAX(dest[2] - src.blue, 0);
+            res[2] = LV_MAX(dest[2] - src.red, 0);
             break;
         case LV_BLEND_MODE_MULTIPLY:
-            res[0] = (dest[0] * src.red) >> 8;
+            res[0] = (dest[0] * src.blue) >> 8;
             res[1] = (dest[1] * src.green) >> 8;
-            res[2] = (dest[2] * src.blue) >> 8;
+            res[2] = (dest[2] * src.red) >> 8;
             break;
         default:
             LV_LOG_WARN("Not supported blend mode: %d", mode);
@@ -516,10 +516,6 @@ LV_ATTRIBUTE_FAST_MEM static inline void lv_color_24_24_mix(const uint8_t * src,
 {
 
     if(mix == 0) return;
-    //    dest[0] = 0xff;
-    //    dest[1] = 0x00;
-    //    dest[2] = 0x00;
-    //    return;
 
     if(mix >= LV_OPA_MAX) {
         dest[0] = src[0];

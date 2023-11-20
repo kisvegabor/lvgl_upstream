@@ -694,8 +694,6 @@ static void layer_normal_cb(lv_obj_t * parent)
 
 static void layer_additive_cb(lv_obj_t * parent)
 {
-    return; /*Not working*/
-
     /*Make the parent darker for additive blending*/
     lv_obj_set_style_bg_color(parent, lv_color_hex3(0x008), 0);
     layer_core_cb(parent, LV_BLEND_MODE_ADDITIVE);
