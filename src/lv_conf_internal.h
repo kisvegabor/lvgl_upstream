@@ -360,7 +360,7 @@
 #endif
 
 #if LV_USE_DRAW_VG_LITE
-/* Enbale VG-Lite custom external 'gpu_init()' function */
+/* Enable VG-Lite custom external 'gpu_init()' function */
 #ifndef LV_VG_LITE_USE_GPU_INIT
     #ifdef CONFIG_LV_VG_LITE_USE_GPU_INIT
         #define LV_VG_LITE_USE_GPU_INIT CONFIG_LV_VG_LITE_USE_GPU_INIT
@@ -2631,6 +2631,13 @@
             #endif
         #else
             #define LV_SDL_DIRECT_EXIT     1    /*1: Exit the application when all SDL windows are closed*/
+        #endif
+    #endif
+    #ifndef LV_SDL_MOUSEWHEEL_MODE
+        #ifdef CONFIG_LV_SDL_MOUSEWHEEL_MODE
+            #define LV_SDL_MOUSEWHEEL_MODE CONFIG_LV_SDL_MOUSEWHEEL_MODE
+        #else
+            #define LV_SDL_MOUSEWHEEL_MODE 0    /*0: Encoder, 1: Watch crown*/
         #endif
     #endif
 #endif

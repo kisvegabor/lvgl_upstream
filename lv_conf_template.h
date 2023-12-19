@@ -132,7 +132,7 @@
 #define LV_USE_DRAW_VG_LITE 0
 
 #if LV_USE_DRAW_VG_LITE
-/* Enbale VG-Lite custom external 'gpu_init()' function */
+/* Enable VG-Lite custom external 'gpu_init()' function */
 #define LV_VG_LITE_USE_GPU_INIT 0
 
 /* Enable VG-Lite assert. */
@@ -803,6 +803,7 @@
     #define LV_SDL_BUF_COUNT       1    /*1 or 2*/
     #define LV_SDL_FULLSCREEN      0    /*1: Make the window full screen by default*/
     #define LV_SDL_DIRECT_EXIT     1    /*1: Exit the application when all SDL windows are closed*/
+    #define LV_SDL_MOUSEWHEEL_MODE 0    /*0: Encoder, 1: Watch crown*/
 #endif
 
 /*Use X11 to open window on Linux desktop and handle mouse and keyboard*/
