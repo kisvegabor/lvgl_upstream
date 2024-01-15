@@ -63,6 +63,25 @@ static void prvTestAndDecrement(lv_thread_sync_t * pxCond,
  *   GLOBAL FUNCTIONS
  **********************/
 
+
+static volatile int was_idle;
+static volatile uint32_t t;
+static volatile uint32_t t_idle_sum;
+static volatile uint32_t t_no_idle_sum;
+void myTaskSwitchedInFunction(const char * name)
+{
+
+    if(strcmp(name, "IDLE") == 0) was_idle = true;
+    else was_idle = false;
+    t = lv_tick_get();
+}
+
+void myTaskSwitchedOutFunction(void)
+{
+    if(was_idle) t_idle_sum += lv_tick_elaps(t);
+    else t_no_idle_sum += lv_tick_elaps(t);
+}
+
 lv_result_t lv_thread_init(lv_thread_t * pxThread, lv_thread_prio_t xSchedPriority,
                            void (*pvStartRoutine)(void *), size_t usStackSize,
                            void * xAttr)
