@@ -1,3 +1,4 @@
+#if LV_BUILD_TEST
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
     #include "lvgl.h"
 #else
@@ -245,3 +246,4 @@ const lv_image_dsc_t emoji_F617 = {
     .data_size = 5184 * LV_COLOR_DEPTH / 8,
     .data = emoji_F617_map,
 };
+#endif /*LV_BUILD_TEST*/
