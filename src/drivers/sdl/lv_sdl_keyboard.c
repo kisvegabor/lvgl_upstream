@@ -12,7 +12,9 @@
 #include "../../indev/lv_indev.h"
 #include "../../core/lv_group.h"
 #include "../../stdlib/lv_string.h"
+#include "../../indev/lv_indev_private.h"
 #include LV_SDL_INCLUDE_PATH
+#include "lc-gui/ui.h"
 
 /*********************
  *      DEFINES
@@ -63,6 +65,53 @@ lv_indev_t * lv_sdl_keyboard_create(void)
     return indev;
 }
 
+static uint32_t last_key;
+uint32_t ui_key_get(void)
+{
+    uint32_t key = last_key;
+    last_key = 0;
+
+    switch(key) {
+        case LV_KEY_LEFT:
+            key = UI_KEY_LEFT;
+            break;
+        case LV_KEY_RIGHT:
+            key = UI_KEY_RIGHT;
+            break;
+        case LV_KEY_UP:
+            key = UI_KEY_UP;
+            break;
+        case LV_KEY_DOWN:
+            key = UI_KEY_DOWN;
+            break;
+        case LV_KEY_ENTER:
+            key = UI_KEY_ENTER;
+            break;
+        case LV_KEY_ESC:
+            key = UI_KEY_ESC;
+            break;
+        case 'p':
+            ui_scr_cc_open_photo();
+            return 0;
+        case 'g':
+            ui_scr_play_gallery_open();
+            return 0;
+        case 'l':
+            ui_scr_play_open();
+            return 0;
+        case 'v':
+            ui_scr_play_video_open();
+            return 0;
+        case 'm':
+            ui_scr_menu_open(NULL);
+            return 0;
+        default:
+            break;
+    }
+
+
+    return key;
+}
 /**********************
  *   STATIC FUNCTIONS
  **********************/
@@ -86,6 +135,7 @@ static void sdl_keyboard_read(lv_indev_t * indev, lv_indev_data_t * data)
         lv_memmove(dev->buf, dev->buf + 1, len);
     }
 }
+
 
 static void release_indev_cb(lv_event_t * e)
 {
@@ -118,7 +168,8 @@ void _lv_sdl_keyboard_handler(SDL_Event * event)
     /*Find a suitable indev*/
     lv_indev_t * indev = lv_indev_get_next(NULL);
     while(indev) {
-        if(lv_indev_get_display(indev) == disp && lv_indev_get_type(indev) == LV_INDEV_TYPE_KEYPAD) {
+        if(indev->read_cb == sdl_keyboard_read && lv_indev_get_display(indev) == disp &&
+           lv_indev_get_type(indev) == LV_INDEV_TYPE_KEYPAD) {
             break;
         }
         indev = lv_indev_get_next(indev);
@@ -145,6 +196,7 @@ void _lv_sdl_keyboard_handler(SDL_Event * event)
                 if(len < KEYBOARD_BUFFER_SIZE - 1)
                     strcat(dsc->buf, event->text.text);
             }
+            last_key = event->text.text[0];
             break;
         default:
             break;
