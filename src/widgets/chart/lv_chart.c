@@ -259,7 +259,8 @@ void lv_chart_get_point_pos_by_id(lv_obj_t * obj, lv_chart_series_t * ser, uint3
     uint32_t start_point = chart->update_mode == LV_CHART_UPDATE_MODE_SHIFT ? ser->start_point : 0;
     id = ((int32_t)start_point + id) % chart->point_cnt;
     int32_t temp_y = 0;
-    temp_y = (int32_t)((int32_t)ser->y_points[id] - chart->ymin[ser->y_axis_sec]) * h;
+    int32_t v = ser->y_points[id];
+    temp_y = (int32_t)((int32_t) v - chart->ymin[ser->y_axis_sec]) * h;
     temp_y = temp_y / (chart->ymax[ser->y_axis_sec] - chart->ymin[ser->y_axis_sec]);
     p_out->y = h - temp_y;
     p_out->y += lv_obj_get_style_pad_top(obj, LV_PART_MAIN) + border_width;

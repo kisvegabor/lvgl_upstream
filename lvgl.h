@@ -105,6 +105,7 @@ extern "C" {
 #include "src/libs/rlottie/lv_rlottie.h"
 #include "src/libs/ffmpeg/lv_ffmpeg.h"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
+#include "src/libs/thorvg/thorvg_capi.h"
 
 #include "src/layouts/lv_layout.h"
 

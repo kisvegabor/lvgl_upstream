@@ -175,6 +175,7 @@ void _lv_sdl_mouse_handler(SDL_Event * event)
             indev_dev->last_y = (int16_t)((float)ver_res * event->tfinger.y / zoom);
             break;
     }
+
     lv_indev_read(indev);
 }
 

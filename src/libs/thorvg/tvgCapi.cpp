@@ -732,9 +732,9 @@ TVG_API Tvg_Animation* tvg_animation_new()
 
 TVG_API Tvg_Result tvg_animation_set_frame(Tvg_Animation* animation, uint32_t no)
 {
-    return TVG_RESULT_INVALID_ARGUMENT;
-//    if (!animation) return TVG_RESULT_INVALID_ARGUMENT;
-//    return (Tvg_Result) reinterpret_cast<Animation*>(animation)->frame(no);
+//    return TVG_RESULT_INVALID_ARGUMENT;
+    if (!animation) return TVG_RESULT_INVALID_ARGUMENT;
+    return (Tvg_Result) reinterpret_cast<Animation*>(animation)->frame(no);
 }
 
 

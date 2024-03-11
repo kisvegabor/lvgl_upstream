@@ -20,27 +20,26 @@
  * SOFTWARE.
  */
 
-#ifndef _TVG_FRAME_MODULE_H_
-#define _TVG_FRAME_MODULE_H_
+#ifndef _TVG_LOTTIE_INTERPOLATOR_H_
+#define _TVG_LOTTIE_INTERPOLATOR_H_
 
-#include "tvgLoadModule.h"
+#define SPLINE_TABLE_SIZE 11
 
-namespace tvg
+struct LottieInterpolator
 {
+    char* key;
+    Point outTangent, inTangent;
 
-class FrameModule: public LoadModule
-{
-public:
-    virtual ~FrameModule() {}
+    float progress(float t);
+    void set(const char* key, Point& inTangent, Point& outTangent);
 
-    virtual bool frame(float no) = 0;       //set the current frame number
-    virtual float totalFrame() = 0;         //return the total frame count
-    virtual float curFrame() = 0;           //return the current frame number
-    virtual float duration() = 0;           //return the animation duration in seconds
+private:
+    static constexpr float SAMPLE_STEP_SIZE = 1.0f / float(SPLINE_TABLE_SIZE - 1);
+    float samples[SPLINE_TABLE_SIZE];
 
-    virtual bool animatable() override { return true; }
+    float getTForX(float aX);
+    float binarySubdivide(float aX, float aA, float aB);
+    float NewtonRaphsonIterate(float aX, float aGuessT);
 };
 
-}
-
-#endif //_TVG_FRAME_MODULE_H_
+#endif //_TVG_LOTTIE_INTERPOLATOR_H_

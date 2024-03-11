@@ -324,7 +324,7 @@ static void lv_roller_event(const lv_obj_class_t * class_p, lv_event_t * e)
         transform_vect_recursive(obj, &p);
         if(p.y) {
             lv_obj_t * label = get_label(obj);
-            lv_obj_set_y(label, lv_obj_get_y(label) + p.y);
+            lv_obj_set_y(label, lv_obj_get_y_aligned(label) + p.y);
             roller->moved = 1;
         }
     }
@@ -621,7 +621,7 @@ static void refr_position(lv_obj_t * obj, lv_anim_enable_t anim_en)
         lv_anim_init(&a);
         lv_anim_set_var(&a, label);
         lv_anim_set_exec_cb(&a, set_y_anim);
-        lv_anim_set_values(&a, lv_obj_get_y(label), new_y);
+        lv_anim_set_values(&a, lv_obj_get_y_aligned(label), new_y);
         lv_anim_set_duration(&a, anim_time);
         lv_anim_set_completed_cb(&a, scroll_anim_completed_cb);
         lv_anim_set_path_cb(&a, lv_anim_path_ease_out);

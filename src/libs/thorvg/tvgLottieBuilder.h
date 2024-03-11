@@ -20,27 +20,17 @@
  * SOFTWARE.
  */
 
-#ifndef _TVG_FRAME_MODULE_H_
-#define _TVG_FRAME_MODULE_H_
+#ifndef _TVG_LOTTIE_BUILDER_H_
+#define _TVG_LOTTIE_BUILDER_H_
 
-#include "tvgLoadModule.h"
+#include "tvgCommon.h"
 
-namespace tvg
+struct LottieComposition;
+
+struct LottieBuilder
 {
-
-class FrameModule: public LoadModule
-{
-public:
-    virtual ~FrameModule() {}
-
-    virtual bool frame(float no) = 0;       //set the current frame number
-    virtual float totalFrame() = 0;         //return the total frame count
-    virtual float curFrame() = 0;           //return the current frame number
-    virtual float duration() = 0;           //return the animation duration in seconds
-
-    virtual bool animatable() override { return true; }
+    bool update(LottieComposition* comp, float progress);
+    void build(LottieComposition* comp);
 };
 
-}
-
-#endif //_TVG_FRAME_MODULE_H_
+#endif //_TVG_LOTTIE_BUILDER_H
