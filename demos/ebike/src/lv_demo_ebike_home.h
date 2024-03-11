@@ -25,6 +25,7 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
+void lv_demo_ebike_home_create(lv_obj_t * parent);
 
 /**********************
  *      MACROS

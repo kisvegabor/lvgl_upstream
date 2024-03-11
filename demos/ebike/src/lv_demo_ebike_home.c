@@ -38,10 +38,9 @@ static lv_obj_t * card_labels_create(lv_obj_t * parent, const char * value, cons
  *   GLOBAL FUNCTIONS
  **********************/
 
-void lv_demo_ebike_home_create(void)
+void lv_demo_ebike_home_create(lv_obj_t * parent)
 {
-
-    lv_obj_t * main_cont = lv_obj_create(lv_screen_active());
+    lv_obj_t * main_cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
@@ -58,6 +57,32 @@ void lv_demo_ebike_home_create(void)
  *   STATIC FUNCTIONS
  **********************/
 
+static void speed_label_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
+{
+    lv_obj_t * label = lv_observer_get_target_obj(observer);
+    int32_t label_v = (int32_t)observer->user_data;
+    int32_t speed = lv_subject_get_int(subject);
+
+    label_v = LV_ABS(label_v - speed);
+    uint32_t zoom = lv_map(label_v, 0, 10, 512, 256);
+    lv_obj_set_style_transform_scale(label, zoom, 0);
+}
+
+static void speed_roller_10_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
+{
+    lv_obj_t * roller = lv_observer_get_target_obj(observer);
+    int32_t speed = lv_subject_get_int(subject);
+    lv_roller_set_selected(roller, speed / 10, LV_ANIM_ON);
+}
+
+static void speed_roller_1_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
+{
+    lv_obj_t * roller = lv_observer_get_target_obj(observer);
+    int32_t speed = lv_subject_get_int(subject);
+    int32_t prev_speed = lv_subject_get_int(subject);
+
+    lv_roller_set_selected(roller, speed, LV_ANIM_ON);
+}
 
 static lv_obj_t * left_cont_create(lv_obj_t * parent)
 {
@@ -78,6 +103,10 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(arc, LV_OPA_0, LV_PART_KNOB);
     lv_obj_set_style_arc_opa(arc, LV_OPA_0, 0);
     lv_obj_set_style_arc_color(arc, EBIKE_COLOR_TURQUOISE, LV_PART_INDICATOR);
+    lv_arc_set_bg_angles(arc, 0, 90);
+    lv_arc_set_rotation(arc, 130);
+    lv_arc_set_range(arc, -20, 110);
+    lv_arc_bind_value(arc, &ebike_subject_speed);
 
     uint32_t i;
     for(i = 0; i < 5; i++) {
@@ -97,10 +126,8 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
         lv_obj_set_style_text_font(label, &font_ebike_19, 0);
         lv_obj_set_style_transform_pivot_x(label, lv_pct(100), 0);
         lv_obj_set_style_transform_pivot_y(label, lv_pct(50), 0);
+        lv_subject_add_observer_obj(&ebike_subject_speed, speed_label_observer_cb, label, (void *)((i + 1) * 20));
 
-        if(i == 2) {
-            lv_obj_set_style_transform_scale(label, 512, 0);
-        }
     }
 
     lv_obj_t * dashboard_center_cont = lv_obj_create(left_cont);
@@ -132,12 +159,15 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_align(roller_cont, LV_ALIGN_CENTER, 0, 0);
 
     const char * opts1 = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
-    lv_obj_t * roller1 = roller_create(roller_cont, opts1, LV_ROLLER_MODE_NORMAL);
-    lv_obj_align(roller1, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_obj_t * roller_1 = roller_create(roller_cont, opts1, LV_ROLLER_MODE_NORMAL);
+    lv_obj_align(roller_1, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_subject_add_observer_obj(&ebike_subject_speed, speed_roller_10_observer_cb, roller_1, NULL);
 
-    const char * opts2 = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
-    lv_obj_t * roller2 = roller_create(roller_cont, opts2, LV_ROLLER_MODE_INFINITE);
-    lv_obj_align(roller2, LV_ALIGN_LEFT_MID, 50, 0);
+    const char * opts2 =
+        "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
+    lv_obj_t * roller_10 = roller_create(roller_cont, opts2, LV_ROLLER_MODE_NORMAL);
+    lv_obj_align(roller_10, LV_ALIGN_LEFT_MID, 50, 0);
+    lv_subject_add_observer_obj(&ebike_subject_speed, speed_roller_1_observer_cb, roller_10, NULL);
 
     return left_cont;
 }
@@ -151,7 +181,7 @@ static lv_obj_t * roller_create(lv_obj_t * parent, const char * opts, lv_roller_
     lv_roller_set_options(roller, opts, mode);
     lv_roller_set_visible_row_count(roller, 1);
     lv_obj_set_width(roller, 50);
-    lv_obj_set_style_anim_duration(roller, 300, 0);
+    lv_obj_set_style_anim_duration(roller, 1000, 0);
     lv_obj_set_style_bg_opa(roller, 0, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(roller, 0, LV_PART_SELECTED);
 
@@ -219,8 +249,8 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_radius(battery, 6, LV_PART_INDICATOR);
     lv_bar_set_value(battery, 30, LV_ANIM_ON);
 
-    card_labels_create(battery, "16.4", "km", "Distance today");
-    card_labels_create(battery, "36.4", "asd", "Asdasda ds");
+    card_labels_create(battery, "78", "%", "Battery");
+    card_labels_create(battery, "29:37", "", "Battery");
 
     lv_obj_t * dist = lv_obj_create(right_cont);
     lv_obj_set_size(dist, lv_pct(100), lv_pct(100));
@@ -232,10 +262,9 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_flex_flow(dist, LV_FLEX_FLOW_ROW);
     lv_obj_set_scroll_snap_x(dist, LV_SCROLL_SNAP_CENTER);
 
-
     card_labels_create(dist, "16.4", "km", "Distance today");
-    card_labels_create(dist, "36.4", "asd", "Asdasda ds");
-    card_labels_create(dist, "76.4", "GGGG", "ddff asdas ");
+    card_labels_create(dist, "20.1", "km/h", "Speed today");
+    card_labels_create(dist, "43:12", "", "Time today");
 
     return right_cont;
 }

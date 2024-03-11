@@ -34,9 +34,9 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent);
  *   GLOBAL FUNCTIONS
  **********************/
 
-void lv_demo_ebike_settings_create(void)
+void lv_demo_ebike_settings_create(lv_obj_t * parent)
 {
-    lv_obj_t * main_cont = lv_obj_create(lv_screen_active());
+    lv_obj_t * main_cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
@@ -52,7 +52,6 @@ void lv_demo_ebike_settings_create(void)
 /**********************
  *   STATIC FUNCTIONS
  **********************/
-
 
 static lv_obj_t * left_cont_create(lv_obj_t * parent)
 {

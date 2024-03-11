@@ -338,6 +338,7 @@ static void children_repos(lv_obj_t * cont, flex_t * f, int32_t item_first_id, i
         for(i = 0; i < t->grow_item_cnt; i++) {
             if(t->grow_dsc[i].clamped == 0) {
                 grow_value_sum += t->grow_dsc[i].grow_value;
+                grow_max_size -= get_margin_main_start(t->grow_dsc[i].item, 0) + get_margin_main_end(t->grow_dsc[i].item, 0);
             }
             else {
                 grow_max_size -= t->grow_dsc[i].final_size;
