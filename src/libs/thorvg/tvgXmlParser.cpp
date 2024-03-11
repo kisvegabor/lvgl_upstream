@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #include <cstring>
 #include <ctype.h>
@@ -174,10 +171,11 @@ static const char* _simpleXmlFindStartTag(const char* itr, const char* itrEnd)
 
 static const char* _simpleXmlFindEndTag(const char* itr, const char* itrEnd)
 {
-    bool insideQuote = false;
+    bool insideQuote[2] = {false, false}; // 0: ", 1: '
     for (; itr < itrEnd; itr++) {
-        if (*itr == '"') insideQuote = !insideQuote;
-        if (!insideQuote) {
+        if (*itr == '"' && !insideQuote[1]) insideQuote[0] = !insideQuote[0];
+        if (*itr == '\'' && !insideQuote[0]) insideQuote[1] = !insideQuote[1];
+        if (!insideQuote[0] && !insideQuote[1]) {
             if ((*itr == '>') || (*itr == '<'))
                 return itr;
         }
@@ -586,6 +584,3 @@ const char* simpleXmlFindAttributesTag(const char* buf, unsigned bufLength)
 
     return nullptr;
 }
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

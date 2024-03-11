@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2023 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 
 #include "tvgCommon.h"
 #include "tvgLottieParserHandler.h"
+#include "tvgLottieProperty.h"
 
 struct LottieParser : LookaheadParserHandler
 {
@@ -35,6 +36,8 @@ public:
     }
 
     bool parse();
+    bool parse(LottieSlot* slot);
+    const char* sid();
 
     LottieComposition* comp = nullptr;
     const char* dirName = nullptr;       //base resource directory
@@ -48,9 +51,12 @@ private:
     StrokeJoin getStrokeJoin();
     CompositeMethod getMaskMethod(bool inversed);
     LottieInterpolator* getInterpolator(const char* key, Point& in, Point& out);
+    uint8_t getDirection();
 
     void getInperpolatorPoint(Point& pt);
     void getPathSet(LottiePathSet& path);
+    void getLayerSize(uint32_t& val);
+    void getValue(TextDocument& doc);
     void getValue(PathSet& path);
     void getValue(Array<Point>& pts);
     void getValue(ColorStop& color);
@@ -58,17 +64,17 @@ private:
     void getValue(uint8_t& val);
     void getValue(Point& pt);
     void getValue(RGB24& color);
-    void getLayerSize(uint32_t& val);
 
     template<typename T> bool parseTangent(const char *key, LottieVectorFrame<T>& value);
     template<typename T> bool parseTangent(const char *key, LottieScalarFrame<T>& value);
     template<typename T> void parseKeyFrame(T& prop);
     template<typename T> void parsePropertyInternal(T& prop);
-    template<typename T> void parseProperty(T& prop);
+    template<LottieProperty::Type type = LottieProperty::Type::Invalid, typename T> void parseProperty(T& prop, LottieObject* obj = nullptr);
+    template<typename T> void parseSlotProperty(T& prop);
 
     LottieObject* parseObject();
     LottieObject* parseAsset();
-    LottieImage* parseImage(const char* key);
+    LottieImage* parseImage(const char* data, const char* subPath, bool embedded);
     LottieLayer* parseLayer();
     LottieObject* parseGroup();
     LottieRect* parseRect();
@@ -85,14 +91,20 @@ private:
     LottieMask* parseMask();
     LottieTrimpath* parseTrimpath();
     LottieRepeater* parseRepeater();
+    LottieFont* parseFont();
 
-    void parseObject(LottieGroup* parent);
-    void parseShapes(LottieLayer* layer);
+    void parseObject(Array<LottieObject*>& parent);
+    void parseShapes(Array<LottieObject*>& parent);
+    void parseText(Array<LottieObject*>& parent);
     void parseMasks(LottieLayer* layer);
     void parseTimeRemap(LottieLayer* layer);
     void parseStrokeDash(LottieStroke* stroke);
     void parseGradient(LottieGradient* gradient, const char* key);
+    void parseTextRange(LottieText* text);
     void parseAssets();
+    void parseFonts();
+    void parseChars(Array<LottieGlyph*>& glyphes);
+    void postProcess(Array<LottieGlyph*>& glyphes);
 
     //Current parsing context
     struct Context {

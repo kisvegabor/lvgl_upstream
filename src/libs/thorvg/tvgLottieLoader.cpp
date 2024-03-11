@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2023 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-#include "tvgLoader.h"
 #include "tvgLottieLoader.h"
 #include "tvgLottieModel.h"
 #include "tvgLottieParser.h"
@@ -48,34 +47,17 @@ static float _str2float(const char* str, int len)
 }
 
 
-void LottieLoader::clear()
-{
-    if (copy) free((char*)content);
-    free(dirName);
-    dirName = nullptr;
-    size = 0;
-    content = nullptr;
-    copy = false;
-}
-
-
 void LottieLoader::run(unsigned tid)
 {
     //update frame
-    if (comp && comp->scene) {
+    if (comp) {
         builder->update(comp, frameNo);
     //initial loading
     } else {
-        if (!comp) {
-            LottieParser parser(content, dirName);
-            if (!parser.parse()) return;
-            comp = parser.comp;
-        }
+        LottieParser parser(content, dirName);
+        if (!parser.parse()) return;
+        comp = parser.comp;
         builder->build(comp);
-        w = static_cast<float>(comp->w);
-        h = static_cast<float>(comp->h);
-        frameDuration = comp->duration();
-        frameCnt = comp->frameCnt();
     }
 }
 
@@ -84,21 +66,21 @@ void LottieLoader::run(unsigned tid)
 /* External Class Implementation                                        */
 /************************************************************************/
 
-LottieLoader::LottieLoader() : builder(new LottieBuilder)
+LottieLoader::LottieLoader() : FrameModule(FileType::Lottie), builder(new LottieBuilder)
 {
+
 }
 
 
 LottieLoader::~LottieLoader()
 {
-    close();
+    this->done();
+
+    if (copy) free((char*)content);
+    free(dirName);
 
     //TODO: correct position?
-    if (comp) {
-        delete(comp);
-        comp = nullptr;
-    }
-
+    delete(comp);
     delete(builder);
 }
 
@@ -106,11 +88,18 @@ LottieLoader::~LottieLoader()
 bool LottieLoader::header()
 {
     //A single thread doesn't need to perform intensive tasks.
-//    if (TaskScheduler::threads() == 0) {
-//        run(0);
-//        if (comp) return true;
-//        else return false;
-//    }
+    if (TaskScheduler::threads() == 0) {
+        run(0);
+        if (comp) {
+            w = static_cast<float>(comp->w);
+            h = static_cast<float>(comp->h);
+            frameDuration = comp->duration();
+            frameCnt = comp->frameCnt();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //Quickly validate the given Lottie file without parsing in order to get the animation info.
     auto startFrame = 0.0f;
@@ -208,8 +197,6 @@ bool LottieLoader::header()
 
 bool LottieLoader::open(const char* data, uint32_t size, bool copy)
 {
-    clear();
-
     //If the format is dotLottie
     auto dotLottie = _checkDotLottie(data);
     if (dotLottie) {
@@ -232,8 +219,6 @@ bool LottieLoader::open(const char* data, uint32_t size, bool copy)
 
 bool LottieLoader::open(const string& path)
 {
-    clear();
-
     auto f = fopen(path.c_str(), "r");
     if (!f) return false;
 
@@ -293,8 +278,8 @@ bool LottieLoader::read()
 {
     if (!content || size == 0) return false;
 
-    //the loading has been already completed in header()
-    if (comp) return true;
+    //the loading has been already completed
+    if (comp || !LoadModule::read()) return true;
 
     TaskScheduler::request(this);
 
@@ -302,22 +287,39 @@ bool LottieLoader::read()
 }
 
 
-bool LottieLoader::close()
-{
-    this->done();
-
-    clear();
-
-    return true;
-}
-
-
-unique_ptr<Paint> LottieLoader::paint()
+Paint* LottieLoader::paint()
 {
     this->done();
     if (!comp) return nullptr;
     comp->initiated = true;
-    return cast<Paint>(comp->scene);
+    return comp->root->scene;
+}
+
+
+bool LottieLoader::override(const char* slot)
+{
+    if (!slot || !comp || comp->slots.count == 0) return false;
+
+    //TODO: Crashed, does this necessary?
+    auto temp = strdup(slot);
+
+    //parsing slot json
+    LottieParser parser(temp, dirName);
+    auto sid = parser.sid();
+    if (!sid) {
+        free(temp);
+        return false;
+    }
+
+    bool ret = false;
+    for (auto s = comp->slots.begin(); s < comp->slots.end(); ++s) {
+        if (strcmp((*s)->sid, sid)) continue;
+        ret = parser.parse(*s);
+        break;
+    }
+
+    free(temp);
+    return ret;
 }
 
 

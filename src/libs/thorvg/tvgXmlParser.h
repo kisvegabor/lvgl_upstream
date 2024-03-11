@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #ifndef _TVG_SIMPLE_XML_PARSER_H_
 #define _TVG_SIMPLE_XML_PARSER_H_
@@ -59,6 +56,3 @@ bool isIgnoreUnsupportedLogElements(const char* tagName);
 const char* simpleXmlNodeTypeToString(SvgNodeType type);
 
 #endif //_TVG_SIMPLE_XML_PARSER_H_
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,6 @@
  * SOFTWARE.
  */
 
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
-
 #ifndef _TVG_STR_H_
 #define _TVG_STR_H_
 
@@ -38,6 +35,3 @@ char* strDirname(const char* path);                 //return the full directory 
 
 }
 #endif //_TVG_STR_H_
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

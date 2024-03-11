@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2023 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -135,9 +135,29 @@ Fill* LottieGradient::fill(float frameNo)
 void LottieGroup::prepare(LottieObject::Type type)
 {
     LottieObject::type = type;
-    for (auto child = children.data; child < children.end(); ++child) {
-        statical &= (*child)->statical;
-        if (!statical) break;
+
+    if (children.count == 0) return;
+
+    size_t strokeCnt = 0;
+    size_t fillCnt = 0;
+
+    for (auto c = children.end() - 1; c >= children.begin(); --c) {
+        if (reqFragment && !statical) break;
+        auto child = static_cast<LottieObject*>(*c);
+        if (statical) statical &= child->statical;
+        /* Figure out if the rendering context should be fragmented.
+           Multiple stroking or grouping with a stroking would occur this.
+           This fragment resolves the overlapped stroke outlines. */
+        if (reqFragment) continue;
+        if (child->type == LottieObject::Group) {
+            if (strokeCnt > 0 || fillCnt > 0) reqFragment = true;
+        } else if (child->type == LottieObject::SolidStroke || child->type == LottieObject::GradientStroke) {
+            if (strokeCnt > 0) reqFragment = true;
+            else ++strokeCnt;
+        } else if (child->type == LottieObject::SolidFill || child->type == LottieObject::GradientFill) {
+            if (fillCnt > 0) reqFragment = true;
+            else ++fillCnt;
+        }
     }
 }
 
@@ -150,7 +170,7 @@ LottieLayer::~LottieLayer()
         free(refId);
     }
 
-    for (auto m = masks.data; m < masks.end(); ++m) {
+    for (auto m = masks.begin(); m < masks.end(); ++m) {
         delete(*m);
     }
 
@@ -187,20 +207,30 @@ float LottieLayer::remap(float frameNo)
 
 LottieComposition::~LottieComposition()
 {
-    if (!initiated) delete(scene);
+    if (!initiated) delete(root->scene);
 
     delete(root);
     free(version);
     free(name);
 
     //delete interpolators
-    for (auto i = interpolators.data; i < interpolators.end(); ++i) {
+    for (auto i = interpolators.begin(); i < interpolators.end(); ++i) {
         free((*i)->key);
         free(*i);
     }
 
     //delete assets
-    for (auto a = assets.data; a < assets.end(); ++a) {
+    for (auto a = assets.begin(); a < assets.end(); ++a) {
         delete(*a);
+    }
+
+    //delete fonts
+    for (auto f = fonts.begin(); f < fonts.end(); ++f) {
+        delete(*f);
+    }
+
+    //delete slots
+    for (auto s = slots.begin(); s < slots.end(); ++s) {
+        delete(*s);
     }
 }

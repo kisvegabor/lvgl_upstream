@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
+ * Copyright (c) 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,37 @@
  * SOFTWARE.
  */
 
-#ifndef _TVG_SVG_SCENE_BUILDER_H_
-#define _TVG_SVG_SCENE_BUILDER_H_
-
 #include "tvgCommon.h"
+#include "thorvg_lottie.h"
+#include "tvgLottieLoader.h"
+#include "tvgAnimation.h"
 
-Scene* svgSceneBuild(SvgLoaderData& loaderData, Box vBox, float w, float h, AspectRatioAlign align, AspectRatioMeetOrSlice meetOrSlice, const string& svgPath, SvgViewFlag viewFlag);
 
-#endif //_TVG_SVG_SCENE_BUILDER_H_
+/************************************************************************/
+/* Internal Class Implementation                                        */
+/************************************************************************/
+
+/************************************************************************/
+/* External Class Implementation                                        */
+/************************************************************************/
+
+LottieAnimation::~LottieAnimation()
+{
+}
+
+Result LottieAnimation::override(const char* slot) noexcept
+{
+    if (!pImpl->picture->pImpl->loader) return Result::InsufficientCondition;
+
+    if (static_cast<LottieLoader*>(pImpl->picture->pImpl->loader)->override(slot)) {
+        return Result::Success;
+    }
+
+    return Result::InvalidArguments;
+}
+
+
+unique_ptr<LottieAnimation> LottieAnimation::gen() noexcept
+{
+    return unique_ptr<LottieAnimation>(new LottieAnimation);
+}

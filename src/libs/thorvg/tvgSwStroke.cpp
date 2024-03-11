@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #include <string.h>
 #include <math.h>
@@ -380,9 +377,6 @@ static void _lineTo(SwStroke& stroke, const SwPoint& to)
     //a zero-length lineto is a no-op; avoid creating a spurious corner
     if (delta.zero()) return;
 
-    //compute length of line
-    auto angle = mathAtan(delta);
-
     /* The lineLength is used to determine the intersection of strokes outlines.
        The scale needs to be reverted since the stroke width has not been scaled.
        An alternative option is to scale the width of the stroke properly by
@@ -390,6 +384,7 @@ static void _lineTo(SwStroke& stroke, const SwPoint& to)
     delta.x = static_cast<SwCoord>(delta.x / stroke.sx);
     delta.y = static_cast<SwCoord>(delta.y / stroke.sy);
     auto lineLength = mathLength(delta);
+    auto angle = mathAtan(delta);
 
     delta = {static_cast<SwCoord>(stroke.width), 0};
     mathRotate(delta, angle + SW_ANGLE_PI2);
@@ -838,7 +833,7 @@ bool strokeParseOutline(SwStroke* stroke, const SwOutline& outline)
     uint32_t first = 0;
     uint32_t i = 0;
 
-    for (auto cntr = outline.cntrs.data; cntr < outline.cntrs.end(); ++cntr, ++i) {
+    for (auto cntr = outline.cntrs.begin(); cntr < outline.cntrs.end(); ++cntr, ++i) {
         auto last = *cntr;           //index of last point in contour
         auto limit = outline.pts.data + last;
 
@@ -910,6 +905,3 @@ SwOutline* strokeExportOutline(SwStroke* stroke, SwMpool* mpool, unsigned tid)
 
     return outline;
 }
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

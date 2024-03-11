@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2021 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 template<typename PIXEL_T>
 static void inline cRasterPixels(PIXEL_T* dst, PIXEL_T val, uint32_t offset, int32_t len)
@@ -164,6 +161,3 @@ static bool inline cRasterARGBtoABGR(Surface* surface)
     //exactly same with ABGRtoARGB
     return cRasterABGRtoARGB(surface);
 }
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

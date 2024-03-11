@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2021 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #include "tvgMath.h"
 
@@ -74,9 +71,9 @@ void mathRotate(Matrix* m, float degree)
 {
     if (degree == 0.0f) return;
 
-    auto radian = degree / 180.0f * (float)M_PI;
-    auto cosVal = cosf((float)radian);
-    auto sinVal = sinf((float)radian);
+    auto radian = degree / 180.0f * M_PI;
+    auto cosVal = cosf(radian);
+    auto sinVal = sinf(radian);
 
     m->e12 = m->e11 * -sinVal;
     m->e11 *= cosVal;
@@ -103,6 +100,3 @@ void mathMultiply(Point* pt, const Matrix* transform)
     pt->x = tx;
     pt->y = ty;
 }
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

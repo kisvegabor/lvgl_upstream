@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #include "tvgCanvas.h"
 
@@ -66,9 +63,9 @@ Result Canvas::clear(bool free) noexcept
 
 Result Canvas::draw() noexcept
 {
-    TVGLOG("COMMON", "Draw S. -------------------------------- Canvas(%p)", this);
+    TVGLOG("RENDERER", "Draw S. -------------------------------- Canvas(%p)", this);
     auto ret = pImpl->draw();
-    TVGLOG("COMMON", "Draw E. -------------------------------- Canvas(%p)", this);
+    TVGLOG("RENDERER", "Draw E. -------------------------------- Canvas(%p)", this);
 
     return ret;
 }
@@ -76,9 +73,9 @@ Result Canvas::draw() noexcept
 
 Result Canvas::update(Paint* paint) noexcept
 {
-    TVGLOG("COMMON", "Update S. ------------------------------ Canvas(%p)", this);
+    TVGLOG("RENDERER", "Update S. ------------------------------ Canvas(%p)", this);
     auto ret = pImpl->update(paint, false);
-    TVGLOG("COMMON", "Update E. ------------------------------ Canvas(%p)", this);
+    TVGLOG("RENDERER", "Update E. ------------------------------ Canvas(%p)", this);
 
     return ret;
 }
@@ -88,6 +85,3 @@ Result Canvas::sync() noexcept
 {
     return pImpl->sync();
 }
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

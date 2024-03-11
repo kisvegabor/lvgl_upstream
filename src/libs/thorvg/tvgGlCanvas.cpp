@@ -20,63 +20,69 @@
  * SOFTWARE.
  */
 
-#include <fstream>
-#include <string.h>
-#include "tvgLoader.h"
-#include "tvgRawLoader.h"
+#include "tvgCanvas.h"
+
+#ifdef THORVG_GL_RASTER_SUPPORT
+    #include "tvgGlRenderer.h"
+#else
+    class GlRenderer : public RenderMethod
+    {
+        //Non Supported. Dummy Class */
+    };
+#endif
 
 /************************************************************************/
 /* Internal Class Implementation                                        */
 /************************************************************************/
+
+struct GlCanvas::Impl
+{
+};
 
 
 /************************************************************************/
 /* External Class Implementation                                        */
 /************************************************************************/
 
-RawLoader::RawLoader() : ImageLoader(FileType::Raw)
+#ifdef THORVG_GL_RASTER_SUPPORT
+GlCanvas::GlCanvas() : Canvas(GlRenderer::gen()), pImpl(new Impl)
+#else
+GlCanvas::GlCanvas() : Canvas(nullptr), pImpl(new Impl)
+#endif
 {
 }
 
 
-RawLoader::~RawLoader()
+
+GlCanvas::~GlCanvas()
 {
-    if (copy) free(surface.buf32);
+    delete(pImpl);
 }
 
 
-bool RawLoader::open(const uint32_t* data, uint32_t w, uint32_t h, bool copy)
+Result GlCanvas::target(uint32_t* buffer, uint32_t stride, uint32_t w, uint32_t h) noexcept
 {
-    if (!LoadModule::read()) return true;
+#ifdef THORVG_GL_RASTER_SUPPORT
+    //We know renderer type, avoid dynamic_cast for performance.
+    auto renderer = static_cast<GlRenderer*>(Canvas::pImpl->renderer);
+    if (!renderer) return Result::MemoryCorruption;
 
-    if (!data || w == 0 || h == 0) return false;
+    if (!renderer->target(buffer, stride, w, h)) return Result::Unknown;
 
-    this->w = (float)w;
-    this->h = (float)h;
-    this->copy = copy;
+    //Paints must be updated again with this new target.
+    Canvas::pImpl->needRefresh();
 
-    if (copy) {
-        surface.buf32 = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
-        if (!surface.buf32) return false;
-        memcpy((void*)surface.buf32, data, sizeof(uint32_t) * w * h);
-    }
-    else surface.buf32 = const_cast<uint32_t*>(data);
-
-    //setup the surface
-    surface.stride = w;
-    surface.w = w;
-    surface.h = h;
-    surface.cs = ColorSpace::ARGB8888;
-    surface.channelSize = sizeof(uint32_t);
-    surface.premultiplied = true;
-
-    return true;
+    return Result::Success;
+#endif
+    return Result::NonSupport;
 }
 
 
-bool RawLoader::read()
+unique_ptr<GlCanvas> GlCanvas::gen() noexcept
 {
-    LoadModule::read();
-
-    return true;
+#ifdef THORVG_GL_RASTER_SUPPORT
+    if (GlRenderer::init() <= 0) return nullptr;
+    return unique_ptr<GlCanvas>(new GlCanvas);
+#endif
+    return nullptr;
 }

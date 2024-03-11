@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 - 2024 the ThorVG project. All rights reserved.
+ * Copyright (c) 2021 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,80 +20,66 @@
  * SOFTWARE.
  */
 
-#include "tvgFrameModule.h"
-#include "tvgAnimation.h"
+#include "tvgIteratorAccessor.h"
 
 /************************************************************************/
 /* Internal Class Implementation                                        */
 /************************************************************************/
 
+static bool accessChildren(Iterator* it, function<bool(const Paint* paint)> func)
+{
+    while (auto child = it->next()) {
+        //Access the child
+        if (!func(child)) return false;
+
+        //Access the children of the child
+        if (auto it2 = IteratorAccessor::iterator(child)) {
+            if (!accessChildren(it2, func)) {
+                delete(it2);
+                return false;
+            }
+            delete(it2);
+        }
+    }
+    return true;
+}
+
 /************************************************************************/
 /* External Class Implementation                                        */
 /************************************************************************/
 
-Animation::~Animation()
+unique_ptr<Picture> Accessor::set(unique_ptr<Picture> picture, function<bool(const Paint* paint)> func) noexcept
 {
-    delete(pImpl);
+    auto p = picture.get();
+    if (!p || !func) return picture;
+
+    //Use the Preorder Tree-Search
+
+    //Root
+    if (!func(p)) return picture;
+
+    //Children
+    if (auto it = IteratorAccessor::iterator(p)) {
+        accessChildren(it, func);
+        delete(it);
+    }
+    return picture;
 }
 
 
-Animation::Animation() : pImpl(new Impl)
+Accessor::~Accessor()
 {
+
 }
 
 
-Result Animation::frame(float no) noexcept
+Accessor::Accessor() : pImpl(nullptr)
 {
-    auto loader = pImpl->picture->pImpl->loader;
 
-    if (!loader) return Result::InsufficientCondition;
-    if (!loader->animatable()) return Result::NonSupport;
-
-    if (static_cast<FrameModule*>(loader)->frame(no)) return Result::Success;
-    return Result::InsufficientCondition;
 }
 
 
-Picture* Animation::picture() const noexcept
+unique_ptr<Accessor> Accessor::gen() noexcept
 {
-    return pImpl->picture;
-}
-
-
-float Animation::curFrame() const noexcept
-{
-    auto loader = pImpl->picture->pImpl->loader;
-
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
-
-    return static_cast<FrameModule*>(loader)->curFrame();
-}
-
-
-float Animation::totalFrame() const noexcept
-{
-    auto loader = pImpl->picture->pImpl->loader;
-
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
-
-    return static_cast<FrameModule*>(loader)->totalFrame();
-}
-
-
-float Animation::duration() const noexcept
-{
-    auto loader = pImpl->picture->pImpl->loader;
-
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
-
-    return static_cast<FrameModule*>(loader)->duration();
-}
-
-
-unique_ptr<Animation> Animation::gen() noexcept
-{
-    return unique_ptr<Animation>(new Animation);
+    return unique_ptr<Accessor>(new Accessor);
 }

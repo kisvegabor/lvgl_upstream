@@ -20,80 +20,90 @@
  * SOFTWARE.
  */
 
-#include "tvgFrameModule.h"
-#include "tvgAnimation.h"
+
+#include "tvgText.h"
+
 
 /************************************************************************/
 /* Internal Class Implementation                                        */
 /************************************************************************/
 
+
+
 /************************************************************************/
 /* External Class Implementation                                        */
 /************************************************************************/
 
-Animation::~Animation()
+
+Text::Text() : pImpl(new Impl)
+{
+    Paint::pImpl->id = TVG_CLASS_ID_TEXT;
+}
+
+
+Text::~Text()
 {
     delete(pImpl);
 }
 
 
-Animation::Animation() : pImpl(new Impl)
+Result Text::text(const char* text) noexcept
 {
+    return pImpl->text(text);
 }
 
 
-Result Animation::frame(float no) noexcept
+Result Text::font(const char* name, float size, const char* style) noexcept
 {
-    auto loader = pImpl->picture->pImpl->loader;
+    return pImpl->font(name, size, style);
+}
 
-    if (!loader) return Result::InsufficientCondition;
-    if (!loader->animatable()) return Result::NonSupport;
 
-    if (static_cast<FrameModule*>(loader)->frame(no)) return Result::Success;
+Result Text::load(const std::string& path) noexcept
+{
+    bool invalid; //invalid path
+    if (!LoaderMgr::loader(path, &invalid)) {
+        if (invalid) return Result::InvalidArguments;
+        else return Result::NonSupport;
+    }
+
+    return Result::Success;
+}
+
+
+Result Text::unload(const std::string& path) noexcept
+{
+    if (LoaderMgr::retrieve(path)) return Result::Success;
     return Result::InsufficientCondition;
 }
 
 
-Picture* Animation::picture() const noexcept
+Result Text::fill(uint8_t r, uint8_t g, uint8_t b) noexcept
 {
-    return pImpl->picture;
+    if (!pImpl->paint) return Result::InsufficientCondition;
+
+    return pImpl->fill(r, g, b);
 }
 
 
-float Animation::curFrame() const noexcept
+Result Text::fill(unique_ptr<Fill> f) noexcept
 {
-    auto loader = pImpl->picture->pImpl->loader;
+    if (!pImpl->paint) return Result::InsufficientCondition;
 
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
+    auto p = f.release();
+    if (!p) return Result::MemoryCorruption;
 
-    return static_cast<FrameModule*>(loader)->curFrame();
+    return pImpl->fill(p);
 }
 
 
-float Animation::totalFrame() const noexcept
+unique_ptr<Text> Text::gen() noexcept
 {
-    auto loader = pImpl->picture->pImpl->loader;
-
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
-
-    return static_cast<FrameModule*>(loader)->totalFrame();
+    return unique_ptr<Text>(new Text);
 }
 
 
-float Animation::duration() const noexcept
+uint32_t Text::identifier() noexcept
 {
-    auto loader = pImpl->picture->pImpl->loader;
-
-    if (!loader) return 0;
-    if (!loader->animatable()) return 0;
-
-    return static_cast<FrameModule*>(loader)->duration();
-}
-
-
-unique_ptr<Animation> Animation::gen() noexcept
-{
-    return unique_ptr<Animation>(new Animation);
+    return TVG_CLASS_ID_TEXT;
 }

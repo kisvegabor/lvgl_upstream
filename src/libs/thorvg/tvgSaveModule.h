@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2021 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,6 @@
  * SOFTWARE.
  */
 
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
-
 #ifndef _TVG_SAVE_MODULE_H_
 #define _TVG_SAVE_MODULE_H_
 
@@ -37,12 +34,10 @@ public:
     virtual ~SaveModule() {}
 
     virtual bool save(Paint* paint, const string& path, bool compress) = 0;
+    virtual bool save(Animation* animation, Paint* bg, const string& path, uint32_t quality, uint32_t fps) = 0;
     virtual bool close() = 0;
 };
 
 }
 
 #endif //_TVG_SAVE_MODULE_H_
-
-#endif /* LV_USE_THORVG_INTERNAL */
-

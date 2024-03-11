@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 - 2023 the ThorVG project. All rights reserved.
+ * Copyright (c) 2020 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "../../lv_conf_internal.h"
-#if LV_USE_THORVG_INTERNAL
 
 #ifndef _TVG_SW_RENDERER_H_
 #define _TVG_SW_RENDERER_H_
@@ -46,7 +43,7 @@ public:
     bool renderShape(RenderData data) override;
     bool renderImage(RenderData data) override;
     bool postRender() override;
-    bool dispose(RenderData data) override;
+    void dispose(RenderData data) override;
     RenderRegion region(RenderData data) override;
     RenderRegion viewport() override;
     bool viewport(const RenderRegion& vp) override;
@@ -85,6 +82,3 @@ private:
 }
 
 #endif /* _TVG_SW_RENDERER_H_ */
-
-#endif /* LV_USE_THORVG_INTERNAL */
-
