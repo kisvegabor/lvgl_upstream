@@ -39,7 +39,6 @@ static void draw_event_cb(lv_event_t * e)
 
     if(base_dsc->part == LV_PART_ITEMS && draw_task->type == LV_DRAW_TASK_TYPE_LINE) {
         add_faded_area(e);
-
     }
     /*Hook the division lines too*/
     if(base_dsc->part == LV_PART_MAIN && draw_task->type == LV_DRAW_TASK_TYPE_LINE) {
@@ -95,7 +94,7 @@ static void add_faded_area(lv_event_t * e)
     lv_area_t rect_area;
     rect_area.x1 = (int32_t)draw_line_dsc->p1.x;
     rect_area.x2 = (int32_t)draw_line_dsc->p2.x - 1;
-    rect_area.y1 = (int32_t)LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - 1;
+    rect_area.y1 = (int32_t)LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y);
     rect_area.y2 = (int32_t)obj->coords.y2;
     lv_draw_rect(base_dsc->layer, &rect_dsc, &rect_area);
 }

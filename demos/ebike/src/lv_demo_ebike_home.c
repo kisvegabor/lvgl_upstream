@@ -44,13 +44,15 @@ void lv_demo_ebike_home_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_flex_main_place(main_cont, LV_FLEX_ALIGN_SPACE_EVENLY, 0);
 
     lv_obj_t * left_cont = left_cont_create(main_cont);
-    lv_obj_set_size(left_cont, 264, lv_pct(100));
+    lv_obj_set_size(left_cont, lv_pct(40), lv_pct(100));
+    lv_obj_set_style_min_width(left_cont, 220, 0);
 
     lv_obj_t * right_cont = right_cont_create(main_cont);
-    lv_obj_set_size(right_cont, lv_pct(100), lv_pct(100));
-    lv_obj_set_flex_grow(right_cont, 1);
+    lv_obj_set_size(right_cont, lv_pct(40), lv_pct(100));
+    lv_obj_set_style_min_width(right_cont, 150, 0);
 }
 
 /**********************
@@ -64,7 +66,7 @@ static void speed_label_observer_cb(lv_observer_t * observer, lv_subject_t * sub
     int32_t speed = lv_subject_get_int(subject);
 
     label_v = LV_ABS(label_v - speed);
-    uint32_t zoom = lv_map(label_v, 0, 10, 512, 256);
+    uint32_t zoom = lv_map(label_v, 0, 20, 512, 256);
     lv_obj_set_style_transform_scale(label, zoom, 0);
 }
 
@@ -132,8 +134,10 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
 
     lv_obj_t * dashboard_center_cont = lv_obj_create(left_cont);
     lv_obj_set_style_bg_opa(dashboard_center_cont, 0, 0);
-    lv_obj_align(dashboard_center_cont, LV_ALIGN_LEFT_MID, 110, 0);
-    lv_obj_set_size(dashboard_center_cont, 145, 240);
+    lv_obj_align(dashboard_center_cont, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_obj_set_size(dashboard_center_cont, lv_pct(100), 240);
+    lv_obj_set_style_pad_left(dashboard_center_cont, 110, 0);
+    lv_obj_remove_flag(dashboard_center_cont, LV_OBJ_FLAG_CLICKABLE);
 
     lv_obj_t * top_cont = lv_obj_create(dashboard_center_cont);
     lv_obj_set_style_bg_opa(top_cont, 0, 0);
@@ -202,22 +206,22 @@ static lv_obj_t * card_labels_create(lv_obj_t * parent, const char * value, cons
     lv_obj_set_size(center_cont, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(center_cont, 0, 0);
 
-    LV_FONT_DECLARE(font_ebike_56);
+    LV_FONT_DECLARE(font_ebike_trump_48);
     lv_obj_center(center_cont);
     lv_obj_t * label;
     label = lv_label_create(center_cont);
     lv_label_set_text(label, value);
-    lv_obj_set_style_text_font(label, &font_ebike_56, 0);
+    lv_obj_set_style_text_font(label, &font_ebike_trump_48, 0);
 
-    LV_FONT_DECLARE(font_ebike_19);
+    LV_FONT_DECLARE(font_ebike_inter_14);
     label = lv_label_create(center_cont);
     lv_label_set_text(label, unit);
-    lv_obj_set_style_text_font(label, &font_ebike_19, 0);
+    lv_obj_set_style_text_font(label, &font_ebike_inter_14, 0);
 
     label = lv_label_create(main_cont);
     lv_label_set_text(label, title);
-    lv_obj_set_style_text_font(label, &font_ebike_19, 0);
-    lv_obj_align(label, LV_ALIGN_BOTTOM_MID, 0, -8);
+    lv_obj_set_style_text_font(label, &font_ebike_inter_14, 0);
+    lv_obj_align(label, LV_ALIGN_BOTTOM_MID, 0, -4);
 
     return main_cont;
 }

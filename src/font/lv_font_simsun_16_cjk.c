@@ -23766,7 +23766,8 @@ lv_font_t lv_font_simsun_16_cjk = {
     .underline_position = -2,
     .underline_thickness = 1,
 #endif
-    .dsc = &font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
+    .dsc = &font_dsc,           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
+    .fallback = &lv_font_dejavu_16_persian_hebrew,
 };
 
 #endif /*#if LV_FONT_SIMSUN_16_CJK*/

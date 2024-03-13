@@ -33,6 +33,8 @@ extern "C" {
  * GLOBAL VARIABLES
  **********************/
 extern lv_subject_t ebike_subject_speed;
+extern lv_subject_t ebike_subject_portrait;
+extern lv_subject_t ebike_subject_language;
 
 /**********************
  *      MACROS
