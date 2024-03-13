@@ -8,6 +8,7 @@
  *********************/
 #include "lv_demo_ebike.h"
 #include "lv_demo_lottie.h"
+#include "translations/lv_i18n.h"
 
 /*********************
  *      DEFINES
@@ -33,6 +34,8 @@ static lv_subject_t subject_avg_speed;
 static lv_subject_t subject_distance;
 static lv_subject_t subject_top_speed;
 static lv_subject_t subject_mode;
+static lv_obj_t * left_arrow;
+static lv_obj_t * right_arrow;
 
 /**********************
  *  STATIC VARIABLES
@@ -97,7 +100,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     LV_FONT_DECLARE(font_ebike_trump_24);
     lv_obj_t * label = lv_label_create(left_cont);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 24, 16);
-    lv_label_set_text(label, "STATS");
+    lv_label_set_text(label, _("STATS"));
     lv_obj_set_style_text_font(label, &font_ebike_trump_24, 0);
 
     static const char approve_lottie[] = {
@@ -163,22 +166,34 @@ static lv_obj_t * tabs_create(lv_obj_t * parent)
 static void left_click_event_cb(lv_event_t * e)
 {
     int32_t week = lv_subject_get_int(&subject_week);
-    if(week < 1) return;
-    lv_subject_set_int(&subject_week, week - 1);
+    if(week > 0) {
+        week--;
+        lv_subject_set_int(&subject_week, week);
+    }
 }
 
 static void right_click_event_cb(lv_event_t * e)
 {
     int32_t week = lv_subject_get_int(&subject_week);
-    if(week >= 3) return;
-    lv_subject_set_int(&subject_week, week + 1);
+    if(week < 3) {
+        week++;
+        lv_subject_set_int(&subject_week, week);
+    }
+
 }
 
 static void current_week_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
     lv_obj_t * label = lv_observer_get_target_obj(observer);
     int32_t week = lv_subject_get_int(&subject_week);
-    lv_label_set_text_fmt(label, "March %d - March %d", week * 7 + 1, week * 7 + 7);
+    lv_label_set_text_fmt(label, _("March %d - March %d"), week * 7 + 1, week * 7 + 7);
+
+
+    if(week == 0) lv_obj_set_style_image_opa(left_arrow, LV_OPA_50, 0);
+    else lv_obj_set_style_image_opa(left_arrow, LV_OPA_100, 0);
+
+    if(week == 3) lv_obj_set_style_image_opa(right_arrow, LV_OPA_50, 0);
+    else lv_obj_set_style_image_opa(right_arrow, LV_OPA_100, 0);
 }
 
 static void current_data_objserver_cb(lv_observer_t * observer, lv_subject_t * subject)
@@ -197,8 +212,6 @@ static void current_data_objserver_cb(lv_observer_t * observer, lv_subject_t * s
             lv_label_set_text_fmt(label, "%dkm", distance_values[day]);
             break;
     }
-
-
 }
 
 static lv_obj_t * data_cont_create(lv_obj_t * parent)
@@ -217,11 +230,12 @@ static lv_obj_t * data_cont_create(lv_obj_t * parent)
     LV_FONT_DECLARE(font_ebike_inter_14);
     LV_FONT_DECLARE(font_ebike_trump_48);
 
-    lv_obj_t * icon = lv_image_create(cont);
-    lv_image_set_src(icon, &img_ebike_arrow_left_2);
-    lv_obj_set_ext_click_area(icon, 32);
-    lv_obj_add_flag(icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(icon, left_click_event_cb, LV_EVENT_CLICKED, NULL);
+    left_arrow = lv_image_create(cont);
+    lv_image_set_src(left_arrow, &img_ebike_arrow_left_2);
+    lv_obj_set_ext_click_area(left_arrow, 32);
+    lv_obj_set_size(left_arrow, 40, 40);
+    lv_obj_add_flag(left_arrow, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(left_arrow, left_click_event_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * label = lv_label_create(cont);
     lv_label_set_text(label, "138km");
@@ -233,15 +247,16 @@ static lv_obj_t * data_cont_create(lv_obj_t * parent)
     label = lv_label_create(cont);
     lv_label_set_text(label, "March 18 - March 25");
     lv_obj_set_style_text_font(label, &font_ebike_inter_14, 0);
+
+    right_arrow = lv_image_create(cont);
+    lv_image_set_src(right_arrow, &img_ebike_arrow_right_2);
+    lv_obj_set_ext_click_area(right_arrow, 32);
+    lv_obj_set_size(right_arrow, 40, 40);
+    lv_obj_add_flag(right_arrow, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    lv_obj_add_flag(right_arrow, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(right_arrow, right_click_event_cb, LV_EVENT_CLICKED, NULL);
+
     lv_subject_add_observer_obj(&subject_week, current_week_observer_cb, label, NULL);
-
-    icon = lv_image_create(cont);
-    lv_image_set_src(icon, &img_ebike_arrow_right_2);
-    lv_obj_set_ext_click_area(icon, 32);
-    lv_obj_add_flag(icon, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
-    lv_obj_add_flag(icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(icon, right_click_event_cb, LV_EVENT_CLICKED, NULL);
-
 
     return cont;
 }
@@ -484,9 +499,9 @@ static lv_obj_t * stat_cont_create(lv_obj_t * parent)
     lv_obj_set_size(cont, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
 
-    stat_card_create(cont, "Avg. speed", &subject_avg_speed, "%dkm/h");
-    stat_card_create(cont, "Distance", &subject_distance, "%dkm");
-    stat_card_create(cont, "Top speed", &subject_top_speed, "%dkm/h");
+    stat_card_create(cont, _("Avg. speed"), &subject_avg_speed, "%dkm/h");
+    stat_card_create(cont, _("Distance"), &subject_distance, "%dkm");
+    stat_card_create(cont, _("Top speed"), &subject_top_speed, "%dkm/h");
 
     return cont;
 }

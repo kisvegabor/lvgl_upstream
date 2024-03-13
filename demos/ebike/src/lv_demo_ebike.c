@@ -53,7 +53,7 @@ void lv_demo_ebike_create(void)
     lv_i18n_init(lv_i18n_language_pack);
 
     lv_subject_init_int(&ebike_subject_speed, 0);
-    lv_subject_init_int(&ebike_subject_portrait, false);
+    lv_subject_init_int(&ebike_subject_portrait, true);
     lv_subject_init_int(&ebike_subject_language, 0);
     lv_demo_ebike_stat_init();
 

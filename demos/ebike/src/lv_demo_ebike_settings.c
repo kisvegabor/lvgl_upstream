@@ -70,7 +70,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     LV_FONT_DECLARE(font_ebike_trump_24);
     lv_obj_t * label = lv_label_create(left_cont);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 24, 16);
-    lv_label_set_text(label, "SETTINGS");
+    lv_label_set_text(label, _("SETTINGS"));
     lv_obj_set_style_text_font(label, &font_ebike_trump_24, 0);
 
     LV_IMAGE_DECLARE(img_ebike_settings_large);

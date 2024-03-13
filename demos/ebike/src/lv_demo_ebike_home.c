@@ -7,6 +7,7 @@
  *      INCLUDES
  *********************/
 #include "lv_demo_ebike.h"
+#include "translations/lv_i18n.h"
 
 /*********************
  *      DEFINES
@@ -40,19 +41,28 @@ static lv_obj_t * card_labels_create(lv_obj_t * parent, const char * value, cons
 
 void lv_demo_ebike_home_create(lv_obj_t * parent)
 {
+    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
+
     lv_obj_t * main_cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
-    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(main_cont, portrait ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
     lv_obj_set_style_flex_main_place(main_cont, LV_FLEX_ALIGN_SPACE_EVENLY, 0);
 
     lv_obj_t * left_cont = left_cont_create(main_cont);
-    lv_obj_set_size(left_cont, lv_pct(40), lv_pct(100));
-    lv_obj_set_style_min_width(left_cont, 220, 0);
-
     lv_obj_t * right_cont = right_cont_create(main_cont);
-    lv_obj_set_size(right_cont, lv_pct(40), lv_pct(100));
-    lv_obj_set_style_min_width(right_cont, 150, 0);
+
+    if(portrait) {
+        lv_obj_set_size(right_cont, lv_pct(100), lv_pct(100));
+        lv_obj_set_flex_grow(right_cont, 1);
+        lv_obj_set_size(left_cont, lv_pct(100), 290);
+    }
+    else {
+        lv_obj_set_size(right_cont, lv_pct(40), lv_pct(100));
+        lv_obj_set_style_min_width(right_cont, 150, 0);
+        lv_obj_set_size(left_cont, lv_pct(40), lv_pct(100));
+        lv_obj_set_style_min_width(left_cont, 220, 0);
+    }
 }
 
 /**********************
@@ -85,6 +95,39 @@ static void speed_roller_1_observer_cb(lv_observer_t * observer, lv_subject_t * 
 
     lv_roller_set_selected(roller, speed, LV_ANIM_ON);
 }
+
+static lv_obj_t * info_box_create(lv_obj_t * parent, const void * icon, const char * big_text,  const char * small_text)
+{
+    lv_obj_t * main_cont = lv_obj_create(parent);
+    lv_obj_set_height(main_cont, lv_pct(100));
+    lv_obj_set_flex_grow(main_cont, 1);
+    lv_obj_set_style_bg_opa(main_cont, 0, 0);
+    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_flex_main_place(main_cont, LV_FLEX_ALIGN_CENTER, 0);
+    lv_obj_set_style_flex_cross_place(main_cont, LV_FLEX_ALIGN_CENTER, 0);
+    lv_obj_set_size(main_cont, lv_pct(100), LV_SIZE_CONTENT);
+
+    lv_obj_t * img;
+    img = lv_image_create(main_cont);
+    lv_image_set_src(img, icon);
+
+    LV_FONT_DECLARE(font_ebike_trump_24);
+    lv_obj_center(main_cont);
+    lv_obj_t * label;
+    label = lv_label_create(main_cont);
+    lv_label_set_text(label, big_text);
+    lv_obj_set_style_text_font(label, &font_ebike_trump_24, 0);
+
+    LV_FONT_DECLARE(font_ebike_inter_14);
+    label = lv_label_create(main_cont);
+    lv_label_set_text(label, small_text);
+    lv_obj_set_style_text_font(label, &font_ebike_inter_14, 0);
+    lv_obj_set_style_margin_left(label, 32, 0);
+    lv_obj_add_flag(label, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+
+    return main_cont;
+}
+
 
 static lv_obj_t * left_cont_create(lv_obj_t * parent)
 {
@@ -173,6 +216,17 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_align(roller_10, LV_ALIGN_LEFT_MID, 50, 0);
     lv_subject_add_observer_obj(&ebike_subject_speed, speed_roller_1_observer_cb, roller_10, NULL);
 
+    lv_obj_t * bottom_cont = lv_obj_create(left_cont);
+    lv_obj_set_style_bg_opa(bottom_cont, 0, 0);
+    lv_obj_set_size(bottom_cont, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(bottom_cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_left(bottom_cont, 110, 0);
+    lv_obj_align(bottom_cont, LV_ALIGN_LEFT_MID, 0, 105);
+
+    LV_IMAGE_DECLARE(img_ebike_clock);
+    //    info_box_create(bottom_cont, &img_ebike_whether, "19°", "Cloudy");
+    info_box_create(bottom_cont, &img_ebike_clock, " 03:58 PM", _("March 29"));
+
     return left_cont;
 }
 
@@ -229,11 +283,14 @@ static lv_obj_t * card_labels_create(lv_obj_t * parent, const char * value, cons
 
 static lv_obj_t * right_cont_create(lv_obj_t * parent)
 {
+    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
+
     lv_obj_t * right_cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(right_cont, 0, 0);
-    lv_obj_set_flex_flow(right_cont, LV_FLEX_FLOW_COLUMN);
+
+    lv_obj_set_flex_flow(right_cont, !portrait ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
     lv_obj_set_style_pad_ver(right_cont, 12, 0);
-    lv_obj_set_style_pad_right(right_cont, 8, 0);
+    lv_obj_set_style_pad_hor(right_cont, 8, 0);
     lv_obj_set_style_pad_gap(right_cont, 8, 0);
 
     lv_obj_t * battery = lv_bar_create(right_cont);
@@ -249,26 +306,29 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(battery, 0, 0);
     lv_obj_set_style_radius(battery, 12, 0);
     lv_obj_set_style_bg_color(battery, EBIKE_COLOR_LIME, LV_PART_INDICATOR);
+    lv_obj_set_style_pad_column(battery, 16, 0);
     //  lv_obj_set_style_text_color(battery, lv_color_black(), 0);
     lv_obj_set_style_radius(battery, 6, LV_PART_INDICATOR);
-    lv_bar_set_value(battery, 30, LV_ANIM_ON);
+    lv_bar_set_value(battery, 78, LV_ANIM_ON);
 
-    card_labels_create(battery, "78", "%", "Battery");
-    card_labels_create(battery, "29:37", "", "Battery");
+    card_labels_create(battery, "78", "%", _("Battery"));
+    card_labels_create(battery, "29:37", "", _("Battery"));
 
     lv_obj_t * dist = lv_obj_create(right_cont);
     lv_obj_set_size(dist, lv_pct(100), lv_pct(100));
-    lv_obj_set_style_pad_all(dist, 14, 0);
+    lv_obj_set_style_pad_ver(dist, 14, 0);
+    lv_obj_set_style_pad_hor(dist, 4, 0);
     lv_obj_set_flex_grow(dist, 1);
     lv_obj_set_style_radius(dist, 12, 0);
     lv_obj_set_style_bg_color(dist, EBIKE_COLOR_TURQUOISE, 0);
     lv_obj_set_style_text_color(dist, lv_color_black(), 0);
+    lv_obj_set_style_pad_column(dist, 16, 0);
     lv_obj_set_flex_flow(dist, LV_FLEX_FLOW_ROW);
     lv_obj_set_scroll_snap_x(dist, LV_SCROLL_SNAP_CENTER);
 
-    card_labels_create(dist, "16.4", "km", "Distance today");
-    card_labels_create(dist, "20.1", "km/h", "Speed today");
-    card_labels_create(dist, "43:12", "", "Time today");
+    card_labels_create(dist, "16.4", "km", _("Distance today"));
+    card_labels_create(dist, "20.1", "km/h", _("Speed today"));
+    card_labels_create(dist, "43:12", "", _("Time today"));
 
     return right_cont;
 }
