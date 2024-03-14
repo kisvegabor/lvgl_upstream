@@ -62,6 +62,24 @@ static const lv_i18n_lang_t en_lang = {
 static lv_i18n_phrase_t ar_singulars[] = {
     {"Language", "لغة"},
     {"Title", "عنوان"},
+    {"March 29", "29 مارس"},
+    {"Battery", "البطارية"},
+    {"Distance today", "المسافة اليوم"},
+    {"Speed today", "السرعة اليوم"},
+    {"Time today", "الوقت اليوم"},
+    {"SETTINGS", "الإعدادات"},
+    {"Bluetooth", "بلوتوث"},
+    {"Lights", "أضواء"},
+    {"Brightness", "السطوع"},
+    {"Volume", "الحجم"},
+    {"Max. speed", "الأعلى. السرعة"},
+    {"Light level", "مستوى الضوء"},
+    {"STATS", "إحصائيات"},
+    {"March %d - March %d", "مارس %d - مارس %d"},
+    {"Avg. speed", "متوسط ​​السرعة"},
+    {"Distance", "المسافة"},
+    {"Top speed", "السرعة القصوى"},
+    {"March %d", "مارس %d"},
     {NULL, NULL} // End mark
 };
 
@@ -91,6 +109,24 @@ static const lv_i18n_lang_t ar_lang = {
 static lv_i18n_phrase_t zh_singulars[] = {
     {"Language", "語言"},
     {"Title", "標題"},
+    {"March 29", "3月29日"},
+    {"Battery", "电池"},
+    {"Distance today", "今日距离"},
+    {"Speed today", "今天的速度"},
+    {"Time today", "今天时间"},
+    {"SETTINGS", "设置"},
+    {"Bluetooth", "蓝牙"},
+    {"Lights", "灯"},
+    {"Brightness", "亮度"},
+    {"Volume", "音量"},
+    {"Max. speed", "最大限度。速度"},
+    {"Light level", "光照强度"},
+    {"STATS", "统计"},
+    {"March %d - March %d", "三月 %d - 三月 %d"},
+    {"Avg. speed", "平均速度"},
+    {"Distance", "距离"},
+    {"Top speed", "最高时速"},
+    {"March %d", "三月 %d"},
     {NULL, NULL} // End mark
 };
 

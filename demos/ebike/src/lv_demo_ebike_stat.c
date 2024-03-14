@@ -154,7 +154,11 @@ static lv_obj_t * tabs_create(lv_obj_t * parent)
     lv_obj_set_style_text_font(btnm, &font_ebike_inter_14, LV_PART_ITEMS);
     lv_obj_set_style_text_color(btnm, lv_color_white(), LV_PART_ITEMS);
     lv_obj_set_style_text_color(btnm, EBIKE_COLOR_TURQUOISE, LV_PART_ITEMS | LV_STATE_FOCUSED);
-    static const char * texts[] = {"Avg. Speed", "Distance", "Top speed", ""};
+    static char * texts[4];
+    texts[0] = _("Avg. speed");
+    texts[1] = _("Distance");
+    texts[2] = _("Top speed");
+
     lv_buttonmatrix_set_map(btnm, texts);
 
     lv_obj_add_event_cb(btnm, tabs_click_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
@@ -292,7 +296,7 @@ static void chart_draw_event_cb(lv_event_t * e)
 
 
     char buf[32];
-    lv_snprintf(buf, sizeof(buf), "March %d", lv_subject_get_int(&subject_day));
+    lv_snprintf(buf, sizeof(buf), _("March %d"), lv_subject_get_int(&subject_day));
     LV_FONT_DECLARE(font_ebike_inter_14);
     lv_draw_label_dsc_t label_dsc;
     lv_draw_label_dsc_init(&label_dsc);

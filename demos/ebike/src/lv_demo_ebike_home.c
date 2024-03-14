@@ -307,7 +307,7 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_radius(battery, 12, 0);
     lv_obj_set_style_bg_color(battery, EBIKE_COLOR_LIME, LV_PART_INDICATOR);
     lv_obj_set_style_pad_column(battery, 16, 0);
-    //  lv_obj_set_style_text_color(battery, lv_color_black(), 0);
+    lv_obj_set_style_text_color(battery, lv_color_black(), 0);
     lv_obj_set_style_radius(battery, 6, LV_PART_INDICATOR);
     lv_bar_set_value(battery, 78, LV_ANIM_ON);
 
