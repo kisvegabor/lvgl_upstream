@@ -280,6 +280,64 @@ static lv_obj_t * card_labels_create(lv_obj_t * parent, const char * value, cons
     return main_cont;
 }
 
+static void bullet_scroll_event_cb(lv_event_t * e)
+{
+    lv_obj_t * main_cont = lv_event_get_target(e);
+    lv_obj_t * bullet_cont = lv_event_get_user_data(e);
+    int32_t scroll_x = lv_obj_get_scroll_x(main_cont);
+    int32_t w = lv_obj_get_content_width(main_cont);
+    int32_t idx = scroll_x / w;
+
+    uint32_t i;
+    uint32_t cnt = lv_obj_get_child_count(bullet_cont);
+    for(i = 0; i < cnt; i++) {
+        lv_obj_remove_state(lv_obj_get_child(bullet_cont, i), LV_STATE_CHECKED);
+    }
+    lv_obj_add_state(lv_obj_get_child(bullet_cont, idx), LV_STATE_CHECKED);
+}
+
+static lv_obj_t * bullets_create(lv_obj_t * parent)
+{
+    static bool inited = false;
+    static const lv_style_prop_t props[] = {LV_STYLE_BG_OPA, LV_STYLE_TRANSFORM_HEIGHT, LV_STYLE_TRANSFORM_WIDTH, LV_STYLE_PROP_INV};
+    static lv_style_transition_dsc_t dsc;
+
+    if(!inited) {
+        lv_style_transition_dsc_init(&dsc, props, lv_anim_path_linear, 200, 0, NULL);
+        inited = true;
+    }
+
+    uint32_t cnt = lv_obj_get_child_count(parent);
+
+    lv_obj_t * cont = lv_obj_create(parent);
+    lv_obj_set_style_bg_opa(cont, 0, 0);
+    lv_obj_add_flag(cont, LV_OBJ_FLAG_IGNORE_LAYOUT);
+    lv_obj_add_flag(cont, LV_OBJ_FLAG_FLOATING);
+    lv_obj_set_size(cont, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_align(cont, LV_ALIGN_TOP_MID, 0, 0);
+    lv_obj_set_style_pad_all(cont, 4, 0);
+
+    lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_gap(cont, 8, 0);
+
+    uint32_t i;
+    for(i = 0; i < cnt; i++) {
+        lv_obj_t * bullet = lv_obj_create(cont);
+        lv_obj_set_size(bullet, 5, 5);
+        lv_obj_set_style_transition(bullet, &dsc, 0);
+        lv_obj_set_style_radius(bullet, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_bg_color(bullet, lv_color_hex(0x000000), 0);
+        lv_obj_set_style_bg_opa(bullet, LV_OPA_50, 0);
+        lv_obj_set_style_bg_opa(bullet, LV_OPA_COVER, LV_STATE_CHECKED);
+        lv_obj_set_style_transform_width(bullet, 2, LV_STATE_CHECKED);
+        lv_obj_set_style_transform_height(bullet, 2, LV_STATE_CHECKED);
+    }
+
+    lv_obj_add_state(lv_obj_get_child(cont, 0), LV_STATE_CHECKED);
+    lv_obj_add_event_cb(parent, bullet_scroll_event_cb, LV_EVENT_SCROLL_END, cont);
+    return cont;
+}
+
 
 static lv_obj_t * right_cont_create(lv_obj_t * parent)
 {
@@ -309,10 +367,13 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_pad_column(battery, 16, 0);
     lv_obj_set_style_text_color(battery, lv_color_black(), 0);
     lv_obj_set_style_radius(battery, 6, LV_PART_INDICATOR);
-    lv_bar_set_value(battery, 78, LV_ANIM_ON);
+    lv_bar_set_value(battery, 82, LV_ANIM_ON);
+    lv_obj_set_scrollbar_mode(battery, LV_SCROLLBAR_MODE_OFF);
 
-    card_labels_create(battery, "78", "%", _("Battery"));
-    card_labels_create(battery, "29:37", "", _("Battery"));
+    card_labels_create(battery, "82", "%", _("Battery"));
+    card_labels_create(battery, "29:31", "", _("Battery"));
+
+    bullets_create(battery);
 
     lv_obj_t * dist = lv_obj_create(right_cont);
     lv_obj_set_size(dist, lv_pct(100), lv_pct(100));
@@ -325,10 +386,13 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_pad_column(dist, 16, 0);
     lv_obj_set_flex_flow(dist, LV_FLEX_FLOW_ROW);
     lv_obj_set_scroll_snap_x(dist, LV_SCROLL_SNAP_CENTER);
+    lv_obj_set_scrollbar_mode(dist, LV_SCROLLBAR_MODE_OFF);
 
     card_labels_create(dist, "16.4", "km", _("Distance today"));
     card_labels_create(dist, "20.1", "km/h", _("Speed today"));
     card_labels_create(dist, "43:12", "", _("Time today"));
+
+    bullets_create(dist);
 
     return right_cont;
 }

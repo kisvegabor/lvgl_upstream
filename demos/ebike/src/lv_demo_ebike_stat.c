@@ -264,15 +264,21 @@ static lv_obj_t * data_cont_create(lv_obj_t * parent)
 
     return cont;
 }
-static void chart_click_event_cb(lv_event_t * e)
+
+static uint32_t day_pressed;
+static void chart_value_changed_event_cb(lv_event_t * e)
 {
     lv_obj_t * chart = lv_event_get_target(e);
-    uint32_t idx = lv_chart_get_pressed_point(chart);
-    if(idx == 0) return;
+    day_pressed = lv_chart_get_pressed_point(chart);
+    if(day_pressed == 0) return;
 
-    lv_subject_set_int(&subject_day, idx);
 
 }
+static void chart_released_event_cb(lv_event_t * e)
+{
+    lv_subject_set_int(&subject_day, day_pressed);
+}
+
 
 static void chart_draw_event_cb(lv_event_t * e)
 {
@@ -280,7 +286,14 @@ static void chart_draw_event_cb(lv_event_t * e)
     lv_obj_t * cont = lv_obj_get_parent(chart);
     lv_draw_rect_dsc_t rect_dsc;
     lv_draw_rect_dsc_init(&rect_dsc);
-    rect_dsc.bg_opa = LV_OPA_30;
+    rect_dsc.bg_grad.dir = LV_GRAD_DIR_VER;
+    rect_dsc.bg_grad.stops_count = 2;
+    rect_dsc.bg_grad.stops[0].color = lv_color_hex(0x00C3BC);
+    rect_dsc.bg_grad.stops[0].opa = LV_OPA_0;
+    rect_dsc.bg_grad.stops[0].frac = 50;
+    rect_dsc.bg_grad.stops[1].color = lv_color_hex(0x8968B6);
+    rect_dsc.bg_grad.stops[1].opa = LV_OPA_100;
+    rect_dsc.bg_grad.stops[1].frac = 200;
 
     uint32_t day = lv_subject_get_int(&subject_day);
 
@@ -293,7 +306,6 @@ static void chart_draw_event_cb(lv_event_t * e)
     a.y1 = chart->coords.y1;
     a.y2 = chart->coords.y2;
     lv_draw_rect(lv_event_get_layer(e), &rect_dsc, &a);
-
 
     char buf[32];
     lv_snprintf(buf, sizeof(buf), _("March %d"), lv_subject_get_int(&subject_day));
@@ -344,13 +356,13 @@ static void chart_draw_task_event_cb(lv_event_t * e)
     tri_dsc.bg_grad.dir = LV_GRAD_DIR_VER;
 
     int32_t full_h = lv_obj_get_height(obj);
-    int32_t fract_uppter = (int32_t)(LV_MIN(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - obj->coords.y1) * 255 / full_h;
+    int32_t fract_upper = (int32_t)(LV_MIN(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - obj->coords.y1) * 255 / full_h;
     int32_t fract_lower = (int32_t)(LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - obj->coords.y1) * 255 / full_h;
-    tri_dsc.bg_grad.stops[0].color = ser->color;
-    tri_dsc.bg_grad.stops[0].opa = 255 - fract_uppter;
+    tri_dsc.bg_grad.stops[0].color = lv_color_hex(0x3987CF);
+    tri_dsc.bg_grad.stops[0].opa = 200 * (255 - fract_upper) / 256;
     tri_dsc.bg_grad.stops[0].frac = 0;
-    tri_dsc.bg_grad.stops[1].color = ser->color;
-    tri_dsc.bg_grad.stops[1].opa = 255 - fract_lower;
+    tri_dsc.bg_grad.stops[1].color = lv_color_hex(0x3987CF);
+    tri_dsc.bg_grad.stops[1].opa = 200 * (255 - fract_lower) / 256;
     tri_dsc.bg_grad.stops[1].frac = 255;
 
     lv_draw_triangle(base_dsc->layer, &tri_dsc);
@@ -359,10 +371,10 @@ static void chart_draw_task_event_cb(lv_event_t * e)
     lv_draw_rect_dsc_t rect_dsc;
     lv_draw_rect_dsc_init(&rect_dsc);
     rect_dsc.bg_grad.dir = LV_GRAD_DIR_VER;
-    rect_dsc.bg_grad.stops[0].color = ser->color;
+    rect_dsc.bg_grad.stops[0].color = lv_color_hex(0x3987CF);
     rect_dsc.bg_grad.stops[0].frac = 0;
-    rect_dsc.bg_grad.stops[0].opa = 255 - fract_lower;
-    rect_dsc.bg_grad.stops[1].color = ser->color;
+    rect_dsc.bg_grad.stops[0].opa = 200 * (255 - fract_lower) / 256;
+    rect_dsc.bg_grad.stops[1].color = lv_color_hex(0x3987CF);
     rect_dsc.bg_grad.stops[1].frac = 255;
     rect_dsc.bg_grad.stops[1].opa = 0;
 
@@ -372,6 +384,25 @@ static void chart_draw_task_event_cb(lv_event_t * e)
     rect_area.y1 = (int32_t)LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y);
     rect_area.y2 = (int32_t)obj->coords.y2;
     lv_draw_rect(base_dsc->layer, &rect_dsc, &rect_area);
+}
+
+static void chart_gesture_event_cb(lv_event_t * e)
+{
+    lv_dir_t d = lv_indev_get_gesture_dir(lv_indev_active());
+
+    int32_t week = lv_subject_get_int(&subject_week);
+    if(d == LV_DIR_RIGHT) {
+        if(week > 0) week--;
+    }
+    else if(d == LV_DIR_LEFT) {
+        if(week < 3) week++;
+    }
+    else {
+        return;
+    }
+
+    lv_indev_wait_release(lv_indev_active());
+    lv_subject_set_int(&subject_week, week);
 }
 
 static void chart_week_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
@@ -437,7 +468,7 @@ static lv_obj_t * chart_create(lv_obj_t * parent)
     lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_CIRCULAR);
     lv_chart_set_point_count(chart, 30);
     lv_chart_set_div_line_count(chart, 0, 0);
-    lv_obj_remove_flag(chart, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_remove_flag(chart, LV_OBJ_FLAG_GESTURE_BUBBLE);
     lv_obj_set_style_line_width(chart, 3, LV_PART_ITEMS);
     lv_obj_set_style_size(chart, 10, 10, LV_PART_INDICATOR);
     lv_obj_set_style_bg_opa(chart, LV_OPA_COVER, LV_PART_INDICATOR);
@@ -451,10 +482,12 @@ static lv_obj_t * chart_create(lv_obj_t * parent)
     lv_obj_set_style_margin_bottom(chart, 24, 0);
     lv_obj_set_style_max_height(chart, 200, 0);
 
-    lv_obj_add_event_cb(chart, chart_click_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_event_cb(chart, chart_value_changed_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_event_cb(chart, chart_released_event_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(chart, chart_draw_event_cb, LV_EVENT_DRAW_MAIN_BEGIN, NULL);
     lv_obj_add_event_cb(chart, chart_refr_ext_draw, LV_EVENT_REFR_EXT_DRAW_SIZE, NULL);
     lv_obj_add_event_cb(chart, chart_draw_task_event_cb, LV_EVENT_DRAW_TASK_ADDED, NULL);
+    lv_obj_add_event_cb(chart, chart_gesture_event_cb, LV_EVENT_GESTURE, NULL);
     lv_obj_add_flag(chart, LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS);
 
     lv_chart_series_t * ser = lv_chart_add_series(chart, lv_color_white(), 0);
