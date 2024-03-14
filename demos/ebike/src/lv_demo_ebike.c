@@ -53,7 +53,7 @@ void lv_demo_ebike_create(void)
     lv_i18n_init(lv_i18n_language_pack);
 
     lv_subject_init_int(&ebike_subject_speed, 0);
-    lv_subject_init_int(&ebike_subject_portrait, true);
+    lv_subject_init_int(&ebike_subject_portrait, false);
     lv_subject_init_int(&ebike_subject_language, 0);
     lv_demo_ebike_stat_init();
 
@@ -85,27 +85,30 @@ void lv_demo_ebike_create(void)
     lv_obj_set_size(menu_cont, 44, lv_pct(100));
     lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(menu_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_pad_gap(menu_cont, 32, 0);
+    lv_obj_set_style_pad_gap(menu_cont, 16, 0);
 
     LV_IMAGE_DECLARE(img_ebike_settings);
     lv_obj_t * icon1 = lv_image_create(menu_cont);
     lv_image_set_src(icon1, &img_ebike_settings);
     lv_obj_add_event_cb(icon1, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_ext_click_area(icon1, 32);
+    lv_obj_set_size(icon1, 44, 44);
+    lv_obj_set_ext_click_area(icon1, 8);
     lv_obj_add_flag(icon1, LV_OBJ_FLAG_CLICKABLE);
 
     LV_IMAGE_DECLARE(img_ebike_stat);
     lv_obj_t * icon2 = lv_image_create(menu_cont);
     lv_image_set_src(icon2, &img_ebike_stat);
     lv_obj_add_event_cb(icon2, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_ext_click_area(icon2, 32);
+    lv_obj_set_size(icon2, 44, 44);
+    lv_obj_set_ext_click_area(icon2, 8);
     lv_obj_add_flag(icon2, LV_OBJ_FLAG_CLICKABLE);
 
     LV_IMAGE_DECLARE(img_ebike_home);
     lv_obj_t * icon3 = lv_image_create(menu_cont);
     lv_image_set_src(icon3, &img_ebike_home);
     lv_obj_add_event_cb(icon3, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_ext_click_area(icon3, 32);
+    lv_obj_set_size(icon3, 44, 44);
+    lv_obj_set_ext_click_area(icon3, 8);
     lv_obj_add_flag(icon3, LV_OBJ_FLAG_CLICKABLE);
 
     lv_subject_add_observer_obj(&ebike_subject_portrait, screen_orientation_observer_cb, lv_screen_active(), NULL);
@@ -124,6 +127,12 @@ static void menu_item_click_event_cb(lv_event_t * e)
 
     lv_obj_t  * icon = lv_event_get_target(e);
     uint32_t idx = lv_obj_get_index(icon);
+
+    lv_obj_set_style_image_opa(lv_obj_get_child(menu_cont, 0), LV_OPA_50, 0);
+    lv_obj_set_style_image_opa(lv_obj_get_child(menu_cont, 1), LV_OPA_50, 0);
+    lv_obj_set_style_image_opa(lv_obj_get_child(menu_cont, 2), LV_OPA_50, 0);
+
+    lv_obj_set_style_image_opa(lv_obj_get_child(menu_cont, idx), LV_OPA_100, 0);
     switch(idx) {
         case 0:
             lv_demo_ebike_settings_create(main_cont);

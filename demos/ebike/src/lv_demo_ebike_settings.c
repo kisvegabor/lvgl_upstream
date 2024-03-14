@@ -156,7 +156,7 @@ static void sw_event_cb(lv_event_t * e)
 
 }
 
-static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, const char * value1, const char * value2)
+static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subject_t * subject)
 {
     LV_FONT_DECLARE(font_ebike_inter_14);
     lv_obj_t * cont = lv_obj_create(parent);
@@ -174,31 +174,17 @@ static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, const cha
     lv_label_set_text(label, title);
     lv_obj_set_width(label, lv_pct(100));
 
-    lv_obj_t * sw_bg = lv_obj_create(cont);
-    lv_obj_set_size(sw_bg, 80, 24);
-    lv_obj_set_ext_click_area(sw_bg, 16);
-    lv_obj_set_style_radius(sw_bg, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(sw_bg, EBIKE_COLOR_TURQUOISE, 0);
-    lv_obj_add_flag(sw_bg, LV_OBJ_FLAG_CHECKABLE);
-    lv_obj_add_event_cb(sw_bg, sw_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
-    lv_button_bind_checked(sw_bg, &ebike_subject_portrait);
+    lv_obj_t * sw = lv_switch_create(cont);
+    lv_obj_set_size(sw, 40, 24);
+    lv_obj_set_ext_click_area(sw, 32);
+    lv_obj_set_style_radius(sw, LV_RADIUS_CIRCLE, 0);
+    lv_obj_set_style_bg_color(sw, EBIKE_COLOR_TURQUOISE, 0);
 
+    lv_obj_set_style_radius(sw, LV_RADIUS_CIRCLE, LV_PART_KNOB);
+    lv_obj_set_style_bg_color(sw, lv_color_black(), LV_PART_KNOB);
+    lv_obj_set_style_pad_all(sw, -2, LV_PART_KNOB);
 
-    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
-    lv_obj_t * sw_knob = lv_obj_create(sw_bg);
-    lv_obj_set_size(sw_knob, 36, 18);
-    lv_obj_align(sw_knob, LV_ALIGN_LEFT_MID, portrait ? 41 : 3, 0);
-    lv_obj_set_ext_click_area(sw_knob, 16);
-    lv_obj_set_style_radius(sw_knob, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(sw_knob, lv_color_black(), 0);
-    lv_obj_set_style_outline_width(sw_knob, 1, 0);
-    lv_obj_set_style_outline_opa(sw_knob, 100, 0);
-    lv_obj_remove_flag(sw_knob, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_remove_flag(sw_knob, LV_OBJ_FLAG_CLICKABLE);
-
-    label = lv_label_create(sw_knob);
-    lv_label_set_text(label, value1);
-    lv_obj_center(label);
+    lv_button_bind_checked(sw, subject);
 
     return cont;
 }
@@ -267,7 +253,7 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     }
 
     dropdown_create(right_cont, _("Language"), "English\n中国人\nعربي", &ebike_subject_language);
-    switch_create(right_cont, _("Title"), "v1", "v2");
+    switch_create(right_cont, _("Title"), &ebike_subject_portrait);
     slider_create(right_cont, _("Title"), "Desc");
     slider_create(right_cont, _("Title"), "Desc");
     slider_create(right_cont, _("Title"), "Desc");
