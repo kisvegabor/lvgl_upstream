@@ -151,7 +151,8 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_arc_set_bg_angles(arc, 0, 90);
     lv_arc_set_rotation(arc, 130);
     lv_arc_set_range(arc, -20, 110);
-    lv_arc_bind_value(arc, &ebike_subject_speed);
+    lv_arc_bind_value(arc, &ebike_subject_speed_arc);
+    lv_obj_remove_flag(arc, LV_OBJ_FLAG_CLICKABLE);
 
     uint32_t i;
     for(i = 0; i < 5; i++) {
@@ -171,7 +172,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
         lv_obj_set_style_text_font(label, &font_ebike_19, 0);
         lv_obj_set_style_transform_pivot_x(label, lv_pct(100), 0);
         lv_obj_set_style_transform_pivot_y(label, lv_pct(50), 0);
-        lv_subject_add_observer_obj(&ebike_subject_speed, speed_label_observer_cb, label, (void *)((i + 1) * 20));
+        lv_subject_add_observer_obj(&ebike_subject_speed_arc, speed_label_observer_cb, label, (void *)((i + 1) * 20));
 
     }
 
@@ -208,13 +209,13 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     const char * opts1 = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
     lv_obj_t * roller_1 = roller_create(roller_cont, opts1, LV_ROLLER_MODE_NORMAL);
     lv_obj_align(roller_1, LV_ALIGN_LEFT_MID, 0, 0);
-    lv_subject_add_observer_obj(&ebike_subject_speed, speed_roller_10_observer_cb, roller_1, NULL);
+    lv_subject_add_observer_obj(&ebike_subject_speed_roller, speed_roller_10_observer_cb, roller_1, NULL);
 
     const char * opts2 =
         "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
     lv_obj_t * roller_10 = roller_create(roller_cont, opts2, LV_ROLLER_MODE_NORMAL);
     lv_obj_align(roller_10, LV_ALIGN_LEFT_MID, 50, 0);
-    lv_subject_add_observer_obj(&ebike_subject_speed, speed_roller_1_observer_cb, roller_10, NULL);
+    lv_subject_add_observer_obj(&ebike_subject_speed_roller, speed_roller_1_observer_cb, roller_10, NULL);
 
     lv_obj_t * bottom_cont = lv_obj_create(left_cont);
     lv_obj_set_style_bg_opa(bottom_cont, 0, 0);

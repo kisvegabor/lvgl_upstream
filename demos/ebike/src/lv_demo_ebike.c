@@ -25,18 +25,20 @@
  **********************/
 static void screen_orientation_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
 static void language_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
+static void menu_item_click_event_cb(lv_event_t * e);
+static void anim_timer_cb(lv_timer_t * t);
 
 /**********************
  *  STATIC VARIABLES
  **********************/
-static void menu_item_click_event_cb(lv_event_t * e);
 static lv_obj_t * main_cont;
 static lv_obj_t * menu_cont;
 
 /**********************
  *  GLOBAL VARIABLES
  **********************/
-lv_subject_t ebike_subject_speed;
+lv_subject_t ebike_subject_speed_arc;
+lv_subject_t ebike_subject_speed_roller;
 lv_subject_t ebike_subject_portrait;
 lv_subject_t ebike_subject_language;
 
@@ -52,7 +54,12 @@ void lv_demo_ebike_create(void)
 {
     lv_i18n_init(lv_i18n_language_pack);
 
-    lv_subject_init_int(&ebike_subject_speed, 0);
+    if(lv_group_get_default() == NULL) {
+        lv_group_set_default(lv_group_create());
+    }
+
+    lv_subject_init_int(&ebike_subject_speed_arc, 0);
+    lv_subject_init_int(&ebike_subject_speed_roller, 0);
     lv_subject_init_int(&ebike_subject_portrait, false);
     lv_subject_init_int(&ebike_subject_language, 0);
     lv_demo_ebike_stat_init();
@@ -94,6 +101,7 @@ void lv_demo_ebike_create(void)
     lv_obj_set_size(icon1, 44, 44);
     lv_obj_set_ext_click_area(icon1, 8);
     lv_obj_add_flag(icon1, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_image_opa(icon1, LV_OPA_50, 0);
 
     LV_IMAGE_DECLARE(img_ebike_stat);
     lv_obj_t * icon2 = lv_image_create(menu_cont);
@@ -102,6 +110,7 @@ void lv_demo_ebike_create(void)
     lv_obj_set_size(icon2, 44, 44);
     lv_obj_set_ext_click_area(icon2, 8);
     lv_obj_add_flag(icon2, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_image_opa(icon2, LV_OPA_50, 0);
 
     LV_IMAGE_DECLARE(img_ebike_home);
     lv_obj_t * icon3 = lv_image_create(menu_cont);
@@ -113,12 +122,35 @@ void lv_demo_ebike_create(void)
 
     lv_subject_add_observer_obj(&ebike_subject_portrait, screen_orientation_observer_cb, lv_screen_active(), NULL);
     lv_subject_add_observer_obj(&ebike_subject_language, language_observer_cb, lv_screen_active(), NULL);
+
+    lv_timer_create(anim_timer_cb, 2000, NULL);
 }
 
 /**********************
  *   STATIC FUNCTIONS
  **********************/
 
+
+static void set_subject_exec_cb(void * var, int32_t v)
+{
+    lv_subject_set_int(var, v);
+}
+
+static void anim_timer_cb(lv_timer_t * t)
+{
+    int32_t v = lv_rand(0, 90);
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, &ebike_subject_speed_arc);
+    lv_anim_set_values(&a, lv_subject_get_int(&ebike_subject_speed_arc), v);
+    lv_anim_set_duration(&a, 1000);
+    lv_anim_set_exec_cb(&a, set_subject_exec_cb);
+    lv_anim_start(&a);
+
+    lv_subject_set_int(&ebike_subject_speed_roller, v);
+
+}
 
 static void menu_item_click_event_cb(lv_event_t * e)
 {
