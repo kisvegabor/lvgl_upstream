@@ -745,8 +745,8 @@ static Matrix* _parseTransformationMatrix(const char* value)
             //Transform to signed.
             points[0] = fmod(points[0], 360);
             if (points[0] < 0) points[0] += 360;
-            auto c = cosf(points[0] * (M_PI / 180.0));
-            auto s = sinf(points[0] * (M_PI / 180.0));
+            auto c = cosf(points[0] * (MATH_PI / 180.0));
+            auto s = sinf(points[0] * (MATH_PI / 180.0));
             if (ptCount == 1) {
                 Matrix tmp = { c, -s, 0, s, c, 0, 0, 0, 1 };
                 *matrix = mathMultiply(matrix, &tmp);
@@ -769,12 +769,12 @@ static Matrix* _parseTransformationMatrix(const char* value)
             *matrix = mathMultiply(matrix, &tmp);
         } else if (state == MatrixState::SkewX) {
             if (ptCount != 1) goto error;
-            auto deg = tanf(points[0] * (M_PI / 180.0));
+            auto deg = tanf(points[0] * (MATH_PI / 180.0));
             Matrix tmp = { 1, deg, 0, 0, 1, 0, 0, 0, 1 };
             *matrix = mathMultiply(matrix, &tmp);
         } else if (state == MatrixState::SkewY) {
             if (ptCount != 1) goto error;
-            auto deg = tanf(points[0] * (M_PI / 180.0));
+            auto deg = tanf(points[0] * (MATH_PI / 180.0));
             Matrix tmp = { 1, 0, 0, deg, 1, 0, 0, 0, 1 };
             *matrix = mathMultiply(matrix, &tmp);
         }
