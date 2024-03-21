@@ -27,6 +27,7 @@ extern "C" {
  **********************/
 
 void lv_demo_ebike_stat_create(lv_obj_t * parent);
+void lv_demo_ebike_stat_init(void);
 
 /**********************
  *      MACROS

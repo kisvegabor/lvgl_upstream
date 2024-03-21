@@ -29,6 +29,7 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
+void lv_demo_ebike_create(void);
 
 /**********************
  * GLOBAL VARIABLES
