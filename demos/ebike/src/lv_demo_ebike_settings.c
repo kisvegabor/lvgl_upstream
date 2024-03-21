@@ -224,6 +224,7 @@ static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const c
     lv_obj_set_style_text_line_space(list, 16, 0);
     lv_obj_set_style_text_font(list, &font_ebike_inter_14, 0);
     lv_obj_set_style_pad_all(list, 16, 0);
+    return cont;
 }
 
 static lv_obj_t * right_cont_create(lv_obj_t * parent)
