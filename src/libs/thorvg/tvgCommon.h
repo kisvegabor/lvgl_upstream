@@ -87,4 +87,18 @@ uint16_t THORVG_VERSION_NUMBER();
 #define P(A) ((A)->pImpl)              //Access to pimpl.
 #define PP(A) (((Paint*)(A))->pImpl)   //Access to pimpl.
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+char *strdup(const char *src);
+int strcasecmp (const char *s1, const char *s2);
+
+#ifdef __cplusplus
+} /*extern "C"*/
+#endif
+
+
 #endif //_TVG_COMMON_H_

@@ -20,7 +20,7 @@ extern "C" {
  *********************/
 #define EBIKE_COLOR_TURQUOISE lv_color_hex(0x55FFEB)
 #define EBIKE_COLOR_LIME lv_color_hex(0x91FF3B)
-
+#define EBIKE_LOTTIE    1
 /**********************
  *      TYPEDEFS
  **********************/

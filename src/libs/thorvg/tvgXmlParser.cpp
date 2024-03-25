@@ -471,9 +471,12 @@ bool simpleXmlParseW3CAttribute(const char* buf, unsigned bufLength, simpleXMLAt
 
     if (!buf) return false;
 
+    char key_buf[end - buf + 1];
+    char val_buf[end - buf + 1];
+
     end = buf + bufLength;
-    key = (char*)alloca(end - buf + 1);
-    val = (char*)alloca(end - buf + 1);
+    key = (char*)key_buf;
+    val = (char*)val_buf;
 
     if (buf == end) return true;
 
