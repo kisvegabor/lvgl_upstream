@@ -133,21 +133,6 @@ static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 
 }
 
-static void sw_event_cb(lv_event_t * e)
-{
-    lv_obj_t * sw = lv_event_get_target(e);
-    lv_obj_t * knob = lv_obj_get_child(sw, 0);
-    bool chk = lv_obj_has_state(sw, LV_STATE_CHECKED);
-
-    lv_anim_t a;
-    lv_anim_init(&a);
-    lv_anim_set_values(&a, lv_obj_get_x(knob), chk ? 41 : 3);
-    lv_anim_set_var(&a, knob);
-    lv_anim_set_duration(&a, 200);
-    lv_anim_set_exec_cb(&a, lv_obj_set_x);
-    lv_anim_start(&a);
-
-}
 
 static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subject_t * subject)
 {
