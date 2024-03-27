@@ -31,6 +31,7 @@ static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 static lv_obj_t * left_cont;
 static lv_obj_t * main_cont;
 static lv_obj_t * settings_img;
+uint8_t lottile_buf[100 * 100 * 4];
 
 /**********************
  *      MACROS
@@ -80,8 +81,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
         0x00 /*Close the string*/
     };
 
-    static uint8_t buf[150 * 150 * 4];
-    settings_img = lv_lottie_create(cont, settings_lottie, sizeof(settings_lottie), 150, 150, buf, sizeof(buf));
+    settings_img = lv_lottie_create(cont, settings_lottie, sizeof(settings_lottie), 100, 100, lottile_buf);
 #else
     LV_IMAGE_DECLARE(img_ebike_settings_large);
     lv_obj_t * settings_img = lv_image_create(cont);

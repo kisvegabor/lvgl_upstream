@@ -109,8 +109,8 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
         0x00 /*Close the string*/
     };
 
-    static uint8_t buf[150 * 150 * 4];
-    lv_obj_t * img = lv_lottie_create(left_cont, stat_lottie, sizeof(stat_lottie), 150, 150, buf, sizeof(buf));
+    extern uint8_t lottile_buf[];
+    lv_obj_t * img = lv_lottie_create(left_cont, stat_lottie, sizeof(stat_lottie), 100, 100, lottile_buf);
 #else
     LV_IMAGE_DECLARE(img_ebike_stat_large);
     lv_obj_t * img = lv_image_create(left_cont);

@@ -72,9 +72,14 @@ void lv_demo_ebike_create(void)
     lv_obj_remove_flag(lv_screen_active(), LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_text_color(lv_screen_active(), lv_color_white(), 0);
 
-    LV_IMAGE_DECLARE(img_ebike_bg_large);
     lv_obj_t * bg = lv_image_create(lv_screen_active());
-    lv_image_set_src(bg, &img_ebike_bg_large);
+
+    LV_IMAGE_DECLARE(img_ebike_bg);
+    lv_image_set_src(bg, &img_ebike_bg);
+
+    //    LV_IMAGE_DECLARE(img_ebike_bg_large);
+    //    lv_image_set_src(bg, &img_ebike_bg_large);
+
     lv_obj_align(bg, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_flag(bg, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_image_set_inner_align(bg, LV_IMAGE_ALIGN_TILE);

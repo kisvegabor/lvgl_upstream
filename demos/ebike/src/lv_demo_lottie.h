@@ -26,8 +26,7 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
-lv_obj_t  * lv_lottie_create(lv_obj_t * parent, const char * src, size_t src_size, int32_t w, int32_t h, uint8_t * buf,
-                             size_t buf_size);
+lv_obj_t  * lv_lottie_create(lv_obj_t * parent, const char * src, size_t src_size, int32_t w, int32_t h, uint8_t * buf);
 
 /**********************
  * GLOBAL VARIABLES
