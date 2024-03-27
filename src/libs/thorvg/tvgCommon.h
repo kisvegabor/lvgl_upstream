@@ -93,8 +93,10 @@ uint16_t THORVG_VERSION_NUMBER();
 extern "C" {
 #endif
 
+#ifndef unix
 char *strdup(const char *src);
 int strcasecmp (const char *s1, const char *s2);
+#endif
 
 #ifdef __cplusplus
 } /*extern "C"*/
