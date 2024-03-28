@@ -88,13 +88,6 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_image_set_src(settings_img, &img_ebike_settings_large);
 #endif
 
-    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
-    if(portrait) {
-        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
-    }
-    else {
-        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
-    }
     return cont;
 }
 
@@ -139,7 +132,7 @@ static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
     bool portrait = lv_subject_get_int(&ebike_subject_portrait);
     if(portrait) {
         lv_obj_set_size(left_cont, lv_pct(100), 120);
-        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
         lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
     }
     else {
@@ -249,8 +242,8 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(right_cont, 0, 0);
     lv_obj_set_flex_flow(right_cont, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_ver(right_cont, 12, 0);
-    lv_obj_set_style_pad_right(right_cont, 8, 0);
-    lv_obj_set_style_pad_gap(right_cont, 8, 0);
+    lv_obj_set_style_pad_hor(right_cont, 12, 0);
+    lv_obj_set_style_pad_gap(right_cont, 12, 0);
     lv_obj_set_style_width(right_cont, 3, LV_PART_SCROLLBAR);
     lv_obj_set_style_pad_ver(right_cont, 8, LV_PART_SCROLLBAR);
     lv_obj_set_style_radius(right_cont, 2, LV_PART_SCROLLBAR);

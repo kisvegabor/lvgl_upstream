@@ -167,7 +167,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_set_style_arc_color(arc, EBIKE_COLOR_TURQUOISE, LV_PART_INDICATOR);
     lv_arc_set_rotation(arc, 130);
     lv_arc_bind_value(arc, &ebike_subject_speed_arc);
-    //    lv_obj_remove_flag(arc, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_remove_flag(arc, LV_OBJ_FLAG_CLICKABLE);
 
     uint32_t i;
     uint32_t i_max = EBIKE_ARC_LARGE ? 6 : 5;

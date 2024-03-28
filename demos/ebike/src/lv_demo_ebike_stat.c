@@ -118,7 +118,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
 #endif
 
     if(portrait) {
-        lv_obj_align(img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+        lv_obj_align(img, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
     }
     else {
         lv_obj_align(img, LV_ALIGN_BOTTOM_MID, 0, 0);
@@ -476,7 +476,7 @@ static lv_obj_t * chart_create(lv_obj_t * parent)
     lv_obj_set_style_border_side(chart, LV_BORDER_SIDE_BOTTOM, 0);
     lv_obj_set_style_bg_opa(chart, 0, 0);
     lv_obj_set_style_margin_bottom(chart, 24, 0);
-    lv_obj_set_style_max_height(chart, 200, 0);
+    lv_obj_set_style_max_height(chart, 250, 0);
 
     lv_obj_add_event_cb(chart, chart_value_changed_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_add_event_cb(chart, chart_released_event_cb, LV_EVENT_RELEASED, NULL);
@@ -508,6 +508,7 @@ static lv_obj_t * stat_card_create(lv_obj_t * parent, const char * name, lv_subj
 {
     lv_obj_t * cont = lv_obj_create(parent);
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_flex_grow(cont, 1);
     lv_obj_set_height(cont, LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(cont, 0, 0);
@@ -546,8 +547,9 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     lv_obj_set_flex_flow(right_cont, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_flex_main_place(right_cont, LV_FLEX_ALIGN_SPACE_BETWEEN, 0);
     lv_obj_set_style_pad_ver(right_cont, 12, 0);
-    lv_obj_set_style_pad_right(right_cont, 8, 0);
-    lv_obj_set_style_pad_gap(right_cont, 8, 0);
+    lv_obj_set_style_pad_hor(right_cont, 12, 0);
+    lv_obj_set_style_pad_top(right_cont, 24, 0);
+    lv_obj_set_style_pad_gap(right_cont, 48, 0);
     lv_obj_set_height(right_cont, lv_pct(100));
 
     tabs_create(right_cont);
