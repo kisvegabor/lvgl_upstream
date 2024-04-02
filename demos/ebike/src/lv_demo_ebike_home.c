@@ -85,7 +85,7 @@ static void speed_roller_10_observer_cb(lv_observer_t * observer, lv_subject_t *
 {
     lv_obj_t * roller = lv_observer_get_target_obj(observer);
     int32_t speed = lv_subject_get_int(subject);
-    lv_roller_set_selected(roller, speed / 10, LV_ANIM_ON);
+    lv_label_set_text_fmt(roller, "%02d", speed);
 }
 
 static void speed_roller_1_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
@@ -163,7 +163,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_set_style_arc_width(arc, 20 * 2, 0);
     lv_obj_set_style_arc_width(arc, 20 * 2, LV_PART_INDICATOR);
     lv_obj_set_style_bg_opa(arc, LV_OPA_0, LV_PART_KNOB);
-    lv_obj_set_style_arc_opa(arc, LV_OPA_40, 0);
+    lv_obj_set_style_arc_opa(arc, LV_OPA_0, 0);
     lv_obj_set_style_arc_color(arc, EBIKE_COLOR_TURQUOISE, LV_PART_INDICATOR);
     lv_arc_set_rotation(arc, 110);
     lv_arc_bind_value(arc, &ebike_subject_speed_arc);
@@ -236,16 +236,11 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(roller_cont, 0, 0);
     lv_obj_align(roller_cont, LV_ALIGN_CENTER, 0, 0);
 
-    const char * opts1 = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
-    lv_obj_t * roller_1 = roller_create(roller_cont, opts1, LV_ROLLER_MODE_NORMAL);
-    lv_obj_align(roller_1, LV_ALIGN_LEFT_MID, 0, 0);
-    lv_subject_add_observer_obj(&ebike_subject_speed_roller, speed_roller_10_observer_cb, roller_1, NULL);
-
-    const char * opts2 =
-        "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
-    lv_obj_t * roller_10 = roller_create(roller_cont, opts2, LV_ROLLER_MODE_NORMAL);
-    lv_obj_align(roller_10, LV_ALIGN_LEFT_MID, 125, 0);
-    lv_subject_add_observer_obj(&ebike_subject_speed_roller, speed_roller_1_observer_cb, roller_10, NULL);
+    LV_FONT_DECLARE(font_ebike_trump_325);
+    lv_obj_t * label = lv_label_create(roller_cont);
+    lv_obj_set_style_text_font(label, &font_ebike_trump_325, 0);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_subject_add_observer_obj(&ebike_subject_speed_arc, speed_roller_10_observer_cb, label, NULL);
 
     lv_obj_t * bottom_cont = lv_obj_create(left_cont);
     lv_obj_set_style_bg_opa(bottom_cont, 0, 0);

@@ -150,11 +150,10 @@ static void anim_timer_cb(lv_timer_t * t)
     lv_anim_init(&a);
     lv_anim_set_var(&a, &ebike_subject_speed_arc);
     lv_anim_set_values(&a, lv_subject_get_int(&ebike_subject_speed_arc), v);
-    lv_anim_set_duration(&a, 1000);
+    lv_anim_set_duration(&a, 1800);
     lv_anim_set_exec_cb(&a, set_subject_exec_cb);
     lv_anim_start(&a);
-
-    lv_subject_set_int(&ebike_subject_speed_roller, v);
+    lv_anim_start(&a);
 
 }
 
