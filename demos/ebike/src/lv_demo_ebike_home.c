@@ -78,7 +78,9 @@ static void speed_label_observer_cb(lv_observer_t * observer, lv_subject_t * sub
 
     label_v = LV_ABS(label_v - speed);
     uint32_t zoom = lv_map(label_v, 0, 20, 512, 256);
-    lv_obj_set_style_transform_scale(label, zoom, 0);
+    if(zoom != lv_obj_get_style_transform_scale_x(label, 0)) {
+        lv_obj_set_style_transform_scale(label, zoom, 0);
+    }
 }
 
 static void speed_roller_10_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
