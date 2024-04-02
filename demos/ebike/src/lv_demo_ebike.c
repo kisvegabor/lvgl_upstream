@@ -83,7 +83,7 @@ void lv_demo_ebike_create(void)
     lv_obj_align(bg, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_flag(bg, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_image_set_inner_align(bg, LV_IMAGE_ALIGN_TILE);
-    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0xffeeaa), 0);
+    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x004488), 0);
 
     main_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
@@ -95,17 +95,17 @@ void lv_demo_ebike_create(void)
 
     menu_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_style_bg_color(menu_cont, lv_color_black(), 0);
-    lv_obj_set_size(menu_cont, 44, lv_pct(100));
+    lv_obj_set_size(menu_cont, 44 * 2.5, lv_pct(100));
     lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(menu_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_pad_gap(menu_cont, 16, 0);
+    lv_obj_set_style_pad_gap(menu_cont, 16 * 2.5, 0);
 
     LV_IMAGE_DECLARE(img_ebike_settings);
     lv_obj_t * icon1 = lv_image_create(menu_cont);
     lv_image_set_src(icon1, &img_ebike_settings);
     lv_obj_add_event_cb(icon1, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_size(icon1, 44, 44);
-    lv_obj_set_ext_click_area(icon1, 8);
+    lv_obj_set_size(icon1, 44 * 2.5, 44 * 2.5);
+    lv_obj_set_ext_click_area(icon1, 8 * 2.5);
     lv_obj_add_flag(icon1, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_style_image_opa(icon1, LV_OPA_50, 0);
 
@@ -113,8 +113,8 @@ void lv_demo_ebike_create(void)
     lv_obj_t * icon2 = lv_image_create(menu_cont);
     lv_image_set_src(icon2, &img_ebike_stat);
     lv_obj_add_event_cb(icon2, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_size(icon2, 44, 44);
-    lv_obj_set_ext_click_area(icon2, 8);
+    lv_obj_set_size(icon2, 44 * 2.5, 44 * 2.5);
+    lv_obj_set_ext_click_area(icon2, 8 * 2.5);
     lv_obj_add_flag(icon2, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_style_image_opa(icon2, LV_OPA_50, 0);
 
@@ -122,8 +122,8 @@ void lv_demo_ebike_create(void)
     lv_obj_t * icon3 = lv_image_create(menu_cont);
     lv_image_set_src(icon3, &img_ebike_home);
     lv_obj_add_event_cb(icon3, menu_item_click_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_size(icon3, 44, 44);
-    lv_obj_set_ext_click_area(icon3, 8);
+    lv_obj_set_size(icon3, 44 * 2.5, 44 * 2.5);
+    lv_obj_set_ext_click_area(icon3, 8 * 2.5);
     lv_obj_add_flag(icon3, LV_OBJ_FLAG_CLICKABLE);
 
     lv_subject_add_observer_obj(&ebike_subject_portrait, screen_orientation_observer_cb, lv_screen_active(), NULL);
@@ -213,14 +213,14 @@ static void screen_orientation_observer_cb(lv_observer_t * observer, lv_subject_
     bool portrait = lv_subject_get_int(&ebike_subject_portrait);
 
     if(portrait) {
-        lv_obj_set_size(menu_cont, lv_pct(100), 44);
+        lv_obj_set_size(menu_cont, lv_pct(100), 44 * 2.5);
         lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_ROW);
         lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_COLUMN);
         lv_obj_update_layout(lv_screen_active());
         lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_COLUMN);
     }
     else {
-        lv_obj_set_size(menu_cont, 44, lv_pct(100));
+        lv_obj_set_size(menu_cont, 44 * 2.5, lv_pct(100));
         lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_COLUMN);
         lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW);
         lv_obj_update_layout(lv_screen_active());

@@ -70,7 +70,7 @@ lv_obj_t * lv_lottie_create(lv_obj_t * parent, const char * src, size_t src_size
     lv_obj_add_event_cb(lv_canvas, delete_event_cb, LV_EVENT_DELETE, NULL);
 
 
-    dsc->timer = lv_timer_create(anim_timer_cb, 20, lv_canvas);
+    dsc->timer = lv_timer_create(anim_timer_cb, 16, lv_canvas);
 
     return lv_canvas;
 }

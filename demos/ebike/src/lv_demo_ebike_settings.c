@@ -31,7 +31,7 @@ static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 static lv_obj_t * left_cont;
 static lv_obj_t * main_cont;
 static lv_obj_t * settings_img;
-uint8_t lottile_buf[100 * 100 * 4];
+uint8_t lottile_buf[250 * 250 * 4];
 
 /**********************
  *      MACROS
@@ -69,11 +69,11 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_set_style_bg_opa(cont, 0, 0);
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
 
-    LV_FONT_DECLARE(font_ebike_trump_24);
+    LV_FONT_DECLARE(font_ebike_trump_60);
     lv_obj_t * label = lv_label_create(cont);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 24, 16);
     lv_label_set_text(label, _("SETTINGS"));
-    lv_obj_set_style_text_font(label, &font_ebike_trump_24, 0);
+    lv_obj_set_style_text_font(label, &font_ebike_trump_60, 0);
 
 #if EBIKE_LOTTIE
     static const char settings_lottie[] = {
@@ -81,7 +81,7 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
         0x00 /*Close the string*/
     };
 
-    settings_img = lv_lottie_create(cont, settings_lottie, sizeof(settings_lottie), 100, 100, lottile_buf);
+    settings_img = lv_lottie_create(cont, settings_lottie, sizeof(settings_lottie), 100 * 2.5, 100 * 2.5, lottile_buf);
 #else
     LV_IMAGE_DECLARE(img_ebike_settings_large);
     lv_obj_t * settings_img = lv_image_create(cont);
@@ -94,14 +94,14 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
 
 static lv_obj_t * slider_create(lv_obj_t * parent, const char * title)
 {
-    LV_FONT_DECLARE(font_ebike_inter_14);
+    LV_FONT_DECLARE(font_ebike_inter_35);
     lv_obj_t * main_cont = lv_obj_create(parent);
     lv_obj_set_size(main_cont, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_text_font(main_cont, &font_ebike_inter_14, 0);
-    lv_obj_set_style_pad_all(main_cont, 10, 0);
-    lv_obj_set_style_pad_column(main_cont, 4, 0);
+    lv_obj_set_style_text_font(main_cont, &font_ebike_inter_35, 0);
+    lv_obj_set_style_pad_all(main_cont, 10 * 2.5, 0);
+    lv_obj_set_style_pad_column(main_cont, 4 * 2.5, 0);
 
     lv_obj_t * label;
     label = lv_label_create(main_cont);
@@ -109,19 +109,19 @@ static lv_obj_t * slider_create(lv_obj_t * parent, const char * title)
     lv_obj_set_width(label, lv_pct(100));
 
     lv_obj_t * slider = lv_slider_create(main_cont);
-    lv_obj_set_size(slider, lv_pct(100), 4);
-    lv_obj_set_ext_click_area(slider, 24);
+    lv_obj_set_size(slider, lv_pct(100), 4 * 2.5);
+    lv_obj_set_ext_click_area(slider, 24 * 2.5);
     lv_obj_set_style_bg_opa(slider, LV_OPA_30, 0);
     lv_obj_set_style_radius(slider, LV_RADIUS_CIRCLE, 0);
     lv_obj_set_style_bg_color(slider, EBIKE_COLOR_TURQUOISE, 0);
     lv_obj_set_style_bg_color(slider, EBIKE_COLOR_TURQUOISE, LV_PART_INDICATOR);
     lv_obj_set_style_radius(slider, LV_RADIUS_CIRCLE, LV_PART_INDICATOR);
-    lv_obj_set_style_pad_all(slider, 8, LV_PART_KNOB);
+    lv_obj_set_style_pad_all(slider, 8 * 2.5, LV_PART_KNOB);
     lv_obj_set_style_radius(slider, LV_RADIUS_CIRCLE, LV_PART_KNOB);
-    lv_obj_set_style_border_width(slider, 4, LV_PART_KNOB);
+    lv_obj_set_style_border_width(slider, 4 * 2.5, LV_PART_KNOB);
     lv_obj_set_style_border_color(slider, EBIKE_COLOR_TURQUOISE, LV_PART_KNOB);
     lv_obj_set_style_bg_color(slider, lv_color_black(), LV_PART_KNOB);
-    lv_obj_set_style_margin_top(slider, 12, 0);
+    lv_obj_set_style_margin_top(slider, 12 * 2.5, 0);
 
     return main_cont;
 }
@@ -131,12 +131,12 @@ static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
     bool portrait = lv_subject_get_int(&ebike_subject_portrait);
     if(portrait) {
-        lv_obj_set_size(left_cont, lv_pct(100), 120);
+        lv_obj_set_size(left_cont, lv_pct(100), 120 * 2.5);
         lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
         lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
     }
     else {
-        lv_obj_set_size(left_cont, 164, lv_pct(100));
+        lv_obj_set_size(left_cont, 164 * 2.5, lv_pct(100));
         lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
         lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
     }
@@ -161,16 +161,16 @@ static void sw_event_cb(lv_event_t * e)
 
 static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subject_t * subject)
 {
-    LV_FONT_DECLARE(font_ebike_inter_14);
+    LV_FONT_DECLARE(font_ebike_inter_35);
     lv_obj_t * cont = lv_obj_create(parent);
     lv_obj_set_size(cont, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(cont, 0, 0);
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_flex_main_place(cont, LV_FLEX_ALIGN_SPACE_BETWEEN, 0);
     lv_obj_set_style_flex_cross_place(cont, LV_FLEX_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_font(cont, &font_ebike_inter_14, 0);
-    lv_obj_set_style_pad_all(cont, 10, 0);
-    lv_obj_set_style_pad_column(cont, 4, 0);
+    lv_obj_set_style_text_font(cont, &font_ebike_inter_35, 0);
+    lv_obj_set_style_pad_all(cont, 10 * 2.5, 0);
+    lv_obj_set_style_pad_column(cont, 4 * 2.5, 0);
 
     lv_obj_t * label;
     label = lv_label_create(cont);
@@ -178,14 +178,14 @@ static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subjec
     lv_obj_set_width(label, lv_pct(100));
 
     lv_obj_t * sw = lv_switch_create(cont);
-    lv_obj_set_size(sw, 40, 24);
-    lv_obj_set_ext_click_area(sw, 32);
+    lv_obj_set_size(sw, 40 * 2.5, 24 * 2.5);
+    lv_obj_set_ext_click_area(sw, 32 * 2.5);
     lv_obj_set_style_radius(sw, LV_RADIUS_CIRCLE, 0);
     lv_obj_set_style_bg_color(sw, EBIKE_COLOR_TURQUOISE, 0);
 
     lv_obj_set_style_radius(sw, LV_RADIUS_CIRCLE, LV_PART_KNOB);
     lv_obj_set_style_bg_color(sw, lv_color_black(), LV_PART_KNOB);
-    lv_obj_set_style_pad_all(sw, -2, LV_PART_KNOB);
+    lv_obj_set_style_pad_all(sw, -2 * 2.5, LV_PART_KNOB);
 
     if(subject) lv_button_bind_checked(sw, subject);
 
@@ -196,16 +196,16 @@ static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subjec
 static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const char * options, lv_subject_t * subject)
 {
 
-    LV_FONT_DECLARE(font_ebike_inter_14);
+    LV_FONT_DECLARE(font_ebike_inter_35);
     lv_obj_t * cont = lv_obj_create(parent);
     lv_obj_set_size(cont, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(cont, 0, 0);
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_flex_main_place(cont, LV_FLEX_ALIGN_SPACE_BETWEEN, 0);
     lv_obj_set_style_flex_cross_place(cont, LV_FLEX_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_font(cont, &font_ebike_inter_14, 0);
-    lv_obj_set_style_pad_all(cont, 10, 0);
-    lv_obj_set_style_pad_column(cont, 4, 0);
+    lv_obj_set_style_text_font(cont, &font_ebike_inter_35, 0);
+    lv_obj_set_style_pad_all(cont, 10 * 2.5, 0);
+    lv_obj_set_style_pad_column(cont, 4 * 2.5, 0);
 
     lv_obj_t * label;
     label = lv_label_create(cont);
@@ -217,9 +217,9 @@ static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const c
     lv_dropdown_set_options(dd, options);
     lv_obj_set_style_bg_color(dd, EBIKE_COLOR_TURQUOISE, 0);
     lv_obj_set_style_bg_opa(dd, LV_OPA_40, 0);
-    lv_obj_set_style_radius(dd, 4, 0);
-    lv_obj_set_width(dd, 150);
-    lv_obj_set_style_pad_all(dd, 8, 0);
+    lv_obj_set_style_radius(dd, 4 * 2.5, 0);
+    lv_obj_set_width(dd, 150 * 2.5);
+    lv_obj_set_style_pad_all(dd, 8 * 2.5, 0);
     lv_dropdown_set_symbol(dd, &img_ebike_dropdown_icon);
     lv_dropdown_bind_value(dd, subject);
 
@@ -230,10 +230,10 @@ static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const c
     lv_obj_set_style_bg_opa(list, LV_OPA_20, LV_PART_SELECTED | LV_STATE_CHECKED);
     lv_obj_set_style_bg_color(list, EBIKE_COLOR_TURQUOISE, LV_PART_SELECTED | LV_STATE_PRESSED);
     lv_obj_set_style_bg_opa(list, LV_OPA_40, LV_PART_SELECTED | LV_STATE_PRESSED);
-    lv_obj_set_style_radius(list, 4, 0);
-    lv_obj_set_style_text_line_space(list, 16, 0);
-    lv_obj_set_style_text_font(list, &font_ebike_inter_14, 0);
-    lv_obj_set_style_pad_all(list, 16, 0);
+    lv_obj_set_style_radius(list, 4 * 2.5, 0);
+    lv_obj_set_style_text_line_space(list, 16 * 2.5, 0);
+    lv_obj_set_style_text_font(list, &font_ebike_inter_35, 0);
+    lv_obj_set_style_pad_all(list, 16 * 2.5, 0);
 }
 
 static lv_obj_t * right_cont_create(lv_obj_t * parent)
