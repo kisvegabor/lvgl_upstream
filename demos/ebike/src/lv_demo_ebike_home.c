@@ -236,12 +236,11 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     lv_obj_t * roller_cont = lv_obj_create(dashboard_center_cont);
     lv_obj_set_size(roller_cont, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(roller_cont, 0, 0);
-    lv_obj_align(roller_cont, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(roller_cont, LV_ALIGN_LEFT_MID, 45, 0);
 
     LV_FONT_DECLARE(font_ebike_trump_325);
     lv_obj_t * label = lv_label_create(roller_cont);
     lv_obj_set_style_text_font(label, &font_ebike_trump_325, 0);
-    lv_obj_align(label, LV_ALIGN_LEFT_MID, 0, 0);
     lv_subject_add_observer_obj(&ebike_subject_speed_arc, speed_roller_10_observer_cb, label, NULL);
 
     lv_obj_t * bottom_cont = lv_obj_create(left_cont);
