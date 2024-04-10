@@ -233,6 +233,7 @@ static lv_obj_t * data_cont_create(lv_obj_t * parent)
     LV_IMAGE_DECLARE(img_ebike_arrow_right_2);
     LV_FONT_DECLARE(font_ebike_inter_14);
     LV_FONT_DECLARE(font_ebike_trump_48);
+    LV_FONT_DECLARE(font_ebike_inter_10);
 
     left_arrow = lv_image_create(cont);
     lv_image_set_src(left_arrow, &img_ebike_arrow_left_2);
@@ -250,7 +251,7 @@ static lv_obj_t * data_cont_create(lv_obj_t * parent)
 
     label = lv_label_create(cont);
     lv_label_set_text(label, "March 18 - March 25");
-    lv_obj_set_style_text_font(label, &font_ebike_inter_14, 0);
+    lv_obj_set_style_text_font(label, &font_ebike_inter_10, 0);
 
     right_arrow = lv_image_create(cont);
     lv_image_set_src(right_arrow, &img_ebike_arrow_right_2);
@@ -292,7 +293,7 @@ static void chart_draw_event_cb(lv_event_t * e)
     rect_dsc.bg_grad.stops[0].opa = LV_OPA_0;
     rect_dsc.bg_grad.stops[0].frac = 50;
     rect_dsc.bg_grad.stops[1].color = lv_color_hex(0x8968B6);
-    rect_dsc.bg_grad.stops[1].opa = LV_OPA_100;
+    rect_dsc.bg_grad.stops[1].opa = LV_OPA_30;
     rect_dsc.bg_grad.stops[1].frac = 200;
 
     uint32_t day = lv_subject_get_int(&subject_day);
@@ -303,16 +304,16 @@ static void chart_draw_event_cb(lv_event_t * e)
     lv_area_t a;
     a.x1 = chart->coords.x1 + p.x - w / 2;
     a.x2 = chart->coords.x1 + p.x + w / 2;
-    a.y1 = chart->coords.y1;
-    a.y2 = chart->coords.y2;
+    a.y1 = chart->coords.y1 - 25;
+    a.y2 = chart->coords.y2 - 1;
     lv_draw_rect(lv_event_get_layer(e), &rect_dsc, &a);
 
     char buf[32];
     lv_snprintf(buf, sizeof(buf), _("March %d"), lv_subject_get_int(&subject_day));
-    LV_FONT_DECLARE(font_ebike_inter_14);
+    LV_FONT_DECLARE(font_ebike_inter_10);
     lv_draw_label_dsc_t label_dsc;
     lv_draw_label_dsc_init(&label_dsc);
-    label_dsc.font = &font_ebike_inter_14;
+    label_dsc.font = &font_ebike_inter_10;
     label_dsc.color = lv_color_white();
     label_dsc.text = buf;
     label_dsc.text_local = 1;
@@ -469,14 +470,14 @@ static lv_obj_t * chart_create(lv_obj_t * parent)
     lv_chart_set_point_count(chart, 30);
     lv_chart_set_div_line_count(chart, 0, 0);
     lv_obj_remove_flag(chart, LV_OBJ_FLAG_GESTURE_BUBBLE);
-    lv_obj_set_style_line_width(chart, 3, LV_PART_ITEMS);
-    lv_obj_set_style_size(chart, 10, 10, LV_PART_INDICATOR);
-    lv_obj_set_style_bg_opa(chart, LV_OPA_COVER, LV_PART_INDICATOR);
-    lv_obj_set_style_bg_color(chart, lv_color_black(), LV_PART_INDICATOR);
+    lv_obj_set_style_line_width(chart, 2, LV_PART_ITEMS);
+    lv_obj_set_style_size(chart, 8, 8, LV_PART_INDICATOR);
+    lv_obj_set_style_bg_opa(chart, LV_OPA_100, LV_PART_INDICATOR);
     lv_obj_set_style_radius(chart, LV_RADIUS_CIRCLE, LV_PART_INDICATOR);
-    lv_obj_set_style_border_color(chart, lv_color_black(), LV_PART_INDICATOR);
-    lv_obj_set_style_border_width(chart, 2, LV_PART_INDICATOR);
+    lv_obj_set_style_border_color(chart, lv_color_white(), LV_PART_INDICATOR);
+    lv_obj_set_style_border_width(chart, 1, LV_PART_INDICATOR);
     lv_obj_set_style_border_width(chart, 1, 0);
+    lv_obj_set_style_border_opa(chart, LV_OPA_20, 0);
     lv_obj_set_style_border_side(chart, LV_BORDER_SIDE_BOTTOM, 0);
     lv_obj_set_style_bg_opa(chart, 0, 0);
     lv_obj_set_style_margin_bottom(chart, 24, 0);
@@ -534,7 +535,8 @@ static lv_obj_t * stat_cont_create(lv_obj_t * parent)
     lv_obj_t * cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(cont, 0, 0);
     lv_obj_set_size(cont, lv_pct(100), LV_SIZE_CONTENT);
-    lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_flex_main_place(cont, LV_FLEX_ALIGN_SPACE_EVENLY);
 
     stat_card_create(cont, _("Avg. speed"), &subject_avg_speed, "%dkm/h");
     stat_card_create(cont, _("Distance"), &subject_distance, "%dkm");
