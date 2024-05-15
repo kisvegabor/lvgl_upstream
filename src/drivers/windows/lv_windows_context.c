@@ -228,6 +228,8 @@ static void lv_windows_display_timer_callback(lv_timer_t * timer)
         return;
     }
 
+    lv_display_set_color_format(context->display_device_object, LV_COLOR_FORMAT_ARGB888);
+
     lv_display_set_resolution(
         context->display_device_object,
         context->requested_display_resolution.x,

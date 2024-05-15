@@ -105,6 +105,9 @@ uint32_t ui_key_get(void)
         case 'm':
             ui_scr_menu_open(NULL);
             return 0;
+        case 'c':
+            ui_scr_capture_open();
+            return 0;
         default:
             break;
     }
@@ -184,6 +187,7 @@ void _lv_sdl_keyboard_handler(SDL_Event * event)
                 const uint32_t ctrl_key = keycode_to_ctrl_key(event->key.keysym.sym);
                 if(ctrl_key == '\0')
                     return;
+                last_key = ctrl_key;
                 const size_t len = lv_strlen(dsc->buf);
                 if(len < KEYBOARD_BUFFER_SIZE - 1) {
                     dsc->buf[len] = ctrl_key;
