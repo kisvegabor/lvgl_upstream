@@ -77,6 +77,7 @@
  * - LV_OS_CMSIS_RTOS2
  * - LV_OS_RTTHREAD
  * - LV_OS_WINDOWS
+ * - LV_OS_MQX
  * - LV_OS_CUSTOM */
 #define LV_USE_OS   LV_OS_NONE
 
@@ -667,16 +668,11 @@
 /*FreeType library*/
 #define LV_USE_FREETYPE 0
 #if LV_USE_FREETYPE
-    /*Memory used by FreeType to cache characters in kilobytes*/
-    #define LV_FREETYPE_CACHE_SIZE 768
-
     /*Let FreeType to use LVGL memory and file porting*/
     #define LV_FREETYPE_USE_LVGL_PORT 0
 
-    /* Maximum number of opened FT_Face/FT_Size objects managed by this cache instance. */
-    /* (0:use system defaults) */
-    #define LV_FREETYPE_CACHE_FT_FACES 8
-    #define LV_FREETYPE_CACHE_FT_SIZES 8
+    /*Cache count of the glyphs in FreeType. It means the number of glyphs that can be cached.
+     *The higher the value, the more memory will be used.*/
     #define LV_FREETYPE_CACHE_FT_GLYPH_CNT 256
 #endif
 
@@ -889,6 +885,9 @@
 #define LV_USE_ILI9341      0
 
 #define LV_USE_GENERIC_MIPI (LV_USE_ST7735 | LV_USE_ST7789 | LV_USE_ST7796 | LV_USE_ILI9341)
+
+/*Driver for Renesas GLCD*/
+#define LV_USE_RENESAS_GLCDC    0
 
 /* LVGL Windows backend */
 #define LV_USE_WINDOWS      0

@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "tvgIteratorAccessor.h"
 
 /************************************************************************/
@@ -83,3 +86,6 @@ unique_ptr<Accessor> Accessor::gen() noexcept
 {
     return unique_ptr<Accessor>(new Accessor);
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 /*
  * Copyright (c) 2020 Samsung Electronics Co., Ltd. All rights reserved.
 
@@ -48,8 +51,6 @@
 #include "rapidjson/document.h"
 #include "tvgCommon.h"
 
-RAPIDJSON_DIAG_PUSH
-RAPIDJSON_DIAG_OFF(effc++)
 
 using namespace rapidjson;
 
@@ -200,3 +201,6 @@ struct LookaheadParserHandler
 };
 
 #endif //_TVG_LOTTIE_PARSER_HANDLER_H_
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

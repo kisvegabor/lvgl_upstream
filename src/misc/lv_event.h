@@ -13,8 +13,6 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include <stdbool.h>
-#include <stdint.h>
 #include "lv_types.h"
 #include "../lv_conf_internal.h"
 
@@ -57,11 +55,14 @@ typedef enum {
     LV_EVENT_SCROLL,              /**< Scrolling*/
     LV_EVENT_GESTURE,             /**< A gesture is detected. Get the gesture with `lv_indev_get_gesture_dir(lv_indev_active());` */
     LV_EVENT_KEY,                 /**< A key is sent to the object. Get the key with `lv_indev_get_key(lv_indev_active());`*/
+    LV_EVENT_ROTARY,              /**< An encoder or wheel was rotated. Get the rotation count with `lv_event_get_rotary_diff(e);`*/
     LV_EVENT_FOCUSED,             /**< The object is focused*/
     LV_EVENT_DEFOCUSED,           /**< The object is defocused*/
     LV_EVENT_LEAVE,               /**< The object is defocused but still selected*/
     LV_EVENT_HIT_TEST,            /**< Perform advanced hit-testing*/
     LV_EVENT_INDEV_RESET,         /**< Indev has been reset*/
+    LV_EVENT_HOVER_OVER,          /**< Indev hover over object*/
+    LV_EVENT_HOVER_LEAVE,         /**< Indev hover leave object*/
 
     /** Drawing events*/
     LV_EVENT_COVER_CHECK,        /**< Check if the object fully covers an area. The event parameter is `lv_cover_check_info_t *`.*/

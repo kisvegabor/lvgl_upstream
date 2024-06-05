@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "tvgArray.h"
 #include "tvgInlist.h"
 #include "tvgTaskScheduler.h"
@@ -227,3 +230,6 @@ void TaskScheduler::async(bool on)
     //toggle async tasking for each thread on/off
     _async = on;
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

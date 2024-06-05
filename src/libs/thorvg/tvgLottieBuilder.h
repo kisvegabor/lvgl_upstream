@@ -20,17 +20,35 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
 #ifndef _TVG_LOTTIE_BUILDER_H_
 #define _TVG_LOTTIE_BUILDER_H_
 
 #include "tvgCommon.h"
+#include "tvgLottieExpressions.h"
 
 struct LottieComposition;
 
 struct LottieBuilder
 {
+    LottieExpressions* exps = nullptr;
+
+    LottieBuilder()
+    {
+        exps = LottieExpressions::instance();
+    }
+
+    ~LottieBuilder()
+    {
+        LottieExpressions::retrieve(exps);
+    }
+
     bool update(LottieComposition* comp, float progress);
     void build(LottieComposition* comp);
 };
 
 #endif //_TVG_LOTTIE_BUILDER_H
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

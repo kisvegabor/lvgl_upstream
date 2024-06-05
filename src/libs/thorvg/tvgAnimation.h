@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #ifndef _TVG_ANIMATION_H_
 #define _TVG_ANIMATION_H_
 
@@ -46,3 +49,6 @@ struct Animation::Impl
 };
 
 #endif //_TVG_ANIMATION_H_
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #ifndef _TVG_BINARY_DESC_H_
 #define _TVG_BINARY_DESC_H_
 
@@ -98,3 +101,6 @@ using TvgBinFlag = TvgBinByte;
 #define TVG_TAG_PICTURE_MESH                        (TvgBinTag)0x71
 
 #endif //_TVG_BINARY_DESC_H_
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

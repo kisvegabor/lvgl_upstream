@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 /*
  * Copyright (c) 2020 Samsung Electronics Co., Ltd. All rights reserved.
 
@@ -233,3 +236,6 @@ void LookaheadParserHandler::skip(const char* key)
         skipOut(0);
     }
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

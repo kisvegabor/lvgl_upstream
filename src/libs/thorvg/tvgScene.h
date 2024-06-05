@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #ifndef _TVG_SCENE_H_
 #define _TVG_SCENE_H_
 
@@ -133,7 +136,6 @@ struct Scene::Impl
         if (needComp) {
             cmp = renderer->target(bounds(renderer), renderer->colorSpace());
             renderer->beginComposite(cmp, CompositeMethod::None, opacity);
-            needComp = false;
         }
 
         for (auto paint : paints) {
@@ -228,3 +230,6 @@ struct Scene::Impl
 };
 
 #endif //_TVG_SCENE_H_
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

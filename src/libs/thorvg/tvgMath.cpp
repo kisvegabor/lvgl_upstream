@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "tvgMath.h"
 
 
@@ -71,7 +74,7 @@ void mathRotate(Matrix* m, float degree)
 {
     if (degree == 0.0f) return;
 
-    auto radian = degree / 180.0f * M_PI;
+    auto radian = degree / 180.0f * MATH_PI;
     auto cosVal = cosf(radian);
     auto sinVal = sinf(radian);
 
@@ -100,3 +103,6 @@ void mathMultiply(Point* pt, const Matrix* transform)
     pt->x = tx;
     pt->y = ty;
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

@@ -17,10 +17,9 @@
 #include "../misc/lv_assert.h"
 #include "../misc/lv_math.h"
 #include "../misc/lv_log.h"
+#include "../misc/lv_types.h"
 #include "../tick/lv_tick.h"
 #include "../stdlib/lv_string.h"
-#include <stdint.h>
-#include <string.h>
 
 /*********************
  *      DEFINES
@@ -99,6 +98,8 @@ lv_obj_t * lv_obj_create(lv_obj_t * parent)
 {
     LV_LOG_INFO("begin");
     lv_obj_t * obj = lv_obj_class_create_obj(MY_CLASS, parent);
+    LV_ASSERT_NULL(obj);
+    if(obj == NULL) return NULL;
     lv_obj_class_init_obj(obj);
     return obj;
 }
@@ -713,6 +714,12 @@ static void lv_obj_event(const lv_obj_class_t * class_p, lv_event_t * e)
         lv_obj_remove_state(obj, LV_STATE_PRESSED);
         lv_obj_remove_state(obj, LV_STATE_SCROLLED);
     }
+    else if(code == LV_EVENT_HOVER_OVER) {
+        lv_obj_add_state(obj, LV_STATE_HOVERED);
+    }
+    else if(code == LV_EVENT_HOVER_LEAVE) {
+        lv_obj_remove_state(obj, LV_STATE_HOVERED);
+    }
 }
 
 /**
@@ -740,7 +747,7 @@ static void update_obj_state(lv_obj_t * obj, lv_state_t new_state)
     lv_obj_invalidate(obj);
 
     obj->state = new_state;
-
+    _lv_obj_update_layer_type(obj);
     _lv_obj_style_transition_dsc_t * ts = lv_malloc_zeroed(sizeof(_lv_obj_style_transition_dsc_t) * STYLE_TRANSITION_MAX);
     uint32_t tsi = 0;
     uint32_t i;

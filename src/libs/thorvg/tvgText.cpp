@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 
 #include "tvgText.h"
 
@@ -107,3 +110,6 @@ uint32_t Text::identifier() noexcept
 {
     return TVG_CLASS_ID_TEXT;
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

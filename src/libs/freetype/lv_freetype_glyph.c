@@ -7,6 +7,7 @@
  *      INCLUDES
  *********************/
 
+#include "../../lvgl.h"
 #include "lv_freetype_private.h"
 
 #if LV_USE_FREETYPE
@@ -15,7 +16,8 @@
  *      DEFINES
  *********************/
 
-#define LV_FREETYPE_GLYPH_DSC_CACHE_SIZE (LV_FREETYPE_CACHE_FT_GLYPH_CNT * 2)
+#define CACHE_NAME  "FREETYPE_GLYPH"
+
 /**********************
  *      TYPEDEFS
  **********************/
@@ -49,7 +51,7 @@ static lv_cache_compare_res_t freetype_glyph_compare_cb(const lv_freetype_glyph_
  *   GLOBAL FUNCTIONS
  **********************/
 
-lv_cache_t * lv_freetype_create_glyph_cache(void)
+lv_cache_t * lv_freetype_create_glyph_cache(uint32_t cache_size)
 {
     lv_cache_ops_t ops = {
         .create_cb = (lv_cache_create_cb_t)freetype_glyph_create_cb,
@@ -58,7 +60,8 @@ lv_cache_t * lv_freetype_create_glyph_cache(void)
     };
 
     lv_cache_t * glyph_cache = lv_cache_create(&lv_cache_class_lru_rb_count, sizeof(lv_freetype_glyph_cache_data_t),
-                                               LV_FREETYPE_GLYPH_DSC_CACHE_SIZE, ops);
+                                               cache_size, ops);
+    lv_cache_set_name(glyph_cache, CACHE_NAME);
 
     return glyph_cache;
 }
@@ -129,14 +132,15 @@ static bool freetype_glyph_create_cb(lv_freetype_glyph_cache_data_t * data, void
 
     lv_font_glyph_dsc_t * dsc_out = &data->glyph_dsc;
 
+    lv_mutex_lock(&dsc->cache_node->face_lock);
     FT_Face face = dsc->cache_node->face;
-    FT_UInt charmap_index = FT_Get_Charmap_Index(face->charmap);
-    FT_UInt glyph_index = FTC_CMapCache_Lookup(dsc->context->cmap_cache, dsc->face_id, charmap_index, data->unicode);
+    FT_UInt glyph_index = FT_Get_Char_Index(face, data->unicode);
 
     FT_Set_Pixel_Sizes(face, 0, dsc->size);
     error = FT_Load_Glyph(face, glyph_index,  FT_LOAD_COMPUTE_METRICS | FT_LOAD_NO_BITMAP);
     if(error) {
         FT_ERROR_MSG("FT_Load_Glyph", error);
+        lv_mutex_unlock(&dsc->cache_node->face_lock);
         return false;
     }
 
@@ -171,7 +175,9 @@ static bool freetype_glyph_create_cb(lv_freetype_glyph_cache_data_t * data, void
     }
 
     dsc_out->is_placeholder = glyph_index == 0;
-    dsc_out->glyph_index = glyph_index;
+    dsc_out->gid.index = (uint32_t)glyph_index;
+
+    lv_mutex_unlock(&dsc->cache_node->face_lock);
 
     return true;
 }

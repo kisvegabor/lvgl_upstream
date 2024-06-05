@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "tvgPicture.h"
 
 /************************************************************************/
@@ -29,7 +32,9 @@
 RenderUpdateFlag Picture::Impl::load()
 {
     if (loader) {
-        if (!paint) {
+        if (paint) {
+            loader->sync();
+        } else {
             paint = loader->paint();
             if (paint) {
                 if (w != loader->w || h != loader->h) {
@@ -42,8 +47,7 @@ RenderUpdateFlag Picture::Impl::load()
                 }
                 return RenderUpdateFlag::None;
             }
-        } else loader->sync();
-
+        }
         if (!surface) {
             if ((surface = loader->bitmap())) {
                 return RenderUpdateFlag::Image;
@@ -229,3 +233,6 @@ uint32_t Picture::mesh(const Polygon** triangles) const noexcept
     if (triangles) *triangles = pImpl->rm.triangles;
     return pImpl->rm.triangleCnt;
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

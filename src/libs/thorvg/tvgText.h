@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #ifndef _TVG_TEXT_H
 #define _TVG_TEXT_H
 
@@ -181,3 +184,6 @@ struct Text::Impl
 
 
 #endif //_TVG_TEXT_H
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

@@ -12,10 +12,16 @@
 #if LV_USE_DRAW_VG_LITE
 
 #include "lv_vg_lite_utils.h"
+#include <stdlib.h>
+#include <string.h>
 
 /*********************
  *      DEFINES
  *********************/
+
+#define DECODER_NAME    "VG_LITE"
+
+#define image_cache_draw_buf_handlers &(LV_GLOBAL_DEFAULT()->image_cache_draw_buf_handlers)
 
 /* VG_LITE_INDEX1, 2, and 4 require endian flipping + bit flipping,
  * so for simplicity, they are uniformly converted to I8 for display.
@@ -63,7 +69,8 @@ void lv_vg_lite_decoder_init(void)
     lv_image_decoder_set_info_cb(decoder, decoder_info);
     lv_image_decoder_set_open_cb(decoder, decoder_open);
     lv_image_decoder_set_close_cb(decoder, decoder_close);
-    lv_image_decoder_set_cache_free_cb(decoder, NULL); /*Use general cache free method*/
+
+    decoder->name = DECODER_NAME;
 }
 
 void lv_vg_lite_decoder_deinit(void)
@@ -205,7 +212,8 @@ static lv_result_t decoder_open_variable(lv_image_decoder_t * decoder, lv_image_
     }
 
     /* create draw buf */
-    lv_draw_buf_t * draw_buf = lv_draw_buf_create(width, height, DEST_IMG_FORMAT, LV_STRIDE_AUTO);
+    lv_draw_buf_t * draw_buf = lv_draw_buf_create_user(image_cache_draw_buf_handlers, width, height, DEST_IMG_FORMAT,
+                                                       LV_STRIDE_AUTO);
     if(draw_buf == NULL) {
         return LV_RESULT_INVALID;
     }
@@ -243,11 +251,6 @@ static lv_result_t decoder_open_variable(lv_image_decoder_t * decoder, lv_image_
         dest += dest_stride;
     }
 
-    /* invalidate D-Cache */
-    lv_draw_buf_invalidate_cache(draw_buf, NULL);
-    LV_LOG_INFO("image %p (W%" LV_PRId32 " x H%" LV_PRId32 ", buffer: %p, cf: %d) decode finish",
-                image_data, width, height, draw_buf->data, src_cf);
-
     return LV_RESULT_OK;
 }
 
@@ -277,7 +280,8 @@ static lv_result_t decoder_open_file(lv_image_decoder_t * decoder, lv_image_deco
         return LV_RESULT_INVALID;
     }
 
-    lv_draw_buf_t * draw_buf = lv_draw_buf_create(width, height, DEST_IMG_FORMAT, LV_STRIDE_AUTO);
+    lv_draw_buf_t * draw_buf = lv_draw_buf_create_user(image_cache_draw_buf_handlers, width, height, DEST_IMG_FORMAT,
+                                                       LV_STRIDE_AUTO);
     if(draw_buf == NULL) {
         lv_fs_close(&file);
         return LV_RESULT_INVALID;
@@ -340,12 +344,6 @@ static lv_result_t decoder_open_file(lv_image_decoder_t * decoder, lv_image_deco
     lv_free(src_temp);
 
     lv_fs_close(&file);
-
-    /* invalidate D-Cache */
-    lv_draw_buf_invalidate_cache(draw_buf, NULL);
-
-    LV_LOG_INFO("image %s (W%" LV_PRId32 " x H%" LV_PRId32 ", buffer: %p cf: %d) decode finish",
-                path, width, height, draw_buf->data, src_header.cf);
     return LV_RESULT_OK;
 
 failed:
@@ -392,7 +390,10 @@ static lv_result_t decoder_open(lv_image_decoder_t * decoder, lv_image_decoder_d
 
     if(dsc->args.no_cache) return res;
 
-#if LV_CACHE_DEF_SIZE > 0
+    /*If the image cache is disabled, just return the decoded image*/
+    if(!lv_image_cache_is_enabled()) return res;
+
+    /*Add the decoded image to the cache*/
     if(res == LV_RESULT_OK) {
         lv_image_cache_data_t search_key;
         search_key.src_type = dsc->src_type;
@@ -408,7 +409,6 @@ static lv_result_t decoder_open(lv_image_decoder_t * decoder, lv_image_decoder_d
         }
         dsc->cache_entry = entry;
     }
-#endif
 
     return res;
 }
@@ -417,10 +417,7 @@ static void decoder_close(lv_image_decoder_t * decoder, lv_image_decoder_dsc_t *
 {
     LV_UNUSED(decoder); /*Unused*/
 
-    if(dsc->args.no_cache || LV_CACHE_DEF_SIZE == 0)
-        decoder_draw_buf_free((lv_draw_buf_t *)dsc->decoded);
-    else
-        lv_cache_release(dsc->cache, dsc->cache_entry, NULL);
+    if(dsc->args.no_cache || !lv_image_cache_is_enabled()) decoder_draw_buf_free((lv_draw_buf_t *)dsc->decoded);
 
     if(decoder->user_data) free(decoder->user_data);
 }

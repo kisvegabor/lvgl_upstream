@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2021 - 2024 the ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,6 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
 
 #ifdef THORVG_AVX_VECTOR_SUPPORT
 
@@ -59,6 +62,23 @@ static inline __m128i ALPHA_BLEND(__m128i c, __m128i a)
 
     //5. the final result
     return _mm_or_si128(odd, even);
+}
+
+
+static void avxRasterGrayscale8(uint8_t* dst, uint8_t val, uint32_t offset, int32_t len)
+{
+    dst += offset;
+
+    __m256i vecVal = _mm256_set1_epi8(val);
+
+    int32_t i = 0;
+    for (; i <= len - 32; i += 32) {
+        _mm256_storeu_si256((__m256i*)(dst + i), vecVal);
+    }
+
+    for (; i < len; ++i) {
+        dst[i] = val;
+    }
 }
 
 
@@ -189,3 +209,6 @@ static bool avxRasterTranslucentRle(SwSurface* surface, const SwRleData* rle, ui
 
 
 #endif
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

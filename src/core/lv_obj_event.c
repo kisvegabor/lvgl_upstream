@@ -193,7 +193,9 @@ lv_indev_t * lv_event_get_indev(lv_event_t * e)
        e->code == LV_EVENT_KEY ||
        e->code == LV_EVENT_FOCUSED ||
        e->code == LV_EVENT_DEFOCUSED ||
-       e->code == LV_EVENT_LEAVE) {
+       e->code == LV_EVENT_LEAVE ||
+       e->code == LV_EVENT_HOVER_OVER ||
+       e->code == LV_EVENT_HOVER_LEAVE) {
         return lv_event_get_param(e);
     }
     else {
@@ -234,6 +236,19 @@ uint32_t lv_event_get_key(lv_event_t * e)
     if(e->code == LV_EVENT_KEY) {
         uint32_t * k = lv_event_get_param(e);
         if(k) return *k;
+        else return 0;
+    }
+    else {
+        LV_LOG_WARN("Not interpreted with this event code");
+        return 0;
+    }
+}
+
+int32_t lv_event_get_rotary_diff(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_ROTARY) {
+        int32_t * r = lv_event_get_param(e);
+        if(r) return *r;
         else return 0;
     }
     else {
@@ -341,19 +356,19 @@ static lv_result_t event_send_core(lv_event_t * e)
     lv_event_list_t * list = target->spec_attr ?  &target->spec_attr->event_list : NULL;
 
     res = lv_event_send(list, e, true);
-    if(res != LV_RESULT_OK) return res;
+    if(res != LV_RESULT_OK || e->stop_processing) return res;
 
     res = lv_obj_event_base(NULL, e);
-    if(res != LV_RESULT_OK) return res;
+    if(res != LV_RESULT_OK || e->stop_processing) return res;
 
     res = lv_event_send(list, e, false);
-    if(res != LV_RESULT_OK) return res;
+    if(res != LV_RESULT_OK || e->stop_processing) return res;
 
     lv_obj_t * parent = lv_obj_get_parent(e->current_target);
     if(parent && event_is_bubbled(e)) {
         e->current_target = parent;
         res = event_send_core(e);
-        if(res != LV_RESULT_OK) return res;
+        if(res != LV_RESULT_OK || e->stop_processing || e->stop_bubbling) return res;
     }
 
     return res;

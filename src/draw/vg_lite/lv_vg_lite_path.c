@@ -103,6 +103,9 @@ void lv_vg_lite_path_destroy(lv_vg_lite_path_t * path)
     if(path->base.path != NULL) {
         lv_free(path->base.path);
         path->base.path = NULL;
+
+        /* clear remaining path data */
+        LV_VG_LITE_CHECK_ERROR(vg_lite_clear_path(&path->base));
     }
     lv_free(path);
     LV_PROFILER_END;
@@ -133,6 +136,7 @@ void lv_vg_lite_path_reset(lv_vg_lite_path_t * path, vg_lite_format_t data_forma
     path->base.path_length = 0;
     path->base.format = data_format;
     path->base.quality = VG_LITE_MEDIUM;
+    path->base.path_type = VG_LITE_DRAW_ZERO;
     path->format_len = lv_vg_lite_path_format_len(data_format);
 }
 
@@ -214,10 +218,10 @@ bool lv_vg_lite_path_update_bonding_box(lv_vg_lite_path_t * path)
     lv_vg_lite_path_bounds_t bounds;
 
     /* init bounds */
-    bounds.min_x = __FLT_MAX__;
-    bounds.min_y = __FLT_MAX__;
-    bounds.max_x = __FLT_MIN__;
-    bounds.max_y = __FLT_MIN__;
+    bounds.min_x = FLT_MAX;
+    bounds.min_y = FLT_MAX;
+    bounds.max_x = FLT_MIN;
+    bounds.max_y = FLT_MIN;
 
     /* calc bounds */
     lv_vg_lite_path_for_each_data(lv_vg_lite_path_get_path(path), path_bounds_iter_cb, &bounds);

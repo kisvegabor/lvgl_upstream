@@ -20,7 +20,11 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "config.h"
+#include <cmath>
 #include <cstring>
 #include <memory.h>
 #include "tvgMath.h"
@@ -182,7 +186,7 @@ float strToFloat(const char *nPtr, char **endPtr)
         auto scale = 1.0f;
 
         while (exponentPart >= 8U) {
-            scale *= 1E8;
+            scale *= 1E8f;
             exponentPart -= 8U;
         }
         while (exponentPart > 0U) {
@@ -197,6 +201,8 @@ float strToFloat(const char *nPtr, char **endPtr)
 
 success:
     if (endPtr) *endPtr = (char *)(a);
+    if (!std::isfinite(val)) return 0.0f;
+
     return minus * val;
 
 error:
@@ -237,3 +243,6 @@ char* strDirname(const char* path)
 }
 
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

@@ -22,6 +22,7 @@ extern "C" {
 #define LV_USE_STDLIB_SPRINTF       LV_STDLIB_CLIB
 #define LV_USE_OS                   LV_OS_PTHREAD
 #define LV_OBJ_STYLE_CACHE          0
+#define LV_BIN_DECODER_RAM_LOAD     1   /* Run test with bin image loaded to RAM */
 #endif
 
 #ifdef LVGL_CI_USING_DEF_HEAP
@@ -29,6 +30,7 @@ extern "C" {
 #define LV_USE_STDLIB_STRING    LV_STDLIB_BUILTIN
 #define LV_USE_STDLIB_SPRINTF   LV_STDLIB_BUILTIN
 #define LV_OBJ_STYLE_CACHE      1
+#define LV_BIN_DECODER_RAM_LOAD 0
 #endif
 
 #ifdef MICROPYTHON
@@ -114,8 +116,6 @@ typedef void * lv_user_data_t;
 #define LV_DRAW_BUF_ALIGN                       852
 
 /*For screenshots*/
-#undef LV_USE_PERF_MONITOR
-#undef LV_USE_MEM_MONITOR
 #undef LV_DPI_DEF
 #define  LV_DPI_DEF         130
 #endif

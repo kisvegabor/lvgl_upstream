@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #ifndef _TVG_TASK_SCHEDULER_H_
 #define _TVG_TASK_SCHEDULER_H_
 
@@ -109,3 +112,6 @@ struct TaskScheduler
 }  //namespace
 
 #endif //_TVG_TASK_SCHEDULER_H_
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

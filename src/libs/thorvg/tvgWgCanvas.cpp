@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+#include "../../lv_conf_internal.h"
+#if LV_USE_THORVG_INTERNAL
+
 #include "tvgCanvas.h"
 
 #ifdef THORVG_WG_RASTER_SUPPORT
@@ -63,6 +66,8 @@ Result WgCanvas::target(void* window, uint32_t w, uint32_t h) noexcept
     if (!renderer) return Result::MemoryCorruption;
 
     if (!renderer->target(window, w, h)) return Result::Unknown;
+    Canvas::pImpl->vport = {0, 0, (int32_t)w, (int32_t)h};
+    renderer->viewport(Canvas::pImpl->vport);
 
     //Paints must be updated again with this new target.
     Canvas::pImpl->needRefresh();
@@ -79,3 +84,6 @@ unique_ptr<WgCanvas> WgCanvas::gen() noexcept
 #endif
     return nullptr;
 }
+
+#endif /* LV_USE_THORVG_INTERNAL */
+

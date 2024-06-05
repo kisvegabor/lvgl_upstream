@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <xf86drm.h>
 #include <xf86drmMode.h>
@@ -24,7 +25,7 @@
  *      DEFINES
  *********************/
 #if LV_COLOR_DEPTH == 32
-    #define DRM_FOURCC DRM_FORMAT_ARGB8888
+    #define DRM_FOURCC DRM_FORMAT_XRGB8888
 #elif LV_COLOR_DEPTH == 16
     #define DRM_FOURCC DRM_FORMAT_RGB565
 #else
@@ -152,9 +153,12 @@ void lv_linux_drm_set_file(lv_display_t * disp, const char * file, int64_t conne
     int32_t width = drm_dev->mmWidth;
 
     size_t buf_size = LV_MIN(drm_dev->drm_bufs[1].size, drm_dev->drm_bufs[0].size);
+    /* Resolution must be set first because if the screen is smaller than the size passed
+     * to lv_display_create then the buffers aren't big enough for LV_DISPLAY_RENDER_MODE_DIRECT.
+     */
+    lv_display_set_resolution(disp, hor_res, ver_res);
     lv_display_set_buffers(disp, drm_dev->drm_bufs[1].map, drm_dev->drm_bufs[0].map, buf_size,
                            LV_DISPLAY_RENDER_MODE_DIRECT);
-    lv_display_set_resolution(disp, hor_res, ver_res);
 
     if(width) {
         lv_display_set_dpi(disp, DIV_ROUND_UP(hor_res * 25400, width * 1000));
