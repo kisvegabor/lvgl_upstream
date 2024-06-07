@@ -20,7 +20,7 @@ extern "C" {
  *********************/
 #define EBIKE_COLOR_TURQUOISE lv_color_hex(0x55FFEB)
 #define EBIKE_COLOR_LIME lv_color_hex(0x91FF3B)
-#define EBIKE_LARGE 0
+#define EBIKE_PORTRAIT 0    /*0: for 480x270..480x320, 1: for 480x800..720x1280*/
 
 /**********************
  *      TYPEDEFS
@@ -34,9 +34,6 @@ void lv_demo_ebike_create(void);
 /**********************
  * GLOBAL VARIABLES
  **********************/
-extern lv_subject_t ebike_subject_speed_arc;
-extern lv_subject_t ebike_subject_speed_roller;
-extern lv_subject_t ebike_subject_portrait;
 extern lv_subject_t ebike_subject_language;
 
 /**********************

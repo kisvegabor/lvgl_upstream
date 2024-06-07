@@ -23,23 +23,18 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static void screen_orientation_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
-static void language_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
+static void menu_bar_create(void);
 static void menu_item_click_event_cb(lv_event_t * e);
-static void anim_timer_cb(lv_timer_t * t);
+static void language_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
 
 /**********************
  *  STATIC VARIABLES
  **********************/
 static lv_obj_t * main_cont;
-static lv_obj_t * menu_cont;
 
 /**********************
  *  GLOBAL VARIABLES
  **********************/
-lv_subject_t ebike_subject_speed_arc;
-lv_subject_t ebike_subject_speed_roller;
-lv_subject_t ebike_subject_portrait;
 lv_subject_t ebike_subject_language;
 
 /**********************
@@ -50,20 +45,16 @@ lv_subject_t ebike_subject_language;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void lv_demo_ebike_create(void)
+void lv_demo_ebike(void)
 {
     lv_i18n_init(lv_i18n_language_pack);
 
-    if(lv_group_get_default() == NULL) {
-        lv_group_set_default(lv_group_create());
-    }
-
-    lv_subject_init_int(&ebike_subject_speed_arc, 0);
-    lv_subject_init_int(&ebike_subject_speed_roller, 0);
-    lv_subject_init_int(&ebike_subject_portrait, false);
     lv_subject_init_int(&ebike_subject_language, 0);
+    lv_subject_add_observer_obj(&ebike_subject_language, language_observer_cb, lv_screen_active(), NULL);
+    lv_demo_ebike_home_init();
     lv_demo_ebike_stat_init();
 
+    /*Use the simple the to make styling simpler*/
     lv_display_t * display = lv_display_get_default();
     lv_theme_t * theme = lv_theme_simple_init(display);
     lv_display_set_theme(display, theme);
@@ -73,29 +64,46 @@ void lv_demo_ebike_create(void)
     lv_obj_set_style_text_color(lv_screen_active(), lv_color_white(), 0);
 
     lv_obj_t * bg = lv_image_create(lv_screen_active());
-#if EBIKE_LARGE
+#if EBIKE_PORTRAIT
     LV_IMAGE_DECLARE(img_ebike_bg_large);
     lv_image_set_src(bg, &img_ebike_bg_large);
 #else
     LV_IMAGE_DECLARE(img_ebike_bg);
     lv_image_set_src(bg, &img_ebike_bg);
 #endif
+
     lv_obj_align(bg, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_flag(bg, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0xffeeaa), 0);
 
+    /*Create a container for the main content*/
     main_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_grow(main_cont, 1);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
 
     lv_demo_ebike_home_create(main_cont);
-    //    lv_demo_ebike_stat_create(main_cont);
 
-    menu_cont = lv_obj_create(lv_screen_active());
+    menu_bar_create();
+
+    lv_obj_set_flex_flow(lv_screen_active(), EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
+}
+
+/**********************
+ *   STATIC FUNCTIONS
+ **********************/
+
+static void menu_bar_create(void)
+{
+    lv_obj_t * menu_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_style_bg_color(menu_cont, lv_color_black(), 0);
+    lv_obj_set_flex_flow(menu_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
+#if EBIKE_PORTRAIT
+    lv_obj_set_size(menu_cont, lv_pct(100), 44);
+#else
     lv_obj_set_size(menu_cont, 44, lv_pct(100));
-    lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_COLUMN);
+#endif
+
     lv_obj_set_flex_align(menu_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_gap(menu_cont, 16, 0);
 
@@ -124,45 +132,14 @@ void lv_demo_ebike_create(void)
     lv_obj_set_size(icon3, 44, 44);
     lv_obj_set_ext_click_area(icon3, 8);
     lv_obj_add_flag(icon3, LV_OBJ_FLAG_CLICKABLE);
-
-    lv_subject_add_observer_obj(&ebike_subject_portrait, screen_orientation_observer_cb, lv_screen_active(), NULL);
-    lv_subject_add_observer_obj(&ebike_subject_language, language_observer_cb, lv_screen_active(), NULL);
-
-    lv_timer_create(anim_timer_cb, 2000, NULL);
-}
-
-/**********************
- *   STATIC FUNCTIONS
- **********************/
-
-
-static void set_subject_exec_cb(void * var, int32_t v)
-{
-    lv_subject_set_int(var, v);
-}
-
-static void anim_timer_cb(lv_timer_t * t)
-{
-    int32_t v = lv_rand(0, 90);
-
-    lv_anim_t a;
-    lv_anim_init(&a);
-    lv_anim_set_var(&a, &ebike_subject_speed_arc);
-    lv_anim_set_values(&a, lv_subject_get_int(&ebike_subject_speed_arc), v);
-    lv_anim_set_duration(&a, 1000);
-    lv_anim_set_exec_cb(&a, set_subject_exec_cb);
-    lv_anim_start(&a);
-
-    lv_subject_set_int(&ebike_subject_speed_roller, v);
-
 }
 
 static void menu_item_click_event_cb(lv_event_t * e)
 {
-
     lv_obj_clean(main_cont);
 
     lv_obj_t  * icon = lv_event_get_target(e);
+    lv_obj_t  * menu_cont = lv_obj_get_parent(icon);
     uint32_t idx = lv_obj_get_index(icon);
 
     lv_obj_set_style_image_opa(lv_obj_get_child(menu_cont, 0), LV_OPA_50, 0);
@@ -187,6 +164,8 @@ static void menu_item_click_event_cb(lv_event_t * e)
 
 static void language_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(observer);
+
     static uint32_t lang_current = 0;
     uint32_t lang_new = lv_subject_get_int(subject);
     if(lang_new != lang_current) {
@@ -204,25 +183,5 @@ static void language_observer_cb(lv_observer_t * observer, lv_subject_t * subjec
         }
         lv_obj_clean(main_cont);
         lv_demo_ebike_settings_create(main_cont);
-    }
-}
-
-static void screen_orientation_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
-{
-    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
-
-    if(portrait) {
-        lv_obj_set_size(menu_cont, lv_pct(100), 44);
-        lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_ROW);
-        lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_COLUMN);
-        lv_obj_update_layout(lv_screen_active());
-        lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_COLUMN);
-    }
-    else {
-        lv_obj_set_size(menu_cont, 44, lv_pct(100));
-        lv_obj_set_flex_flow(menu_cont, LV_FLEX_FLOW_COLUMN);
-        lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW);
-        lv_obj_update_layout(lv_screen_active());
-        lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW);
     }
 }

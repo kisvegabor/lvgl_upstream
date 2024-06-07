@@ -41,20 +41,16 @@ static lv_obj_t * settings_img;
 
 void lv_demo_ebike_settings_create(lv_obj_t * parent)
 {
-    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
-
     main_cont = lv_obj_create(parent);
     lv_obj_set_style_bg_opa(main_cont, 0, 0);
     lv_obj_set_size(main_cont, lv_pct(100), lv_pct(100));
-    lv_obj_set_flex_flow(main_cont, portrait ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(main_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
 
     left_cont = left_cont_create(main_cont);
 
     lv_obj_t * right_cont = right_cont_create(main_cont);
     lv_obj_set_size(right_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_grow(right_cont, 1);
-
-    lv_subject_add_observer_obj(&ebike_subject_portrait, switch_observer_cb, left_cont, NULL);
 }
 
 /**********************
@@ -119,18 +115,15 @@ static lv_obj_t * slider_create(lv_obj_t * parent, const char * title)
 
 static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
-    bool portrait = lv_subject_get_int(&ebike_subject_portrait);
-    if(portrait) {
-        lv_obj_set_size(left_cont, lv_pct(100), 120);
-        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
-        lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
-    }
-    else {
-        lv_obj_set_size(left_cont, 164, lv_pct(100));
-        lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
-        lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
-    }
-
+#if EBIKE_PORTRAIT
+    lv_obj_set_size(left_cont, lv_pct(100), 120);
+    lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
+#else
+    lv_obj_set_size(left_cont, 164, lv_pct(100));
+    lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
+#endif
 }
 
 static void sw_event_cb(lv_event_t * e)
