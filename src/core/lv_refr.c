@@ -378,23 +378,19 @@ void _lv_display_refr_timer(lv_timer_t * tmr)
     /*If refresh happened ...*/
     lv_display_send_event(disp_refr, LV_EVENT_RENDER_READY, NULL);
 
-    if(!lv_display_is_double_buffered(disp_refr) ||
-       disp_refr->render_mode != LV_DISPLAY_RENDER_MODE_DIRECT) goto refr_clean_up;
+    /*In double buffered direct mode save the updated areas.
+     *They will be used on the next call to synchronize the buffers.*/
+    if(lv_display_is_double_buffered(disp_refr) && disp_refr->render_mode == LV_DISPLAY_RENDER_MODE_DIRECT) {
+        uint32_t i;
+        for(i = 0; i < disp_refr->inv_p; i++) {
+            if(disp_refr->inv_area_joined[i])
+                continue;
 
-    /*With double buffered direct mode synchronize the rendered areas to the other buffer*/
-    /*We need to wait for ready here to not mess up the active screen*/
-    wait_for_flushing(disp_refr);
-
-    uint32_t i;
-    for(i = 0; i < disp_refr->inv_p; i++) {
-        if(disp_refr->inv_area_joined[i])
-            continue;
-
-        lv_area_t * sync_area = _lv_ll_ins_tail(&disp_refr->sync_areas);
-        *sync_area = disp_refr->inv_areas[i];
+            lv_area_t * sync_area = _lv_ll_ins_tail(&disp_refr->sync_areas);
+            *sync_area = disp_refr->inv_areas[i];
+        }
     }
 
-refr_clean_up:
     lv_memzero(disp_refr->inv_areas, sizeof(disp_refr->inv_areas));
     lv_memzero(disp_refr->inv_area_joined, sizeof(disp_refr->inv_area_joined));
     disp_refr->inv_p = 0;
@@ -1064,6 +1060,12 @@ static void call_flush_cb(lv_display_t * disp, const lv_area_t * area, uint8_t *
     };
 
     lv_display_send_event(disp, LV_EVENT_FLUSH_START, &offset_area);
+
+    /*For backward compatibility support LV_COLOR_16_SWAP (from v8)*/
+#if defined(LV_COLOR_16_SWAP) && LV_COLOR_16_SWAP
+    lv_draw_sw_rgb565_swap(px_map, lv_area_get_size(&offset_area));
+#endif
+
     disp->flush_cb(disp, &offset_area, px_map);
     lv_display_send_event(disp, LV_EVENT_FLUSH_FINISH, &offset_area);
 

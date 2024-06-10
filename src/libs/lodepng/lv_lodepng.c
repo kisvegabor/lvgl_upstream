@@ -185,7 +185,7 @@ static lv_result_t decoder_open(lv_image_decoder_t * decoder, lv_image_decoder_d
     if(dsc->src_type == LV_IMAGE_SRC_FILE) lv_free((void *)png_data);
 
     if(!decoded) {
-        LV_LOG_WARN("Error decoding PNG\n");
+        LV_LOG_WARN("Error decoding PNG");
         return LV_RESULT_INVALID;
     }
 
@@ -234,10 +234,7 @@ static void decoder_close(lv_image_decoder_t * decoder, lv_image_decoder_dsc_t *
 {
     LV_UNUSED(decoder);
 
-    if(dsc->args.no_cache || !lv_image_cache_is_enabled())
-        lv_draw_buf_destroy((lv_draw_buf_t *)dsc->decoded);
-    else
-        lv_cache_release(dsc->cache, dsc->cache_entry, NULL);
+    if(dsc->args.no_cache || !lv_image_cache_is_enabled()) lv_draw_buf_destroy((lv_draw_buf_t *)dsc->decoded);
 }
 
 static lv_draw_buf_t * decode_png_data(const void * png_data, size_t png_data_size)

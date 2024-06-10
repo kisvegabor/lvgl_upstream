@@ -131,7 +131,7 @@ lv_result_t lv_image_decoder_open(lv_image_decoder_dsc_t * dsc, const void * src
                     dsc->src_type == LV_IMAGE_SRC_FILE ? (const char *)src : "c-array",
                     dsc->decoded->header.w,
                     dsc->decoded->header.h,
-                    dsc->decoded->data,
+                    (void *)dsc->decoded->data,
                     dsc->decoded->header.cf);
     }
 
@@ -151,6 +151,11 @@ void lv_image_decoder_close(lv_image_decoder_dsc_t * dsc)
 {
     if(dsc->decoder) {
         if(dsc->decoder->close_cb) dsc->decoder->close_cb(dsc->decoder, dsc);
+
+        if(lv_image_cache_is_enabled() && dsc->cache && dsc->cache_entry) {
+            /*Decoded data is in cache, release it from cache's callback*/
+            lv_cache_release(dsc->cache, dsc->cache_entry, NULL);
+        }
     }
 }
 
