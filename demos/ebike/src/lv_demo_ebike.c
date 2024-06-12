@@ -59,7 +59,7 @@ void lv_demo_ebike(void)
     lv_theme_t * theme = lv_theme_simple_init(display);
     lv_display_set_theme(display, theme);
 
-    lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(lv_screen_active(), EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
     lv_obj_remove_flag(lv_screen_active(), LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_text_color(lv_screen_active(), lv_color_white(), 0);
 
@@ -85,8 +85,6 @@ void lv_demo_ebike(void)
     lv_demo_ebike_home_create(main_cont);
 
     menu_bar_create();
-
-    lv_obj_set_flex_flow(lv_screen_active(), EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
 }
 
 /**********************
@@ -97,7 +95,7 @@ static void menu_bar_create(void)
 {
     lv_obj_t * menu_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_style_bg_color(menu_cont, lv_color_black(), 0);
-    lv_obj_set_flex_flow(menu_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(menu_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_ROW : LV_FLEX_FLOW_COLUMN);
 #if EBIKE_PORTRAIT
     lv_obj_set_size(menu_cont, lv_pct(100), 44);
 #else

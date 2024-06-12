@@ -85,7 +85,6 @@ void lv_demo_ebike_stat_create(lv_obj_t * parent)
  *   STATIC FUNCTIONS
  **********************/
 
-
 static lv_obj_t * left_cont_create(lv_obj_t * parent)
 {
     lv_obj_t * left_cont = lv_obj_create(parent);
@@ -132,7 +131,7 @@ static lv_obj_t * tabs_create(lv_obj_t * parent)
     lv_obj_set_style_text_font(btnm, &font_ebike_inter_14, LV_PART_ITEMS);
     lv_obj_set_style_text_color(btnm, lv_color_white(), LV_PART_ITEMS);
     lv_obj_set_style_text_color(btnm, EBIKE_COLOR_TURQUOISE, LV_PART_ITEMS | LV_STATE_FOCUSED);
-    static char * texts[4];
+    static const char * texts[4];
     texts[0] = _("Avg. speed");
     texts[1] = _("Distance");
     texts[2] = _("Top speed");
@@ -147,6 +146,7 @@ static lv_obj_t * tabs_create(lv_obj_t * parent)
 
 static void left_click_event_cb(lv_event_t * e)
 {
+    LV_UNUSED(e);
     int32_t week = lv_subject_get_int(&subject_week);
     if(week > 0) {
         week--;
@@ -156,6 +156,7 @@ static void left_click_event_cb(lv_event_t * e)
 
 static void right_click_event_cb(lv_event_t * e)
 {
+    LV_UNUSED(e);
     int32_t week = lv_subject_get_int(&subject_week);
     if(week < 3) {
         week++;
@@ -166,6 +167,7 @@ static void right_click_event_cb(lv_event_t * e)
 
 static void current_week_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(subject);
     lv_obj_t * label = lv_observer_get_target_obj(observer);
     int32_t week = lv_subject_get_int(&subject_week);
     lv_label_set_text_fmt(label, _("March %d - March %d"), week * 7 + 1, week * 7 + 7);
@@ -180,6 +182,7 @@ static void current_week_observer_cb(lv_observer_t * observer, lv_subject_t * su
 
 static void current_data_objserver_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(subject);
     lv_obj_t * label = lv_observer_get_target_obj(observer);
     stat_mode_t mode = lv_subject_get_int(&subject_mode);
     int32_t day = lv_subject_get_int(&subject_day);
@@ -254,6 +257,7 @@ static void chart_value_changed_event_cb(lv_event_t * e)
 }
 static void chart_released_event_cb(lv_event_t * e)
 {
+    LV_UNUSED(e);
     lv_subject_set_int(&subject_day, day_pressed);
 }
 
@@ -303,7 +307,6 @@ static void chart_draw_event_cb(lv_event_t * e)
     lv_draw_label(lv_event_get_layer(e), &label_dsc, &a);
 }
 
-
 static void chart_refr_ext_draw(lv_event_t * e)
 {
     lv_event_set_ext_draw_size(e, 32);
@@ -317,8 +320,6 @@ static void chart_draw_task_event_cb(lv_event_t * e)
     if(base_dsc->part != LV_PART_ITEMS || draw_task->type != LV_DRAW_TASK_TYPE_LINE) return;
 
     lv_obj_t * obj = lv_event_get_target(e);
-
-    const lv_chart_series_t * ser = lv_chart_get_series_next(obj, NULL);
 
     /*Draw a triangle below the line witch some opacity gradient*/
     lv_draw_line_dsc_t * draw_line_dsc = draw_task->draw_dsc;
@@ -366,6 +367,7 @@ static void chart_draw_task_event_cb(lv_event_t * e)
 
 static void chart_gesture_event_cb(lv_event_t * e)
 {
+    LV_UNUSED(e);
     lv_dir_t d = lv_indev_get_gesture_dir(lv_indev_active());
 
     int32_t week = lv_subject_get_int(&subject_week);
@@ -385,6 +387,7 @@ static void chart_gesture_event_cb(lv_event_t * e)
 
 static void chart_week_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(subject);
     int32_t week = lv_subject_get_int(&subject_week);
     lv_subject_set_int(&subject_day, week * 7 + 1);
 
@@ -398,6 +401,7 @@ static void chart_week_observer_cb(lv_observer_t * observer, lv_subject_t * subj
 
 static void chart_mode_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(subject);
     lv_obj_t * chart = lv_observer_get_target_obj(observer);
     lv_chart_series_t * ser = lv_chart_get_series_next(chart, NULL);
 
@@ -421,6 +425,7 @@ static void chart_mode_observer_cb(lv_observer_t * observer, lv_subject_t * subj
 
 static void chart_day_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
 {
+    LV_UNUSED(subject);
     lv_obj_t * chart = lv_observer_get_target_obj(observer);
 
     int32_t day = lv_subject_get_int(&subject_day);

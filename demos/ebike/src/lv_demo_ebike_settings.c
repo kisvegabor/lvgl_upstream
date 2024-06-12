@@ -22,7 +22,6 @@
  **********************/
 static lv_obj_t * left_cont_create(lv_obj_t * parent);
 static lv_obj_t * right_cont_create(lv_obj_t * parent);
-static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject);
 
 /**********************
  *  STATIC VARIABLES
@@ -47,7 +46,11 @@ void lv_demo_ebike_settings_create(lv_obj_t * parent)
     lv_obj_set_flex_flow(main_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_COLUMN : LV_FLEX_FLOW_ROW);
 
     left_cont = left_cont_create(main_cont);
-
+#if EBIKE_PORTRAIT
+    lv_obj_set_size(left_cont, lv_pct(100), 120);
+#else
+    lv_obj_set_size(left_cont, 164, lv_pct(100));
+#endif
     lv_obj_t * right_cont = right_cont_create(main_cont);
     lv_obj_set_size(right_cont, lv_pct(100), lv_pct(100));
     lv_obj_set_flex_grow(right_cont, 1);
@@ -72,11 +75,13 @@ static lv_obj_t * left_cont_create(lv_obj_t * parent)
     LV_IMAGE_DECLARE(img_ebike_settings_large);
     settings_img = lv_image_create(left_cont);
     lv_image_set_src(settings_img, &img_ebike_settings_large);
+#if EBIKE_PORTRAIT
+    lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+#else
     lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
-
+#endif
     return left_cont;
 }
-
 
 static lv_obj_t * slider_create(lv_obj_t * parent, const char * title)
 {
@@ -110,36 +115,6 @@ static lv_obj_t * slider_create(lv_obj_t * parent, const char * title)
     lv_obj_set_style_margin_top(slider, 12, 0);
 
     return main_cont;
-}
-
-
-static void switch_observer_cb(lv_observer_t * observer, lv_subject_t * subject)
-{
-#if EBIKE_PORTRAIT
-    lv_obj_set_size(left_cont, lv_pct(100), 120);
-    lv_obj_align(settings_img, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
-    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_COLUMN);
-#else
-    lv_obj_set_size(left_cont, 164, lv_pct(100));
-    lv_obj_align(settings_img, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_set_flex_flow(main_cont, LV_FLEX_FLOW_ROW);
-#endif
-}
-
-static void sw_event_cb(lv_event_t * e)
-{
-    lv_obj_t * sw = lv_event_get_target(e);
-    lv_obj_t * knob = lv_obj_get_child(sw, 0);
-    bool chk = lv_obj_has_state(sw, LV_STATE_CHECKED);
-
-    lv_anim_t a;
-    lv_anim_init(&a);
-    lv_anim_set_values(&a, lv_obj_get_x(knob), chk ? 41 : 3);
-    lv_anim_set_var(&a, knob);
-    lv_anim_set_duration(&a, 200);
-    lv_anim_set_exec_cb(&a, lv_obj_set_x);
-    lv_anim_start(&a);
-
 }
 
 static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subject_t * subject)
@@ -178,7 +153,6 @@ static lv_obj_t * switch_create(lv_obj_t * parent, const char * title, lv_subjec
 
 static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const char * options, lv_subject_t * subject)
 {
-
     LV_FONT_DECLARE(font_ebike_inter_14);
     lv_obj_t * cont = lv_obj_create(parent);
     lv_obj_set_size(cont, lv_pct(100), LV_SIZE_CONTENT);
@@ -193,7 +167,6 @@ static lv_obj_t * dropdown_create(lv_obj_t * parent, const char * title, const c
     lv_obj_t * label;
     label = lv_label_create(cont);
     lv_label_set_text(label, title);
-    //    lv_obj_set_width(label, lv_pct(100));
 
     LV_IMAGE_DECLARE(img_ebike_dropdown_icon);
     lv_obj_t * dd = lv_dropdown_create(cont);
@@ -243,7 +216,6 @@ static lv_obj_t * right_cont_create(lv_obj_t * parent)
     dropdown_create(right_cont, _("Language"), "English\n中国人\nعربي", &ebike_subject_language);
     switch_create(right_cont, _("Bluetooth"), NULL);
     switch_create(right_cont, _("Lights"), NULL);
-    //    switch_create(right_cont, _("Title"), &ebike_subject_portrait);
     slider_create(right_cont, _("Brightness"));
     slider_create(right_cont, _("Volume"));
     slider_create(right_cont, _("Max. speed"));
