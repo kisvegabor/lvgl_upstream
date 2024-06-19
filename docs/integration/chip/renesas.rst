@@ -25,9 +25,9 @@ GLCDC
 -----
 
 GLCDC is a multi-stage graphics output peripheral available in several Renesas MCUs.
-It is able to drive LCD panles via a higly configurable RGB interface.
+It is able to drive LCD panles via a highly configurable RGB interface.
 
-More info can be found at the :ref:`dirver's page<renesas_glcdc>`.
+More info can be found at the :ref:`driver's page<renesas_glcdc>`.
 
 Supported boards
 ----------------
@@ -35,7 +35,7 @@ Supported boards
 .. list-table::
    :widths: 10 30 30 30
 
-   * - 
+   * -
      - **EK-RA8D1**
      - **EK-RA6M3G**
      - **RX72N Envision Kit**
@@ -44,25 +44,25 @@ Supported boards
      - 120MHz, Arm Cortex-M4 core
      - 240MHz, Renesas RXv3 core
    * - Memory
-     - 
+     -
          | 1MB internal, 64MB external SDRAM
          | 2MB internal, 64MB External Octo-SPI Flash
-     - 
+     -
          | 640kB internal SRAM
          | 2MB internal, 32MB external QSPI Flash
-     - 
+     -
          | 1MB internal SRAM
          | 4MB internal, 32MB external QSPI Flash
    * - Display
-     - 
+     -
          | 4.5”
          | 480x854
          | 2-lane MIPI
-     - 
+     -
          | 4.3”
          | 480x272
          | Parallel RGB565
-     - 
+     -
          | 4.3”
          | 480x272
          | Parallel RGB565
@@ -86,7 +86,7 @@ Get started with the Renesas ecosystem
 
 .. dropdown:: RA Family
 
-   - The official IDE of Renesas is called e² studio. As it's Eclipse-based, it runs on Windows, Linux, and Mac as well. The RA family requires the latest version with FSP 5.3. It can be downloaded `here <https://www.renesas.com/us/en/software-tool/flexible-software-package-fsp>`__.
+   - The official IDE of Renesas is called e² studio. As it's Eclipse-based, it runs on Windows, Linux, and Mac as well. The RA family requires the latest version with FSP 5.3. It can be downloaded from `here <https://www.renesas.com/us/en/software-tool/flexible-software-package-fsp>`__.
 
    - JLink is used for debugging, it can be downloaded `here <https://www.segger.com/downloads/jlink/>`__.
 
@@ -99,14 +99,14 @@ Get started with the Renesas ecosystem
 
       Downloading the `.zip` from GitHub doesn't work as it doesn't download the submodules.
 
-   - Open e² studio, go to ``File`` -> ``Import project`` and select ``General`` / ``Exsisting projects into workspace``
+   - Open e² studio, go to ``File`` -> ``Import project`` and select ``General`` / ``Existing projects into workspace``
 
    - Browse the cloned folder and press ``Finish``.
 
    - Double click on ``configuration.xml``. This will activate the `Configuration Window`.
 
-      Renesas' Flexible Software Package (FSP) incudes BSP and HAL layer support extended with multiple RTOS variants and other middleware stacks.
-      The components will be available via code generation, incuding the entry point of *"main.c"*.
+      Renesas' Flexible Software Package (FSP) includes BSP and HAL layer support extended with multiple RTOS variants and other middleware stacks.
+      The components will be available via code generation, including the entry point of *"main.c"*.
 
       Press ``Generate Project Content`` in the top right corner.
 
@@ -144,7 +144,7 @@ Get started with the Renesas ecosystem
       The compiler must be activated in e² studio:
 
       - Go to go to ``Help`` -> ``Add Renesas Toolchains``
-      - Presss the ``Add... `` button
+      - Press the ``Add... `` button
       - Browse the installation folder of the toolchain
 
       |
@@ -160,14 +160,14 @@ Get started with the Renesas ecosystem
 
       Downloading the `.zip` from GitHub doesn't work as it doesn't download the submodules.
 
-   - Open e² studio, go to ``File`` -> ``Import project`` and select ``General`` / ``Exsisting projects into workspace``
+   - Open e² studio, go to ``File`` -> ``Import project`` and select ``General`` / ``Existing projects into workspace``
 
    - Select the cloned folder and press ``Finish``.
 
    - Double click on ``RX72N_EnVision_LVGL.scfg``. This will activate the `Configuration Window`.
 
-      Renesas' Smart Configurator (SMC) incudes BSP and HAL layer support extended with multiple RTOS variants and other middleware stacks.
-      The components will be available via code generation, incuding the entry point of the application.
+      Renesas' Smart Configurator (SMC) includes BSP and HAL layer support extended with multiple RTOS variants and other middleware stacks.
+      The components will be available via code generation, including the entry point of the application.
 
       Press ``Generate Code`` in the top right corner.
 
@@ -205,6 +205,39 @@ Configuration
 
 
 Hardware and software components can be modified in a visual way using the `Configuration Window`.
+
+Change compiler
+--------------
+
+By default Renesas supports GCC, however it's possible to use other compilers as well
+
+LLVM
+~~~~
+
+Add the compiler to e² studio
+=============================
+
+
+1. Download LLVM 17 from `here <https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/tag/release-17.0.1>`__ . Other versions might work as well, but they are not tested
+2. Extract the downloaded file. The target path can be selected freely.
+3. In e² studio click ``Help`` -> ``Add Renesas Toolchain``. From the list select ``LLVM Embedded Toolchain for Arm`` and click the ``Add...`` button at the bottom.
+4. Browse the extracted LLVM folder then click ok.
+
+
+Convert the project LLVM
+========================
+
+1. Click ``File`` -> ``Properties`` -> ``C/C++ Build`` -> ``Tool Chain Editor``
+2. In ``Current Toolachain`` select ``LLVM for Arm``
+3. Confirm the change of the Toolchain
+4. Still in Project properties select ``C/C++ Build`` -> ``Settings``. On the ``Tool Settings`` tab select `CPU` and as `Arm Family` the core of your MCU, e.g. ``cortex-m85``.
+5. On the ``Toolchain`` tab be sure that ``LLVM for Arm`` and the correct version is selected, and click ``Apply``.
+
+
+Ac6
+~~~
+
+TODO
 
 
 Support
