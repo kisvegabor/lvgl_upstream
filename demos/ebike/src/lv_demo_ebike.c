@@ -96,14 +96,15 @@ static void menu_bar_create(void)
     lv_obj_t * menu_cont = lv_obj_create(lv_screen_active());
     lv_obj_set_style_bg_color(menu_cont, lv_color_black(), 0);
     lv_obj_set_flex_flow(menu_cont, EBIKE_PORTRAIT ? LV_FLEX_FLOW_ROW : LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(menu_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 #if EBIKE_PORTRAIT
-    lv_obj_set_size(menu_cont, lv_pct(100), 44);
+    lv_obj_set_size(menu_cont, lv_pct(100), 64);
+    lv_obj_set_style_pad_gap(menu_cont, 32, 0);
 #else
     lv_obj_set_size(menu_cont, 44, lv_pct(100));
+    lv_obj_set_style_pad_gap(menu_cont, 16, 0);
 #endif
 
-    lv_obj_set_flex_align(menu_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_pad_gap(menu_cont, 16, 0);
 
     LV_IMAGE_DECLARE(img_ebike_settings);
     lv_obj_t * icon1 = lv_image_create(menu_cont);
