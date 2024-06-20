@@ -200,9 +200,9 @@ static void x11_disp_delete_evt_cb(lv_event_t * e)
     lv_timer_delete(xd->timer);
 
     lv_display_set_buffers(disp, NULL, NULL, 0, LV_DISPLAY_RENDER_MODE_PARTIAL);
-    lv_free(xd->buffer[0]);
+    free(xd->buffer[0]);
     if(LV_X11_DOUBLE_BUFFER) {
-        lv_free(xd->buffer[1]);
+        free(xd->buffer[1]);
     }
 
     XDestroyImage(xd->ximage);
