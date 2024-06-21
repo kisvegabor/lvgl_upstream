@@ -231,7 +231,10 @@ Convert the project LLVM
 2. In ``Current Toolachain`` select ``LLVM for Arm``
 3. Confirm the change of the Toolchain
 4. Still in Project properties select ``C/C++ Build`` -> ``Settings``. On the ``Tool Settings`` tab select `CPU` and as `Arm Family` the core of your MCU, e.g. ``cortex-m85``.
-5. On the ``Toolchain`` tab be sure that ``LLVM for Arm`` and the correct version is selected, and click ``Apply``.
+5. In ``Library Generator`` -> ``Settings`` set ``Library type`` to ``Pre-Built``
+6. In ``Linker CPP`` -> ``Archives`` in ``Archive search directories`` add ``script`` folder
+7. In ``Objcopy`` -> ``General`` set ``OutFormat`` to ``Intel Hex``
+8. On the ``Toolchain`` tab be sure that ``LLVM for Arm`` and the correct version is selected, and click ``Apply``.
 
 
 Ac6
