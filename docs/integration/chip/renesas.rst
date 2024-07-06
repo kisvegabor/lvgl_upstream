@@ -209,7 +209,11 @@ Hardware and software components can be modified in a visual way using the `Conf
 Change compiler
 --------------
 
-By default Renesas supports GCC, however it's possible to use other compilers as well
+By default Renesas supports GCC, however it's possible to use other compilers as well.
+
+Ready to use configurations are available in the ``llvm`` and ``ac6`` branches of `lv_port_renesas_ek-ra8d1 <https://github.com/lvgl/lv_port_renesas_ek-ra8d1>`__.
+
+After switching to a new compiler delete the ``ra_gen``, ``ra_cfg``, and ``Debug`` folders, and also ``Generate Project Content`` again in ``configuration.xml``.
 
 LLVM
 ~~~~
@@ -237,11 +241,31 @@ Convert the project LLVM
 8. On the ``Toolchain`` tab be sure that ``LLVM for Arm`` and the correct version is selected, and click ``Apply``.
 
 
-Ac6
-~~~
+Ac6 and Arm2D
+~~~~~~~~~~~~~
 
-TODO
+Add the compiler to e² studio
+=============================
+1. Download and install the Ac6 compiler from `arm's website <https://developer.arm.com/downloads/view/ACOMPE>`__.
+2. To register a community license go to ``bin`` folder of the compiler and in a Terminal run ``armlm.exe activate -server https://mdk-preview.keil.arm.com -product KEMDK-COM0``
+3. In E2 Studio open ``Window`` -> ``Preferences``. Select ``Toolchains`` on the left, click ``Add...`` and browse the bin folder of the Ac6 compiler.
 
+Convert the project Ac6
+=======================
+1. Project props, tool chain Ac6
+target: arm-arm-none-eabi
+mcpu: cortex-m85
+linker target: Cortex-M85
+linker scatter ${workspace_loc:/${ProjName}}/script/fsp.scat
+
+linker misc: --lto --library_type=standardlib --no_startup --via="${workspace_loc:/${ProjName}/script}/ac6/fsp_keep.via"
+asm misc: -x assembler-with-cpp
+comp misc: -DUSE_MVE_INTRINSICS  -Omax -mfloat-abi=hard -flto -Wno-int-conversion -Wno-deprecated-non-prototype -Wno-implicit-function-declaration -Wno-unused-but-set-variable -Wfloat-equal -Waggregate-return -Wshadow -Wpointer-arith -Wconversion -Wmissing-declarations -Wuninitialized -Wunused -Wno-license-management -Wextra -Wno-implicit-int-conversion -Wno-sign-conversion -I"/home/kisvegabor/projects/lvgl/e2_studio-workspace/lv_renesas/lv_ek_ra8d1/ra/arm/CMSIS_5/CMSIS/DSP/Include/" -I"/home/kisvegabor/projects/lvgl/e2_studio-workspace/lv_renesas/lv_ek_ra8d1/ra/arm/CMSIS_5/CMSIS/DSP/PrivateInclude/"
+
+
+
+Add Arm2D
+=========
 
 Support
 -------
