@@ -90,6 +90,8 @@ uint32_t ui_key_get(void)
         case LV_KEY_ESC:
             key = UI_KEY_ESC;
             break;
+        case 'f':
+            return UI_KEY_FN;
         case 'p':
             ui_scr_cc_open_photo();
             return 0;
@@ -100,6 +102,7 @@ uint32_t ui_key_get(void)
             ui_scr_play_open();
             return 0;
         case 'v':
+            //            ui_scr_cc_open_photo();
             ui_scr_play_video_open();
             return 0;
         case 'm':
