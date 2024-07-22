@@ -69,7 +69,7 @@ install(
   RENAME "lv_conf.h"
   OPTIONAL)
 
-configure_file("${LVGL_ROOT_DIR}/lvgl.pc.in" lvgl.pc @ONLY)
+configure_file("${LVGL_ROOT_DIR}/lvgl.pc.in" ${CMAKE_BINARY_DIR}/lvgl.pc @ONLY) 
 
 install(
   FILES "${CMAKE_BINARY_DIR}/lvgl.pc"
