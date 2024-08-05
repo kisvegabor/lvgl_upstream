@@ -672,7 +672,15 @@ static void scale_draw_label(lv_obj_t * obj, lv_event_t * event, lv_draw_label_d
         return;
     }
 
-    lv_draw_label(layer, label_dsc, &label_coords);
+    /*Draw the label to a new layer and draw the layer rotated*/
+    lv_layer_t * layer_label = lv_draw_layer_create(layer, LV_COLOR_FORMAT_ARGB8888, &label_coords);
+    lv_draw_label(layer_label, label_dsc, &label_coords);
+
+    lv_draw_image_dsc_t layer_draw_dsc;
+    lv_draw_image_dsc_init(&layer_draw_dsc);
+    layer_draw_dsc.src = layer_label;
+    layer_draw_dsc.rotation = 300;
+    lv_draw_layer(layer, &layer_draw_dsc, &label_coords);
 }
 
 static void scale_calculate_main_compensation(lv_obj_t * obj)
