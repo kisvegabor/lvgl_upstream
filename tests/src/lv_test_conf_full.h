@@ -1,3 +1,6 @@
+#ifndef LV_TEST_CONF_FULL_H
+#define LV_TEST_CONF_FULL_H
+
 #define LV_MEM_SIZE                     (32 * 1024 * 1024)
 #define LV_DRAW_SW_SHADOW_CACHE_SIZE    8
 #define LV_DRAW_THREAD_STACK_SIZE    (64 * 1024) /*Increase stack size to 64KB in order to run ThorVG*/
@@ -10,6 +13,7 @@
 #define LV_USE_ASSERT_OBJ               1
 #define LV_USE_ASSERT_STYLE             1
 #define LV_USE_FLOAT      1
+#define LV_USE_MATRIX     1
 
 #define LV_FONT_MONTSERRAT_8    1
 #define LV_FONT_MONTSERRAT_10   1
@@ -109,6 +113,7 @@
 #define LV_USE_DEMO_VECTOR_GRAPHIC  1
 
 #define LV_USE_OBJ_ID           1
+#define LV_OBJ_ID_AUTO_ASSIGN    1
 #define LV_USE_OBJ_ID_BUILTIN   1
 
 #define LV_CACHE_DEF_SIZE       (10 * 1024 * 1024)
@@ -134,8 +139,16 @@
     #define LV_LIBINPUT_XKB     1
 #endif
 
+#ifndef LV_USE_OPENGLES
+    #if !defined(NON_AMD64_BUILD) && !defined(_MSC_VER) && !defined(_WIN32)
+        #define LV_USE_OPENGLES 1
+    #endif
+#endif
+
 #define LV_USE_FREETYPE 1
 #define LV_FREETYPE_USE_LVGL_PORT 0
 #define LV_FREETYPE_CACHE_FT_GLYPH_CNT 10
 
 #define LV_USE_DRAW_SW_COMPLEX_GRADIENTS    1
+
+#endif /* LV_TEST_CONF_FULL_H */

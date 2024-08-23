@@ -26,8 +26,11 @@
     #warning "It's recommended to have at least 128kB RAM for the benchmark"
 #endif
 
-#include "../../src/display/lv_display_private.h"
 #include "../../src/core/lv_global.h"
+
+#if LV_USE_PERF_MONITOR
+    #include "../../src/display/lv_display_private.h"
+#endif
 
 /**********************
  *      TYPEDEFS
@@ -760,10 +763,10 @@ static lv_obj_t * card_create(void)
     lv_obj_set_size(panel, 270, 120);
     lv_obj_set_style_pad_all(panel, 8, 0);
 
-    LV_IMAGE_DECLARE(img_transform_avatar_15);
+    LV_IMAGE_DECLARE(img_benchmark_avatar);
     lv_obj_t * child = lv_image_create(panel);
     lv_obj_align(child, LV_ALIGN_LEFT_MID, 0, 0);
-    lv_image_set_src(child, &img_transform_avatar_15);
+    lv_image_set_src(child, &img_benchmark_avatar);
 
     child = lv_label_create(panel);
     lv_label_set_text(child, "John Smith");

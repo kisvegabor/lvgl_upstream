@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import os
+import platform
 from itertools import chain
 from pathlib import Path
 
@@ -24,9 +25,13 @@ build_only_options = {
     'OPTIONS_VG_LITE': 'VG-Lite simulator with full config, 32 bit color depth',
 }
 
+if platform.system() != 'Windows':
+    build_only_options['OPTIONS_SDL'] = 'SDL simulator with full config, 32 bit color depth'
+
 test_options = {
     'OPTIONS_TEST_SYSHEAP': 'Test config, system heap, 32 bit color depth',
     'OPTIONS_TEST_DEFHEAP': 'Test config, LVGL heap, 32 bit color depth',
+    'OPTIONS_TEST_VG_LITE': 'VG-Lite simulator with full config, 32 bit color depth',
 }
 
 
@@ -138,7 +143,7 @@ def generate_code_coverage_report():
     cmd = ['gcovr', '--root', root_dir, '--html-details', '--output',
            html_report_file, '--xml', 'report/coverage.xml',
            '-j', str(os.cpu_count()), '--print-summary',
-           '--html-title', 'LVGL Test Coverage', '--filter', '../src/.*/lv_.*\.c']
+           '--html-title', 'LVGL Test Coverage', '--filter', r'../src/.*/lv_.*\.c']
 
     subprocess.check_call(cmd)
     print("Done: See %s" % html_report_file, flush=True)

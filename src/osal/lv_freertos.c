@@ -13,7 +13,6 @@
  *      INCLUDES
  *********************/
 #include "lv_os.h"
-
 #if LV_USE_OS == LV_OS_FREERTOS
 
 #if (ESP_PLATFORM)
@@ -22,7 +21,10 @@
     #include "atomic.h"
 #endif
 
+#include "../tick/lv_tick.h"
 #include "../misc/lv_log.h"
+#include "../core/lv_global.h"
+
 /*********************
  *      DEFINES
  *********************/
@@ -31,6 +33,8 @@
 #ifndef pcTASK_NAME
     #define pcTASK_NAME "lvglDraw"
 #endif
+
+#define globals LV_GLOBAL_DEFAULT()
 
 /**********************
  *      TYPEDEFS
@@ -318,6 +322,68 @@ lv_result_t lv_thread_sync_delete(lv_thread_sync_t * pxCond)
     return LV_RESULT_OK;
 }
 
+lv_result_t lv_thread_sync_signal_isr(lv_thread_sync_t * pxCond)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+#if USE_FREERTOS_TASK_NOTIFY
+    /* Send a notification to the task waiting. */
+    vTaskNotifyGiveFromISR(pxCond->xTaskToNotify, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+#else
+    /* If the cond is uninitialized, perform initialization. */
+    prvCheckCondInit(pxCond);
+
+    /* Enter critical section to prevent preemption. */
+    _enter_critical();
+
+    pxCond->xSyncSignal = pdTRUE;
+    BaseType_t xAnyHigherPriorityTaskWoken = pdFALSE;
+
+    /* Unblock all. */
+    for(uint32_t i = 0; i < pxCond->ulWaitingThreads; i++) {
+        xSemaphoreGiveFromISR(pxCond->xCondWaitSemaphore, &xAnyHigherPriorityTaskWoken);
+        xHigherPriorityTaskWoken |= xAnyHigherPriorityTaskWoken;
+    }
+
+    _exit_critical();
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+#endif
+
+    return LV_RESULT_OK;
+}
+
+
+void lv_freertos_task_switch_in(const char * name)
+{
+    if(lv_strcmp(name, "IDLE")) globals->freertos_idle_task_running = false;
+    else globals->freertos_idle_task_running = true;
+
+    globals->freertos_task_switch_timestamp = lv_tick_get();
+}
+
+void lv_freertos_task_switch_out(void)
+{
+    uint32_t elaps = lv_tick_elaps(globals->freertos_task_switch_timestamp);
+    if(globals->freertos_idle_task_running) globals->freertos_idle_time_sum += elaps;
+    else globals->freertos_non_idle_time_sum += elaps;
+}
+
+uint32_t lv_os_get_idle_percent(void)
+{
+    if(globals->freertos_non_idle_time_sum + globals->freertos_idle_time_sum == 0) {
+        LV_LOG_WARN("Not enough time elapsed to provide idle percentage");
+        return 0;
+    }
+
+    uint32_t pct = (globals->freertos_idle_time_sum * 100) / (globals->freertos_idle_time_sum +
+                                                              globals->freertos_non_idle_time_sum);
+
+    globals->freertos_non_idle_time_sum = 0;
+    globals->freertos_idle_time_sum = 0;
+
+    return pct;
+}
+
 /**********************
  *   STATIC FUNCTIONS
  **********************/
@@ -334,7 +400,7 @@ static void prvRunThread(void * pxArg)
 
 static void prvMutexInit(lv_mutex_t * pxMutex)
 {
-    pxMutex->xMutex = xSemaphoreCreateMutex();
+    pxMutex->xMutex = xSemaphoreCreateRecursiveMutex();
 
     /* Ensure that the FreeRTOS mutex was successfully created. */
     if(pxMutex->xMutex == NULL) {

@@ -23,18 +23,25 @@
 #include <png.h>
 
 #ifdef _WIN32
-#include <direct.h>
-#define mkdir(pathname, mode) _mkdir(pathname)
-#define strtok_r strtok_s
+    #include <direct.h>
+    #define mkdir(pathname, mode) _mkdir(pathname)
+    #define strtok_r strtok_s
 #else
-#include <sys/stat.h>
+    #include <sys/stat.h>
 #endif
 
 /*********************
  *      DEFINES
  *********************/
-//#define REF_IMGS_PATH "lvgl/tests/lv_test_ref_imgs/"
-#define REF_IMGS_PATH "ref_imgs/"
+
+#ifndef REF_IMGS_PATH
+    #define REF_IMGS_PATH "ref_imgs/"
+#endif
+
+#ifndef REF_IMG_TOLERANCE
+    #define REF_IMG_TOLERANCE 0
+#endif
+
 #define ERR_FILE_NOT_FOUND  -1
 #define ERR_PNG             -2
 
@@ -55,11 +62,11 @@ typedef struct {
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static bool screenhot_compare(const char * fn_ref, const char * mode, uint8_t tolerance);
+static bool screenshot_compare(const char * fn_ref, const char * mode, uint8_t tolerance);
 static int read_png_file(png_image_t * p, const char * file_name);
 static int write_png_file(void * raw_img, uint32_t width, uint32_t height, char * file_name);
 static void png_release(png_image_t * p);
-static void buf_to_xrgb8888(const uint8_t * buf_in, uint8_t * buf_out, lv_color_format_t cf_in);
+static void buf_to_xrgb8888(const lv_draw_buf_t * draw_buf, uint8_t * buf_out);
 static void create_folders_if_needed(const char * path) ;
 
 /**********************
@@ -81,7 +88,7 @@ bool lv_test_assert_image_eq(const char * fn_ref)
     lv_obj_t * scr = lv_screen_active();
     lv_obj_invalidate(scr);
 
-    pass = screenhot_compare(fn_ref, "full refresh", 0);
+    pass = screenshot_compare(fn_ref, "full refresh", REF_IMG_TOLERANCE);
     if(!pass) return false;
 
     //Software has minor rounding errors when not the whole image is updated
@@ -100,7 +107,7 @@ bool lv_test_assert_image_eq(const char * fn_ref)
     //        lv_obj_invalidate_area(scr, &a);
     //    }
     //
-    //    pass = screenhot_compare(fn_ref, "vertical stripes", 32);
+    //    pass = screenshot_compare(fn_ref, "vertical stripes", 32);
     //    if(!pass) return false;
     //
     //
@@ -117,7 +124,7 @@ bool lv_test_assert_image_eq(const char * fn_ref)
     //        lv_obj_invalidate_area(scr, &a);
     //    }
     //
-    //    pass = screenhot_compare(fn_ref, "horizontal stripes", 32);
+    //    pass = screenshot_compare(fn_ref, "horizontal stripes", 32);
     //    if(!pass) return false;
 
     return true;
@@ -134,7 +141,7 @@ static uint8_t screen_buf_xrgb8888[800 * 480 * 4];
  * @param mode          arbitrary string to tell more about the compare
  * @return  true: test passed; false: test failed
  */
-static bool screenhot_compare(const char * fn_ref, const char * mode, uint8_t tolerance)
+static bool screenshot_compare(const char * fn_ref, const char * mode, uint8_t tolerance)
 {
 
     char fn_ref_full[256];
@@ -144,11 +151,8 @@ static bool screenhot_compare(const char * fn_ref, const char * mode, uint8_t to
 
     lv_refr_now(NULL);
 
-    extern uint8_t * last_flushed_buf;
-
-    lv_color_format_t cf = lv_display_get_color_format(NULL);
-    uint8_t * screen_buf = lv_draw_buf_align(last_flushed_buf, cf);
-    buf_to_xrgb8888(screen_buf, screen_buf_xrgb8888, cf);
+    lv_draw_buf_t * draw_buf = lv_display_get_buf_active(NULL);
+    buf_to_xrgb8888(draw_buf, screen_buf_xrgb8888);
 
     png_image_t p;
     int res = read_png_file(&p, fn_ref_full);
@@ -174,9 +178,9 @@ static bool screenhot_compare(const char * fn_ref, const char * mode, uint8_t to
             ptr_ref = &(row[x * 3]);
             ptr_act = screen_buf_tmp;
 
-            if(LV_ABS((int32_t) ptr_act[0] - ptr_ref[0]) > tolerance ||
-               LV_ABS((int32_t) ptr_act[1] - ptr_ref[1]) > tolerance ||
-               LV_ABS((int32_t) ptr_act[2] - ptr_ref[2]) > tolerance) {
+            if(LV_ABS((int32_t) ptr_act[0] - (int32_t) ptr_ref[0]) > tolerance ||
+               LV_ABS((int32_t) ptr_act[1] - (int32_t) ptr_ref[1]) > tolerance ||
+               LV_ABS((int32_t) ptr_act[2] - (int32_t) ptr_ref[2]) > tolerance) {
                 uint32_t act_px = (ptr_act[2] << 16) + (ptr_act[1] << 8) + (ptr_act[0] << 0);
                 uint32_t ref_px = 0;
                 memcpy(&ref_px, ptr_ref, 3);
@@ -185,8 +189,9 @@ static bool screenhot_compare(const char * fn_ref, const char * mode, uint8_t to
                             "  - Mode: %s\n"
                             "  - At x:%d, y:%d.\n"
                             "  - Expected: %X\n"
-                            "  - Actual:   %X",
-                            fn_ref_full, mode,  x, y, ref_px, act_px);
+                            "  - Actual:   %X\n"
+                            "  - Tolerance: %d",
+                            fn_ref_full, mode,  x, y, ref_px, act_px, tolerance);
                 fflush(stderr);
                 err = true;
                 break;
@@ -372,9 +377,12 @@ static void png_release(png_image_t * p)
     png_destroy_read_struct(&p->png_ptr, &p->info_ptr, NULL);
 }
 
-static void buf_to_xrgb8888(const uint8_t * buf_in, uint8_t * buf_out, lv_color_format_t cf_in)
+static void buf_to_xrgb8888(const lv_draw_buf_t * draw_buf, uint8_t * buf_out)
 {
-    uint32_t stride = lv_draw_buf_width_to_stride(800, cf_in);
+    uint32_t stride = draw_buf->header.stride;
+    lv_color_format_t cf_in = draw_buf->header.cf;
+    const uint8_t * buf_in = draw_buf->data;
+
     if(cf_in == LV_COLOR_FORMAT_RGB565) {
         uint32_t y;
         for(y = 0; y < 480; y++) {
@@ -438,15 +446,34 @@ static void buf_to_xrgb8888(const uint8_t * buf_in, uint8_t * buf_out, lv_color_
             buf_out += 800 * 4;
         }
     }
-    else if (cf_in == LV_COLOR_FORMAT_AL88) {
+    else if(cf_in == LV_COLOR_FORMAT_AL88) {
         uint32_t y;
-        for (y = 0; y < 480; y++) {
+        for(y = 0; y < 480; y++) {
             uint32_t x;
-            for (x = 0; x < 800; x++) {
+            for(x = 0; x < 800; x++) {
                 buf_out[x * 4 + 3] = buf_in[x * 2 + 1];
                 buf_out[x * 4 + 2] = buf_in[x * 2 + 0];
                 buf_out[x * 4 + 1] = buf_in[x * 2 + 0];
                 buf_out[x * 4 + 0] = buf_in[x * 2 + 0];
+            }
+
+            buf_in += stride;
+            buf_out += 800 * 4;
+        }
+    }
+    else if(cf_in == LV_COLOR_FORMAT_I1) {
+        uint32_t y;
+        for(y = 0; y < 480; y++) {
+            uint32_t x;
+            for(x = 0; x < 800; x++) {
+                const uint8_t byte = buf_in[x / 8];
+                const uint8_t bit_pos = x % 8;
+                const uint8_t pixel = (byte >> (7 - bit_pos)) & 0x01;
+
+                buf_out[x * 4 + 3] = 0xff;
+                buf_out[x * 4 + 2] = pixel ? 0xff : 0x00;
+                buf_out[x * 4 + 1] = pixel ? 0xff : 0x00;
+                buf_out[x * 4 + 0] = pixel ? 0xff : 0x00;
             }
 
             buf_in += stride;
@@ -472,10 +499,10 @@ static void create_folders_if_needed(const char * path)
         strcat(current_path, "/");
 
         int mkdir_retval = mkdir(current_path, 0777);
-        if (mkdir_retval == 0) {
+        if(mkdir_retval == 0) {
             printf("Created folder: %s\n", current_path);
         }
-        else if (errno != EEXIST) {
+        else if(errno != EEXIST) {
             perror("Error creating folder");
             free(pathCopy);
             exit(EXIT_FAILURE);

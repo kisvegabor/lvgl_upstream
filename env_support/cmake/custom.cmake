@@ -1,9 +1,4 @@
-set(LVGL_VERSION_MAJOR "9")
-set(LVGL_VERSION_MINOR "1")
-set(LVGL_VERSION_PATCH "1")
-set(LVGL_VERSION_INFO  "dev")
-set(LVGL_VERSION ${LVGL_VERSION_MAJOR}.${LVGL_VERSION_MINOR}.${LVGL_VERSION_PATCH})
-set(LVGL_SOVERSION ${LVGL_VERSION_MAJOR})
+include("${CMAKE_CURRENT_LIST_DIR}/version.cmake")
 
 # Option to define LV_LVGL_H_INCLUDE_SIMPLE, default: ON
 option(LV_LVGL_H_INCLUDE_SIMPLE
@@ -32,16 +27,9 @@ file(GLOB_RECURSE THORVG_SOURCES ${LVGL_ROOT_DIR}/src/libs/thorvg/*.cpp ${LVGL_R
 add_library(lvgl ${SOURCES})
 add_library(lvgl::lvgl ALIAS lvgl)
 
-if(NOT (CMAKE_C_COMPILER_ID STREQUAL "MSVC"))
-  target_compile_definitions(
-    lvgl PUBLIC $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
-                $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>
-                $<$<COMPILE_LANGUAGE:ASM>:__ASSEMBLY__>)
-else()
-  target_compile_definitions(
-    lvgl PUBLIC $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
-                $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>)
-endif()
+target_compile_definitions(
+  lvgl PUBLIC $<$<BOOL:${LV_LVGL_H_INCLUDE_SIMPLE}>:LV_LVGL_H_INCLUDE_SIMPLE>
+              $<$<BOOL:${LV_CONF_INCLUDE_SIMPLE}>:LV_CONF_INCLUDE_SIMPLE>)
 
 # Add definition of LV_CONF_PATH only if needed
 if(LV_CONF_PATH)

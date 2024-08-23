@@ -21,7 +21,16 @@
 #endif
 
 #if LV_FS_FATFS_LETTER == '\0'
-    #error "LV_FS_FATFS_LETTER must be an upper case ASCII letter"
+    #error "LV_FS_FATFS_LETTER must be set to a valid value"
+#else
+    #if (LV_FS_FATFS_LETTER < 'A') || (LV_FS_FATFS_LETTER > 'Z')
+        #if LV_FS_DEFAULT_DRIVE_LETTER != '\0' /*When using default drive letter, strict format (X:) is mandatory*/
+            #error "LV_FS_FATFS_LETTER must be an upper case ASCII letter"
+        #else /*Lean rules for backward compatibility*/
+            #warning LV_FS_FATFS_LETTER should be an upper case ASCII letter. \
+            Using a slash symbol as drive letter should be replaced with LV_FS_DEFAULT_DRIVE_LETTER mechanism
+        #endif
+    #endif
 #endif
 
 /**********************
@@ -294,4 +303,4 @@ static lv_fs_res_t fs_dir_close(lv_fs_drv_t * drv, void * dir_p)
     #warning "LV_USE_FS_FATFS is not enabled but LV_FS_FATFS_LETTER is set"
 #endif
 
-#endif /*LV_USE_FS_POSIX*/
+#endif /*LV_USE_FS_FATFS*/

@@ -7,6 +7,7 @@
  *      INCLUDES
  *********************/
 
+#include "../../draw/lv_image_decoder_private.h"
 #include "../lv_assert.h"
 #include "../../core/lv_global.h"
 
@@ -20,6 +21,7 @@
 #define CACHE_NAME  "IMAGE"
 
 #define img_cache_p (LV_GLOBAL_DEFAULT()->img_cache)
+#define image_cache_draw_buf_handlers &(LV_GLOBAL_DEFAULT()->image_cache_draw_buf_handlers)
 
 /**********************
  *      TYPEDEFS
