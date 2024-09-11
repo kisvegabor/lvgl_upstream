@@ -1,0 +1,12 @@
+<api>
+    <prop name="text" type="string" code="const char * text;"/>
+    <prop name="click_cnt" code="uint8_t cnt :4;"/>
+</api>
+
+<styles>
+    <style name="main" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+</styles>
+
+<view extends="button" styles="main">
+    <label name="label" text="Button text"/>
+</view>

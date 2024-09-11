@@ -1,0 +1,15 @@
+<api>
+    <prop name="range_min" type="int" />
+    <prop name="range_max" type="int" />
+    <prop name="value" type="int" />
+    <prop name="mode" base_type="enum">
+        <enum name="Normal" help="Normal left to right slider"/>
+        <enum name="Range" help="Two knobs with to set a range"/>
+        <enum name="Symmetrical" help="The indicaror is grwing from zero"/>
+    </prop>
+    <prop name="orientation" base_type="enum">
+        <enum name="auto" />
+        <enum name="horizontal" />
+        <enum name="vertical" />
+    </prop>
+</api>

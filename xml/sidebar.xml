@@ -1,0 +1,12 @@
+<view>
+    <list title="Hello list!">
+        <sliderbox title="First" value="10"/>
+        <sliderbox title="Second" value="20">
+            <label text="Extra :)">
+        </sliderbox>
+        <sliderbox title="Third with a very long title, maybe it won't even fit." value="30"/>
+        <sliderbox title="4" value="40" mode="warning"/>
+        <sliderbox title="" value="50"/>
+        <sliderbox title=0 value="60"/>
+    </list>
+</view>

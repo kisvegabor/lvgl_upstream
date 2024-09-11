@@ -1,0 +1,29 @@
+<api>
+    <prop name="color" type="color" />
+    <prop name="title" type="string" />
+    <prop name="value" type="int" />
+    <prop name="title_subject" type="subject" />
+    <prop name="value_subject" type="subject" />
+    <prop name="mode" type="enum" >
+        <enum name="normal"/>
+        <enum name="warning"/>
+    </prop>
+</api>
+
+<styles>
+    <style name="main" bg_color="0xffeeaa" radius="20" border_width="5px" flex_flow="row_wrap"/>
+    <style name="slider_bg" bg_color="0x12ff88" radius="2px"/>
+    <style name="slider_indic" bg_color="0xff0088" radius="44px"/>
+    <style name="warning_strong" bg_color="0xff8800"/>
+    <style name="warning_light" bg_color="0xffaa66"/>
+</styles>
+
+
+<view>
+    <obj>
+        <label text="Title" width="100%"/>
+        <circle_button text="-" />
+        <slider width="100%" styles="slider_bg slider_indic:indicator"/>
+        <circle_button text="+" />
+    </obj>
+</view>
