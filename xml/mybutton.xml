@@ -1,0 +1,13 @@
+<api>
+    <property name="text" type="string" />
+</api>
+
+<styles>
+    <style name="main" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+</styles>
+
+<view>
+    <button styles="main">
+        <label text="Button text"/>
+    </button>
+</view>
