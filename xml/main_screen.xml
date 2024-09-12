@@ -3,7 +3,7 @@
         <tabview name="tv" act_tab="2">
             <tabview-tab_bar name="tabbar" styles="red" />
             <tabview-tab_cont name="tabcont" styles="light_blue" />
-            <tabview-tab text="First">
+            <tabview-tab text="First"  cont_h=100  main_color="0x123" transparent="false">
                 <label name="tab_first_label" text="Tab 1"/>
                 <sliderbox  name="sliderbox" x="10" y="80"/>
             </tabview-tab>

@@ -6,6 +6,9 @@
     <element name="tab_cont" type="obj" access="implicit-single"/>
     <element name="tab" type="obj" access="explicit">
         <prop name="text" type="string" arg="true"/>
+        <prop name="main_color" type="color" arg="true"/>
+        <prop name="cont_h" type="px" arg="true"/>
+        <prop name="transparent" type="bool"/>
     </element>
     <element name="tab_button" type="obj" access="implicit-multi"/>
 </api>
