@@ -1,0 +1,16 @@
+<api>
+    <prop type="string" help="Missing name"/>
+    <element name="label" type="no_exists" help="The label of the button" access="explicit-single"/>
+</api>
+
+<styles>
+    <style name="main" help="The style of the background" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+    <style help="No name" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+    <style name="inv prop" help="Inv prop" AAAA_color="0xffeeaa" />
+</styles>
+
+<view extends="button" styles="main">
+    <label name="label" text="Button text"/>
+    <label eeeename="not base obj prop" text="Button text"/>
+    <label eeeename="not base obj prop" textrrrrrr="Not text prop"/>
+</view>

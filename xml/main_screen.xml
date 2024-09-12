@@ -1,0 +1,24 @@
+<view>
+    <obj width="300" height="200">
+        <tabview act_tab="2">
+            <tab_bar styles="red" />
+            <tab_cont styles="light_blue" />
+            <tab name="Zero">
+                <label text="Tab 0"/>
+                <sliderbox x=10 y=80/>
+            </tab>
+            <tab name="First">
+                <label text="Tab 1"/>
+            </tab>
+            <tab name="Second">
+                <label text="Tab 2"/>
+            </tab>
+
+            <tab_button index="1">
+                <label text="new">
+            </tab_button>
+        </tabview>
+    </obj>
+
+
+</view>
