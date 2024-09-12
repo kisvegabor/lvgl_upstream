@@ -1,0 +1,75 @@
+<type>
+    <def name="int"            help="Normal number in the range of -2M..2M by default. int[min,max] defines a range."/>
+    <def name="px"             help="Simple pixel unit. The unit &quot;px&quot; can be omitted"/>
+    <def name="%"              help="Percentage. % must be appended as a unit"/>
+    <def name="content"        help="Can have a single value: LV_SIZE_CONTENT"/>
+    <def name="subject"        help="A subject"/>
+    <def name="string"         help="Simple `\0` terminated string" />
+    <def name="enum"           help="Options from which one can be selected" />
+    <def name="color"          help="A color stored as 24 bit RGB" />
+    <def name="opa"            help="Opacity value in the range of 0..255 or 0..100%" />
+    <def name="grad"           help="A complex gradient descriptor"/>
+    <def name="obj"            help="Pointer to a widget" />
+    <def name="animation"      help="An animation descriptor"/>
+    <def name="font"           help="A font from the asset manager"/>
+    <def name="image_src"      help="An image from the asset manager"/>
+    <def name="style"          help="The name of a style. Can be also style:state:part, style:state, style:part"/>
+    <def name="bool"           help="true or false">
+    <def name="custom"         help="Describe the type in required languages. E.g. code=&quot;lv_chart_series_t *&quot; or code-c=&quot;lv_chart_series_t *&quot;">
+    <def name="type"           help="A type" />
+</type>
+
+<styles>
+    <style>
+        <def name="name"  type="string" required="true" help="You can reference this property by this name later. E.g. name=&quot;text&quot;, when used <some_wodget text=&quot;hello&quot; "/>
+        <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+        <def name="bg_color" type="color" help="The background color"/>
+        <def name="border_color" type="px" help="The boder color"/>
+        <def name="border_width" type="px" help="The boder width"/>
+        <def name="width" type="px|%|content" help="The width" />
+        <def name="pad_left" type="px"          help="The left padding"/>
+        <def name="pad_right" type="px"         help="The right padding"/>
+        <def name="pad_top" type="px"           help="The top padding"/>
+        <def name="pad_bottom" type="px"        help="The bottom padding"/>
+        <def name="radius" type="px"            help="The radius"/>
+        <def name="align" type="align"          help="The alignment"/>
+        <def name="flex_flow" type="enum"       help="The flex flow">
+            <enum name="row"            help="In a row"/>
+            <enum name="row_wrap"       help="In rows and wrap"/>
+            <enum name="column"         help="In a column"/>
+            <enum name="column_wrap"    help="In columns and wrap"/>
+        </def>
+    </style>
+</styles>
+
+<api>
+    <prop>
+        <def name="name"  type="string" required="true" help="You can reference this property by this name later. E.g. name=&quot;text&quot;, when used <some_wodget text=&quot;hello&quot; "/>
+        <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+        <def name="type"  type="type"   required="true" help="The type of the property."/>
+        <def name="store" type="bool"  default="false" help="This text will be displayed on hover."/>
+    </prop>
+
+    <element>
+        <def name="name"     type="string" required="true" help="The name of an element"/>
+        <def name="help"     type="string" default="No help to display" help="This text will be displayed on hover."/>
+        <def name="type"     type="type"   required="true" help="The type of the element."/>
+        <def name="creation" type="enum"   required="true" help="Define how and when the element is created"/>
+            <enum name="implicit-single" help="A single instance is created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget)`"/>
+            <enum name="implicit-multi"  help="Multiple instance are created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget, index)`" />
+            <enum name="explicit-single" help="A single instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
+            <enum name="explicit-multi"  help="Multiple instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
+        </def>
+        <prop>
+            <def name="name"  type="string" required="true"  help="The name of an element"/>
+            <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+            <def name="type"  type="type"   required="true" help="The type of the element."/>
+            <def name="arg"   type="bool"   default="false" help="Argument of the `add` function in the order of definition.">
+        </prop>
+    </element>
+
+    <store>
+        <def name="code"     type="string"  required="true"   help="Any custom text to store in widget's class">
+        <def name="language" type="string"  default="c"       help="The language on which the code should be added">
+    </store>
+</api>
