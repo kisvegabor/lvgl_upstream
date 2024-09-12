@@ -4,7 +4,7 @@
 </api>
 
 <styles>
-    <style name="main" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+    <style name="main" help="The style of the background" bg_color="0xffeeaa" radius="20" border_width="5px"/>
 </styles>
 
 <view extends="button" styles="main">

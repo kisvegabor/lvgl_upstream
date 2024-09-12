@@ -10,12 +10,13 @@
     <def name="opa"            help="Opacity value in the range of 0..255 or 0..100%" />
     <def name="grad"           help="A complex gradient descriptor"/>
     <def name="obj"            help="Pointer to a widget" />
+    <def name="dir"            help="Direction" />
     <def name="animation"      help="An animation descriptor"/>
     <def name="font"           help="A font from the asset manager"/>
     <def name="image_src"      help="An image from the asset manager"/>
     <def name="style"          help="The name of a style. Can be also style:state:part, style:state, style:part"/>
-    <def name="bool"           help="true or false">
-    <def name="custom"         help="Describe the type in required languages. E.g. code=&quot;lv_chart_series_t *&quot; or code-c=&quot;lv_chart_series_t *&quot;">
+    <def name="bool"           help="true or false"/>
+    <def name="custom"         help="Describe the type in required languages. E.g. code=&quot;lv_chart_series_t *&quot; or code-c=&quot;lv_chart_series_t *&quot;"/>
     <def name="type"           help="A type" />
 </type>
 
@@ -54,7 +55,7 @@
         <def name="name"     type="string" required="true" help="The name of an element"/>
         <def name="help"     type="string" default="No help to display" help="This text will be displayed on hover."/>
         <def name="type"     type="type"   required="true" help="The type of the element."/>
-        <def name="creation" type="enum"   required="true" help="Define how and when the element is created"/>
+        <def name="creation" type="enum"   required="true" help="Define how and when the element is created">
             <enum name="implicit-single" help="A single instance is created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget)`"/>
             <enum name="implicit-multi"  help="Multiple instance are created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget, index)`" />
             <enum name="explicit-single" help="A single instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
@@ -64,12 +65,12 @@
             <def name="name"  type="string" required="true"  help="The name of an element"/>
             <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
             <def name="type"  type="type"   required="true" help="The type of the element."/>
-            <def name="arg"   type="bool"   default="false" help="Argument of the `add` function in the order of definition.">
+            <def name="arg"   type="bool"   default="false" help="Argument of the `add` function in the order of definition."/>
         </prop>
     </element>
 
     <store>
-        <def name="code"     type="string"  required="true"   help="Any custom text to store in widget's class">
-        <def name="language" type="string"  default="c"       help="The language on which the code should be added">
+        <def name="code"     type="string"  required="true"   help="Any custom text to store in widget's class"/>
+        <def name="language" type="string"  default="c"       help="The language on which the code should be added"/>
     </store>
 </api>
