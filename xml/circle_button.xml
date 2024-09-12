@@ -1,6 +1,10 @@
 <api>
     <prop name="text" type="string" code="const char * text;"/>
-    <prop name="click_cnt" code="uint8_t cnt :4;"/>
+    <element name="label" type="obj" help="The label of the button" access="explicit-single"/>
+    <data language="C">
+        uint32_t x:4; //Bitfield test
+        int click_cnt;
+    </data>
 </api>
 
 <styles>

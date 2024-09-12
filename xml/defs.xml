@@ -11,6 +11,7 @@
     <def name="grad"           help="A complex gradient descriptor"/>
     <def name="obj"            help="Pointer to a widget" />
     <def name="dir"            help="Direction" />
+    <def name="align"          help="Alignment options" />
     <def name="animation"      help="An animation descriptor"/>
     <def name="font"           help="A font from the asset manager"/>
     <def name="image_src"      help="An image from the asset manager"/>
@@ -55,7 +56,7 @@
         <def name="name"     type="string" required="true" help="The name of an element"/>
         <def name="help"     type="string" default="No help to display" help="This text will be displayed on hover."/>
         <def name="type"     type="type"   required="true" help="The type of the element."/>
-        <def name="creation" type="enum"   required="true" help="Define how and when the element is created">
+        <def name="access" type="enum"   required="true" help="Define how and when the element is created and accessed">
             <enum name="implicit-single" help="A single instance is created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget)`"/>
             <enum name="implicit-multi"  help="Multiple instance are created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget, index)`" />
             <enum name="explicit-single" help="A single instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>

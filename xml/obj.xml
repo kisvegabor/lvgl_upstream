@@ -1,8 +1,9 @@
 <api>
-    <prop name="x" type="px|%" />
-    <prop name="y" type="px|%" />
-    <prop name="width" type="px|%|content" />
-    <prop name="height" type="px|%|content" />
+    <prop name="name" type="string">
+    <prop name="x" type="px" />
+    <prop name="y" type="px" />
+    <prop name="width" type="px" />
+    <prop name="height" type="px" />
     <prop name="align" type="align"/>
-    <prop name="styles" type="style_array"/>
+    <prop name="styles" type="style"/>
 </api>
