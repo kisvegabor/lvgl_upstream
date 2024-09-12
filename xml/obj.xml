@@ -1,5 +1,5 @@
 <api>
-    <prop name="name" type="string">
+    <prop name="name" type="string" required>
     <prop name="x" type="px" />
     <prop name="y" type="px" />
     <prop name="width" type="px" />

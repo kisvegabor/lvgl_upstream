@@ -59,8 +59,7 @@
         <def name="access" type="enum"   required="true" help="Define how and when the element is created and accessed">
             <enum name="implicit-single" help="A single instance is created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget)`"/>
             <enum name="implicit-multi"  help="Multiple instance are created automatically. Can be get by `lv_<widget_name>_get_<element_name>(widget, index)`" />
-            <enum name="explicit-single" help="A single instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
-            <enum name="explicit-multi"  help="Multiple instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
+            <enum name="explicit" help="Multiple instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
         </def>
         <prop>
             <def name="name"  type="string" required="true"  help="The name of an element"/>
@@ -69,9 +68,4 @@
             <def name="arg"   type="bool"   default="false" help="Argument of the `add` function in the order of definition."/>
         </prop>
     </element>
-
-    <store>
-        <def name="code"     type="string"  required="true"   help="Any custom text to store in widget's class"/>
-        <def name="language" type="string"  default="c"       help="The language on which the code should be added"/>
-    </store>
 </api>

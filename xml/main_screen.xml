@@ -1,26 +1,20 @@
 <view>
-    <obj width="300" height="200">
-        <tabview act_tab="2">
-            <tabview-tab_bar styles="red" />
-            <tabview-tab_cont styles="light_blue" />
-            <tabview-tab name="Zero">
-                <label text="Tab 0"/>
-                <sliderbox x="10" y="80"/>
+    <obj name="cont" width="300" height="200">
+        <tabview name="tv" act_tab="2">
+            <tabview-tab_bar name="tabbar" styles="red" />
+            <tabview-tab_cont name="tabcont" styles="light_blue" />
+            <tabview-tab text="First">
+                <label name="tab_first_label" text="Tab 1"/>
+                <sliderbox  name="sliderbox" x="10" y="80"/>
             </tabview-tab>
-            <tabview-tab name="First">
-                <label text="Tab 1"/>
+            <tabview-tab name="tab2" text="Second">
+                <label name="aaa" text="Tab 2"/>
             </tabview-tab>
-            <tabview-tab name="Second">
-                <label text="Tab 2"/>
-                <!--Tab view in tabview-->
-                <tabview act_tab="1">
-                    <tabview-tab name="sub 1">
-                        <label text="Tab 1.1"/>
-                    </tabview-tab>
-                </tabview>
-            </tabview-tab>
+            <tabview-tab text="3th">
+                <labeltext="Tab 3"/>
+              </tabview-tab>
 
-            <tabview-tab_button name="does it make sense?">
+            <tabview-tab_button name="tabbutton">
                 <label text="new">
             </tabview-tab_button>
         </tabview>
