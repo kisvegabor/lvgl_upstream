@@ -1,24 +1,28 @@
 <view>
     <obj width="300" height="200">
         <tabview act_tab="2">
-            <tab_bar styles="red" />
-            <tab_cont styles="light_blue" />
-            <tab name="Zero">
+            <tabview-tab_bar styles="red" />
+            <tabview-tab_cont styles="light_blue" />
+            <tabview-tab name="Zero">
                 <label text="Tab 0"/>
-                <sliderbox x=10 y=80/>
-            </tab>
-            <tab name="First">
+                <sliderbox x="10" y="80"/>
+            </tabview-tab>
+            <tabview-tab name="First">
                 <label text="Tab 1"/>
-            </tab>
-            <tab name="Second">
+            </tabview-tab>
+            <tabview-tab name="Second">
                 <label text="Tab 2"/>
-            </tab>
+                <!--Tab view in tabview-->
+                <tabview act_tab="1">
+                    <tabview-tab name="sub 1">
+                        <label text="Tab 1.1"/>
+                    </tabview-tab>
+                </tabview>
+            </tabview-tab>
 
-            <tab_button index="1">
+            <tabview-tab_button name="does it make sense?">
                 <label text="new">
-            </tab_button>
+            </tabview-tab_button>
         </tabview>
     </obj>
-
-
 </view>

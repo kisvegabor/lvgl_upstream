@@ -7,4 +7,5 @@
     <element name="tab" type="obj" access="explicit-multi">
         <prop name="name" type="string" arg="true"/>
     </element>
+    <element name="tab_button" type="obj" access="implicit-multi"/>
 </api>
