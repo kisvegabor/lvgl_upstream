@@ -23,7 +23,7 @@
     <obj>
         <label text="Title" width="100%"/>
         <circle_button text="-" />
-        <slider width="100%" styles="slider_bg slider_indic:indicator"/>
+        <slider value="21" width="100%" styles="slider_bg slider_indic:indicator"/>
         <circle_button text="+" />
     </obj>
 </view>

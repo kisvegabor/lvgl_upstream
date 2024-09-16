@@ -1,0 +1,24 @@
+<api>
+    <prop name="state" type="enum">
+        <enum name="default" help="Some help"/>
+        <enum name="pressed" help="Some help"/>
+        <enum name="checked" help="Some help"/>
+    </prop>
+    <prop name="part" type="enum">
+        <enum name="main" help="Some help"/>
+        <enum name="scrollbar" help="Some help"/>
+        <enum name="indicator" help="Some help"/>
+        <enum name="knob" help="Some help"/>
+    </prop>
+    <prop name="align" type="enum">
+        <enum name="top_left" help="Some help"/>
+        <enum name="bottom_right" help="Some help"/>
+        <enum name="center" help="Some help"/>
+    </prop>
+    <prop name="dir" type="enum">
+        <enum name="top" help="Some help"/>
+        <enum name="bottom" help="Some help"/>
+        <enum name="left" help="Some help"/>
+        <enum name="right" help="Some help"/>
+    </prop>
+</api>

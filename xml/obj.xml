@@ -1,5 +1,6 @@
 <api>
-    <prop name="name" type="string" required>
+    <prop name="name" type="string"/>
+    <prop name="store" type="bool"/>
     <prop name="x" type="px" />
     <prop name="y" type="px" />
     <prop name="width" type="px" />

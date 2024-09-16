@@ -24,7 +24,7 @@
 <styles>
     <style>
         <def name="name"  type="string" required="true" help="You can reference this property by this name later. E.g. name=&quot;text&quot;, when used <some_wodget text=&quot;hello&quot; "/>
-        <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+        <def name="help"  type="string" default="No help to display" help="This text will be displayed on hover."/>
         <def name="bg_color" type="color" help="The background color"/>
         <def name="border_color" type="px" help="The boder color"/>
         <def name="border_width" type="px" help="The boder width"/>
@@ -47,7 +47,7 @@
 <api>
     <prop>
         <def name="name"  type="string" required="true" help="You can reference this property by this name later. E.g. name=&quot;text&quot;, when used <some_wodget text=&quot;hello&quot; "/>
-        <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+        <def name="help"  type="string" default="No help to display" help="This text will be displayed on hover."/>
         <def name="type"  type="type"   required="true" help="The type of the property."/>
         <def name="store" type="bool"  default="false" help="This text will be displayed on hover."/>
     </prop>
@@ -62,10 +62,18 @@
             <enum name="explicit" help="Multiple instance can be created manually. Can be created by `lv_<widget_name>_add_<element_name>`"/>
         </def>
         <prop>
-            <def name="name"  type="string" required="true"  help="The name of an element"/>
-            <def name="help"  type="string" default="No help to display" help="This text will be displayed when on hover."/>
+            <def name="name"  type="string" required="true"  help="The name of an element property"/>
+            <def name="help"  type="string" default="No help to display" help="This text will be displayed on hover."/>
             <def name="type"  type="type"   required="true" help="The type of the element."/>
             <def name="arg"   type="bool"   default="false" help="Argument of the `add` function in the order of definition."/>
         </prop>
     </element>
+    <part>
+        <def name="name"  type="enum" required="true"  help="The name of part">
+            <enum name="main"/>
+            <enum name="scrollbar"/>
+            <enum name="indicator"/>
+        </def>
+        <def name="help"  type="string" required="true" default="No help to display" help="This text will be displayed on hover."/>
+    </part>
 </api>

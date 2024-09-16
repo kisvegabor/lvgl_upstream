@@ -1,7 +1,7 @@
 <api>
     <prop name="text" type="string" />
     <prop name="long_mode" type="enum" >
-        <enum name="Wrap" help="Wrap"/>
-        <enum name="Scroll" help="Scroll if too long"/>
+        <enum name="wrap" help="Wrap"/>
+        <enum name="scroll" help="Scroll if too long"/>
     </prop>
 </api>

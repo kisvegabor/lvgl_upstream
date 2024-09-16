@@ -9,8 +9,9 @@
 
 <styles>
     <style name="main" help="The style of the background" bg_color="0xffeeaa" radius="20" border_width="5px"/>
+    <style name="red" help="The style of the background" bg_color="0xffeeaa" radius="20" border_width="5px"/>
 </styles>
 
-<view extends="button" styles="main">
-    <label name="label" text="Button text"/>
+<view extends="button" styles="main red:indicator:pressed:checked" width="100" height="120">
+    <label name="label" styles="main red:indicator:pressed:checked"  text="Button text" long_mode="wrap" align="center" store="true"/>
 </view>
