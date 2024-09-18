@@ -155,7 +155,35 @@ void end_element_handler(void *userData, const char *name) {
     if(current_parent) lv_ll_remove(&state->parent_ll, current_parent);
 }
 
+
+char *strip(char *str) {
+    char *end;
+
+    // Trim leading spaces
+    while (isspace((unsigned char)*str)) str++;
+
+    if (*str == 0) { // All spaces?
+        return str;
+    }
+
+    // Trim trailing spaces
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) end--;
+
+    // Write new null terminator
+    *(end + 1) = '\0';
+
+    return str;
+}
+
 // Character data handler
 void character_data_handler(void *userData, const char *s, int len) {
+
+	char t[1000] = {};
+	memcpy(t, s, len);
+	t[len] = '\0';
+	const char * t2 = strip(t);
+	if(strlen(t2)) printf("%s\n", t2);
+
     // Handle character data if needed
 }
