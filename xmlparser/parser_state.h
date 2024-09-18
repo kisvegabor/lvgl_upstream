@@ -5,13 +5,25 @@
 #include "../libexpat/expat.h"
 #include <string.h>
 #include "lvgl/src/lvgl_private.h"
+
+typedef struct {
+	const char * name;
+	lv_style_t style;
+}xml_style_t;
+
 /**
  * Structure to hold the parser state
  */
 typedef struct {
 	lv_ll_t parent_ll;
+	lv_ll_t style_ll;
+	lv_obj_t * view;
 } ParserState;
 
+
+static inline bool streq(const char * str1, const char * str2) {
+	return strcmp(str1, str2) == 0;
+}
 
 void start_element_handler(void *userData, const char *name, const char **atts);
 

@@ -12,6 +12,7 @@ int xml_parse(const char *data)
   // Initialize the parser state
   ParserState state = {};
   lv_ll_init(&state.parent_ll, sizeof(lv_obj_t*));
+  lv_ll_init(&state.style_ll, sizeof(xml_style_t));
 
   // Create an XML parser and set handlers
   XML_Parser parser = XML_ParserCreate(NULL);
