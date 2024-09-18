@@ -1,5 +1,5 @@
 #include "xml_parser.h"
-#include "libexpat/expat.h"
+#include "lvgl/libexpat/expat.h"
 #include "parser_state.h"
 #include "lvgl/lvgl.h"
 #include <dirent.h>
