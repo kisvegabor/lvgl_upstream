@@ -7,9 +7,4 @@
         <enum name="Range" help="Two knobs with to set a range"/>
         <enum name="Symmetrical" help="The indicaror is grwing from zero"/>
     </prop>
-    <prop name="orientation" type="enum">
-        <enum name="auto" />
-        <enum name="horizontal" />
-        <enum name="vertical" />
-    </prop>
 </api>

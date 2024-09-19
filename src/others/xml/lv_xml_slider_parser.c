@@ -20,7 +20,6 @@
  *  STATIC PROTOTYPES
  **********************/
 static lv_slider_mode_t mode_text_to_enum_value(const char * txt);
-static lv_slider_orientation_t orientation_text_to_enum_value(const char * txt);
 
 /**********************
  *  STATIC VARIABLES
@@ -48,7 +47,6 @@ void * lv_slider_xml_process(lv_obj_t * parent, const char ** attrs)
         if(streq("range_max", name)) lv_slider_set_range_max(item, atoi(value));
         if(streq("value", name)) lv_slider_set_value(item, atoi(value));
         if(streq("mode", name)) lv_slider_set_mode(item, mode_text_to_enum_value(value));
-        if(streq("orientation", name)) lv_slider_set_orientation(item, orientation_text_to_enum_value(value));
     }
     return item;
 }
@@ -64,14 +62,5 @@ static lv_slider_mode_t mode_text_to_enum_value(const char * txt)
     if(streq("Symmetrical", txt)) return LV_SLIDER_MODE_SYMMETRICAL;
 
     LV_LOG_WARN("%s is an unknown value for slider's mode", txt);
-    return 0; /*Return 0 in lack of a better option. */
-}
-static lv_slider_orientation_t orientation_text_to_enum_value(const char * txt)
-{
-    if(streq("auto", txt)) return LV_SLIDER_ORIENTATION_AUTO;
-    if(streq("horizontal", txt)) return LV_SLIDER_ORIENTATION_HORIZONTAL;
-    if(streq("vertical", txt)) return LV_SLIDER_ORIENTATION_VERTICAL;
-
-    LV_LOG_WARN("%s is an unknown value for slider's orientation", txt);
     return 0; /*Return 0 in lack of a better option. */
 }

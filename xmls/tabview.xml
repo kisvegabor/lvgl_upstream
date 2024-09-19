@@ -1,14 +1,12 @@
 <api>
     <prop name="act_tab" type="int" help="Set the current tab"/>
-    <element name="tab_bar" type="obj" access="implicit-single"/>
+    <element name="tab_bar" type="obj" access="implicit-single">
         <prop name="position" type="dir"/>
     </element>
     <element name="tab_cont" type="obj" access="implicit-single"/>
     <element name="tab" type="obj" access="explicit">
         <prop name="text" type="string" arg="true"/>
-        <prop name="main_color" type="color" arg="true"/>
-        <prop name="cont_h" type="px" arg="true"/>
-        <prop name="transparent" type="bool"/>
+        <prop name="pos" type="int" arg="true"/>
     </element>
     <element name="tab_button" type="obj" access="implicit-multi"/>
 </api>
