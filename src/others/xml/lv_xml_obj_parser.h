@@ -13,7 +13,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include "lvgl/lvgl.h"
+#include "lv_xml.h"
 
 /**********************
  *      TYPEDEFS
@@ -23,7 +23,8 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
-void * lv_obj_xml_process(lv_obj_t * parent, const char ** attrs);
+void * lv_xml_obj_process(lv_xml_parser_state_t * state, const char ** attrs);
+void lv_obj_xml_apply_attrs(lv_xml_parser_state_t * state, lv_obj_t * obj, const char ** attrs);
 
 
 /**********************

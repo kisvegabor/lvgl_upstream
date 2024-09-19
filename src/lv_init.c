@@ -337,6 +337,8 @@ void lv_init(void)
     lv_freetype_init(LV_FREETYPE_CACHE_FT_GLYPH_CNT);
 #endif
 
+    lv_xml_init();
+
     lv_initialized = true;
 
     LV_LOG_TRACE("finished");

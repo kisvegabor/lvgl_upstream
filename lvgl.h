@@ -89,6 +89,7 @@ extern "C" {
 #include "src/others/observer/lv_observer.h"
 #include "src/others/ime/lv_ime_pinyin.h"
 #include "src/others/file_explorer/lv_file_explorer.h"
+#include "src/others/xml/lv_xml.h"
 
 #include "src/libs/barcode/lv_barcode.h"
 #include "src/libs/bin_decoder/lv_bin_decoder.h"

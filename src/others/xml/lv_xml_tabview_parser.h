@@ -13,7 +13,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include "lvgl/lvgl.h"
+#include "lv_xml.h"
 
 /**********************
  *      TYPEDEFS
@@ -23,11 +23,9 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
-void * lv_tabview_xml_process(lv_obj_t * parent, const char ** attrs);
-void * lv_tab_bar_xml_process(lv_obj_t * parent, const char ** attrs);
-void * lv_tab_cont_xml_process(lv_obj_t * parent, const char ** attrs);
-void * lv_tab_xml_process(lv_obj_t * parent, const char ** attrs);
-void * lv_tab_button_xml_process(lv_obj_t * parent, const char ** attrs);
+void * lv_xml_tabview_process(lv_xml_parser_state_t * state, const char ** attrs);
+void * lv_xml_tabview_tab_bar_process(lv_xml_parser_state_t * state, const char ** attrs);
+void * lv_xml_tabview_tab_process(lv_xml_parser_state_t * state, const char ** attrs);
 
 
 /**********************

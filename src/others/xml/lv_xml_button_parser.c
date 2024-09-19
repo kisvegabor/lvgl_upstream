@@ -6,7 +6,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "lvgl/lvgl"
+#include "../../lvgl.h"
 
 /*********************
  *      DEFINES
@@ -32,11 +32,11 @@
  *   GLOBAL FUNCTIONS
  **********************/
 
-void * lv_button_xml_process(lv_obj_t * parent, const char ** attrs)
+void * lv_xml_button_process(lv_xml_parser_state_t * state, const char ** attrs)
 {
-    void * item = lv_button_create(parent);
+    void * item = lv_button_create(lv_xml_state_get_parent(state));
 
-    lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
+    lv_obj_xml_apply_attrs(state, item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
     for(int i = 0; attrs[i]; i += 2) {
         const char * name = attrs[i];

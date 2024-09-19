@@ -24,11 +24,17 @@ extern "C" {
  *      TYPEDEFS
  **********************/
 
-typedef struct {
+typedef struct _lv_xml_parser_state_t {
     lv_ll_t parent_ll;
     lv_ll_t style_ll;
     lv_obj_t * view;
+    lv_obj_t * parent;
 } lv_xml_parser_state_t;
+
+typedef struct _lv_xml_style_t {
+    const char * name;
+    lv_style_t style;
+} lv_xml_style_t;
 
 /**********************
  * GLOBAL PROTOTYPES
