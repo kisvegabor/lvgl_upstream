@@ -1,10 +1,10 @@
 /**
- * @file lv_obj_xml_parser.h
+ * @file lv_xml_label_parser.h
  *
  */
 
-#ifndef LV_OBJ_XML_PARSER_H
-#define LV_OBJ_XML_PARSER_H
+#ifndef LV_LABEL_XML_PARSER_H
+#define LV_LABEL_XML_PARSER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +23,7 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
-void * lv_obj_xml_process(lv_obj_t * parent, const char ** attrs);
+void * lv_label_xml_process(lv_obj_t * parent, const char ** attrs);
 
 
 /**********************
@@ -34,4 +34,4 @@ void * lv_obj_xml_process(lv_obj_t * parent, const char ** attrs);
 } /*extern "C"*/
 #endif
 
-#endif /*LV_OBJ_XML_PARSE_H*/
+#endif /*LV_LABEL_XML_PARSE_H*/

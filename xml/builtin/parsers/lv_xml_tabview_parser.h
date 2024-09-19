@@ -1,5 +1,5 @@
 /**
- * @file lv_tabview_xml_parser.h
+ * @file lv_xml_tabview_parser.h
  *
  */
 

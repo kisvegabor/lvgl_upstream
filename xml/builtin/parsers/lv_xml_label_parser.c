@@ -1,5 +1,5 @@
 /**
- * @file lv_label_xml_parser.c
+ * @file lv_xml_label_parser.c
  *
  */
 
@@ -39,12 +39,12 @@ void * lv_label_xml_process(lv_obj_t * parent, const char ** attrs)
 
     lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
-    for(int i = 0; atts[i]; i += 2) {
-        const char * name = atts[i];
-        const char * value = atts[i + 1];
+    for(int i = 0; attrs[i]; i += 2) {
+        const char * name = attrs[i];
+        const char * value = attrs[i + 1];
 
-        if(streq("text", name)) lv_label_set_text(item, undefined, "value");
-        if(streq("long_mode", name)) lv_label_set_long_mode(item, long_mode_text_to_enum_value(undefined), "value");
+        if(streq("text", name)) lv_label_set_text(item, value);
+        if(streq("long_mode", name)) lv_label_set_long_mode(item, long_mode_text_to_enum_value(value));
     }
     return item;
 }

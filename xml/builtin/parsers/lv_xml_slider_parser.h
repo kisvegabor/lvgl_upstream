@@ -1,10 +1,10 @@
 /**
- * @file lv_button_xml_parser.h
+ * @file lv_xml_slider_parser.h
  *
  */
 
-#ifndef LV_BUTTON_XML_PARSER_H
-#define LV_BUTTON_XML_PARSER_H
+#ifndef LV_SLIDER_XML_PARSER_H
+#define LV_SLIDER_XML_PARSER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +23,7 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
-void * lv_button_xml_process(lv_obj_t * parent, const char ** attrs);
+void * lv_slider_xml_process(lv_obj_t * parent, const char ** attrs);
 
 
 /**********************
@@ -34,4 +34,4 @@ void * lv_button_xml_process(lv_obj_t * parent, const char ** attrs);
 } /*extern "C"*/
 #endif
 
-#endif /*LV_BUTTON_XML_PARSE_H*/
+#endif /*LV_SLIDER_XML_PARSE_H*/

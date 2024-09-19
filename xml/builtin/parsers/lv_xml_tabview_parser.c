@@ -1,5 +1,5 @@
 /**
- * @file lv_tabview_xml_parser.c
+ * @file lv_xml_tabview_parser.c
  *
  */
 
@@ -38,12 +38,12 @@ void * lv_tabview_xml_process(lv_obj_t * parent, const char ** attrs)
 
     lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
-    for(int i = 0; atts[i]; i += 2) {
-        const char * name = atts[i];
-        const char * value = atts[i + 1];
+    for(int i = 0; attrs[i]; i += 2) {
+        const char * name = attrs[i];
+        const char * value = attrs[i + 1];
 
-        if(streq("act_tab", name)) lv_tabview_set_act_tab(item, atoi(undefined), "value");
-        if(streq("position", name)) lv_tabview_set_position(item, dir_align_text_to_enum_value(undefined), "value");
+        if(streq("act_tab", name)) lv_tabview_set_act_tab(item, atoi(value));
+        if(streq("position", name)) lv_tabview_set_position(item, lv_xml_dir_align_text_to_enum_value(value);
     }
     return item;
 }
@@ -75,13 +75,13 @@ void * lv_tab_xml_parse_create(lv_obj_t * parent, const char ** attrs);
     const char * text = lv_xml_get_value_of(attrs, "text")
     const char * main_color = lv_xml_get_value_of(attrs, "main_color")
     const char * cont_h = lv_xml_get_value_of(attrs, "cont_h")
-    void * item = lv_tabview_add_tab(parent, text, lv_color_hex(strtol(main_color, NULL, 16)), atoi(cont_h));
+    void * item = lv_tabview_add_tab(parent, value, lv_color_hex(strtol(value, NULL, 16)), atoi(value));
 
     lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
-    for(int i = 0; atts[i]; i += 2) {
-        const char * name = atts[i];
-        const char * value = atts[i + 1];
+    for(int i = 0; attrs[i]; i += 2) {
+        const char * name = attrs[i];
+        const char * value = attrs[i + 1];
 
         if(streq("transparent", name)) lv_tabview_set_transparent(item, streq(value, "true") ? true : false);
     }

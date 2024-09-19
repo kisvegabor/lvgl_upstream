@@ -1,5 +1,5 @@
 /**
- * @file lv_slider_xml_parser.c
+ * @file lv_xml_slider_parser.c
  *
  */
 
@@ -40,15 +40,15 @@ void * lv_slider_xml_process(lv_obj_t * parent, const char ** attrs)
 
     lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
-    for(int i = 0; atts[i]; i += 2) {
-        const char * name = atts[i];
-        const char * value = atts[i + 1];
+    for(int i = 0; attrs[i]; i += 2) {
+        const char * name = attrs[i];
+        const char * value = attrs[i + 1];
 
-        if(streq("range_min", name)) lv_slider_set_range_min(item, atoi(undefined), "value");
-        if(streq("range_max", name)) lv_slider_set_range_max(item, atoi(undefined), "value");
-        if(streq("value", name)) lv_slider_set_value(item, atoi(undefined), "value");
-        if(streq("mode", name)) lv_slider_set_mode(item, mode_text_to_enum_value(undefined), "value");
-        if(streq("orientation", name)) lv_slider_set_orientation(item, orientation_text_to_enum_value(undefined), "value");
+        if(streq("range_min", name)) lv_slider_set_range_min(item, atoi(value));
+        if(streq("range_max", name)) lv_slider_set_range_max(item, atoi(value));
+        if(streq("value", name)) lv_slider_set_value(item, atoi(value));
+        if(streq("mode", name)) lv_slider_set_mode(item, mode_text_to_enum_value(value));
+        if(streq("orientation", name)) lv_slider_set_orientation(item, orientation_text_to_enum_value(value));
     }
     return item;
 }

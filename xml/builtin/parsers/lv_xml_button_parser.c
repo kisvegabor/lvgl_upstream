@@ -1,5 +1,5 @@
 /**
- * @file lv_button_xml_parser.c
+ * @file lv_xml_button_parser.c
  *
  */
 
@@ -38,9 +38,9 @@ void * lv_button_xml_process(lv_obj_t * parent, const char ** attrs)
 
     lv_obj_xml_apply_attrs(item, attrs); /*Apply the common properties, e.g. width, height, styles flags etc*/
 
-    for(int i = 0; atts[i]; i += 2) {
-        const char * name = atts[i];
-        const char * value = atts[i + 1];
+    for(int i = 0; attrs[i]; i += 2) {
+        const char * name = attrs[i];
+        const char * value = attrs[i + 1];
 
     }
     return item;
