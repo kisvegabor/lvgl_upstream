@@ -23,8 +23,6 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static int32_t part_text_to_enum_value_core(const char * txt);
-static int32_t state_text_to_enum_value_core(const char * txt);
 static lv_style_t * get_style_by_name(lv_xml_parser_state_t * state, const char * name);
 
 /**********************
@@ -41,19 +39,21 @@ static lv_style_t * get_style_by_name(lv_xml_parser_state_t * state, const char 
 
 lv_state_t lv_xml_state_text_to_enum_value(const char * txt)
 {
-    int32_t state = state_text_to_enum_value_core(txt);
-    if(state >= 0)  return (lv_state_t)state;
 
-    LV_LOG_WARN("%s is an unknown value for base's state", txt);
+    if(lv_streq("default", txt)) return LV_STATE_DEFAULT;
+    if(lv_streq("pressed", txt)) return LV_STATE_PRESSED;
+    if(lv_streq("checked", txt)) return LV_STATE_CHECKED;
+
     return 0; /*Return 0 in lack of a better option. */
 }
 
 lv_part_t lv_xml_part_text_to_enum_value(const char * txt)
 {
-    int32_t part = part_text_to_enum_value_core(txt);
-    if(part >= 0)  return part;
+    if(lv_streq("main", txt)) return LV_PART_MAIN;
+    if(lv_streq("scrollbar", txt)) return LV_PART_SCROLLBAR;
+    if(lv_streq("indicator", txt)) return LV_PART_INDICATOR;
+    if(lv_streq("knob", txt)) return LV_PART_KNOB;
 
-    LV_LOG_WARN("%s is an unknown value for base's part", txt);
     return 0; /*Return 0 in lack of a better option. */
 }
 
@@ -116,8 +116,8 @@ void lv_xml_styles_add(lv_xml_parser_state_t * state, lv_obj_t * obj, const char
         char * selector_str = strtok_r(NULL, ":", &selector_state);
         while(selector_str != NULL) {
             // Handle different states and parts
-            selector |= state_text_to_enum_value_core(selector_str);
-            selector |= part_text_to_enum_value_core(selector_str);
+            selector |= lv_xml_state_text_to_enum_value(selector_str);
+            selector |= lv_xml_part_text_to_enum_value(selector_str);
 
             // Move to the next token
             selector_str = strtok_r(NULL, ":", &selector_state);
@@ -140,24 +140,6 @@ void lv_xml_styles_add(lv_xml_parser_state_t * state, lv_obj_t * obj, const char
  *   STATIC FUNCTIONS
  **********************/
 
-static int32_t part_text_to_enum_value_core(const char * txt)
-{
-    if(lv_streq("main", txt)) return LV_PART_MAIN;
-    if(lv_streq("scrollbar", txt)) return LV_PART_SCROLLBAR;
-    if(lv_streq("indicator", txt)) return LV_PART_INDICATOR;
-    if(lv_streq("knob", txt)) return LV_PART_KNOB;
-
-    return -1;
-}
-
-static int32_t state_text_to_enum_value_core(const char * txt)
-{
-    if(lv_streq("default", txt)) return LV_STATE_DEFAULT;
-    if(lv_streq("pressed", txt)) return LV_STATE_PRESSED;
-    if(lv_streq("checked", txt)) return LV_STATE_CHECKED;
-
-    return -1;
-}
 
 static lv_style_t * get_style_by_name(lv_xml_parser_state_t * state, const char * name)
 {
