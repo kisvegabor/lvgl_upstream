@@ -39,6 +39,7 @@
 #include "themes/simple/lv_theme_simple.h"
 #include "misc/lv_fs.h"
 #include "osal/lv_os_private.h"
+#include "others/xml/lv_xml.h"
 
 #if LV_USE_DRAW_VGLITE
     #include "draw/nxp/vglite/lv_draw_vglite.h"

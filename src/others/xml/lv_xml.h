@@ -35,6 +35,7 @@ typedef  void * (*lv_xml_widget_process_cb_t)(lv_xml_parser_state_t * state, con
  * GLOBAL PROTOTYPES
  **********************/
 
+void lv_xml_init(void);
 lv_result_t lv_xml_register_processor(const char * name, lv_xml_widget_process_cb_t cb);
 lv_result_t lv_xml_load_data(lv_obj_t * parent, const char * data, size_t data_len);
 lv_result_t lv_xml_load_file(lv_obj_t * parent, const char * path);
