@@ -15,6 +15,7 @@
 #include "lv_xml_label_parser.h"
 #include "lv_xml_slider_parser.h"
 #include "lv_xml_tabview_parser.h"
+#include "lv_xml_chart_parser.h"
 
 /*********************
  *      DEFINES
@@ -58,6 +59,9 @@ void lv_xml_init(void)
     lv_xml_register_processor("tabview", lv_xml_tabview_process);
     lv_xml_register_processor("tabview-tab_bar", lv_xml_tabview_tab_bar_process);
     lv_xml_register_processor("tabview-tab", lv_xml_tabview_tab_process);
+    lv_xml_register_processor("chart", lv_xml_chart_process);
+    lv_xml_register_processor("chart-cursor", lv_xml_chart_cursor_process);
+    lv_xml_register_processor("chart-series", lv_xml_chart_series_process);
 }
 
 lv_result_t lv_xml_register_processor(const char * name, lv_xml_widget_process_cb_t cb)

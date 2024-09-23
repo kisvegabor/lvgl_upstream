@@ -52,7 +52,7 @@ void lv_obj_xml_apply_attrs(lv_xml_parser_state_t * state, lv_obj_t * obj, const
         if(lv_streq("y", name)) lv_obj_set_y(obj, atoi(value));
         if(lv_streq("width", name)) lv_obj_set_width(obj, atoi(value));
         if(lv_streq("height", name)) lv_obj_set_height(obj, atoi(value));
-        if(lv_streq("align", name)) lv_obj_set_align(obj, lv_xml_align_text_to_enum_value(value));
+        if(lv_streq("align", name)) lv_obj_set_align(obj, lv_xml_align_string_to_enum_value(value));
         if(lv_streq("styles", name)) lv_xml_styles_add(state, obj, value);
     }
 }

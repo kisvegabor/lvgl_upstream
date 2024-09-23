@@ -37,7 +37,7 @@ static lv_style_t * get_style_by_name(lv_xml_parser_state_t * state, const char 
  *   GLOBAL FUNCTIONS
  **********************/
 
-lv_state_t lv_xml_state_text_to_enum_value(const char * txt)
+lv_state_t lv_xml_state_string_to_enum_value(const char * txt)
 {
 
     if(lv_streq("default", txt)) return LV_STATE_DEFAULT;
@@ -47,7 +47,7 @@ lv_state_t lv_xml_state_text_to_enum_value(const char * txt)
     return 0; /*Return 0 in lack of a better option. */
 }
 
-lv_part_t lv_xml_part_text_to_enum_value(const char * txt)
+lv_part_t lv_xml_part_string_to_enum_value(const char * txt)
 {
     if(lv_streq("main", txt)) return LV_PART_MAIN;
     if(lv_streq("scrollbar", txt)) return LV_PART_SCROLLBAR;
@@ -57,7 +57,7 @@ lv_part_t lv_xml_part_text_to_enum_value(const char * txt)
     return 0; /*Return 0 in lack of a better option. */
 }
 
-lv_align_t lv_xml_align_text_to_enum_value(const char * txt)
+lv_align_t lv_xml_align_string_to_enum_value(const char * txt)
 {
     if(lv_streq("top_left", txt)) return LV_ALIGN_TOP_LEFT;
     if(lv_streq("bottom_right", txt)) return LV_ALIGN_BOTTOM_RIGHT;
@@ -67,12 +67,13 @@ lv_align_t lv_xml_align_text_to_enum_value(const char * txt)
     return 0; /*Return 0 in lack of a better option. */
 }
 
-lv_dir_t lv_xml_dir_text_to_enum_value(const char * txt)
+lv_dir_t lv_xml_dir_string_to_enum_value(const char * txt)
 {
     if(lv_streq("top", txt)) return LV_DIR_TOP;
     if(lv_streq("bottom", txt)) return LV_DIR_BOTTOM;
     if(lv_streq("left", txt)) return LV_DIR_LEFT;
     if(lv_streq("right", txt)) return LV_DIR_RIGHT;
+    if(lv_streq("all", txt)) return LV_DIR_ALL;
 
     LV_LOG_WARN("%s is an unknown value for base's dir", txt);
     return 0; /*Return 0 in lack of a better option. */
@@ -116,8 +117,8 @@ void lv_xml_styles_add(lv_xml_parser_state_t * state, lv_obj_t * obj, const char
         char * selector_str = strtok_r(NULL, ":", &selector_state);
         while(selector_str != NULL) {
             // Handle different states and parts
-            selector |= lv_xml_state_text_to_enum_value(selector_str);
-            selector |= lv_xml_part_text_to_enum_value(selector_str);
+            selector |= lv_xml_state_string_to_enum_value(selector_str);
+            selector |= lv_xml_part_string_to_enum_value(selector_str);
 
             // Move to the next token
             selector_str = strtok_r(NULL, ":", &selector_state);

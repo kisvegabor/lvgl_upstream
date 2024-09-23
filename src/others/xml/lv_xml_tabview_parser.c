@@ -43,7 +43,7 @@ void * lv_xml_tabview_process(lv_xml_parser_state_t * state, const char ** attrs
         const char * value = attrs[i + 1];
 
         if(lv_streq("active", name)) lv_tabview_set_active(item, atoi(value), 0);
-        if(lv_streq("tab_bar_position", name)) lv_tabview_set_tab_bar_position(item, lv_xml_dir_text_to_enum_value(value));
+        if(lv_streq("tab_bar_position", name)) lv_tabview_set_tab_bar_position(item, lv_xml_dir_string_to_enum_value(value));
     }
     return item;
 }
