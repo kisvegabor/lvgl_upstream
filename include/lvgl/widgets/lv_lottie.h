@@ -55,6 +55,14 @@ void lv_lottie_set_buffer(lv_obj_t * obj, int32_t w, int32_t h, void * buf);
 void lv_lottie_set_draw_buf(lv_obj_t * obj, lv_draw_buf_t * draw_buf);
 
 /**
+ * Set the source similar to `lv_image_set_src` either from path (e.g. "A:lottie.json")
+ * or an `lv_image_dsc_t` with RAW or RAW_ALPHA color format
+ * @param obj       pointer to a lottie widget
+ * @param src       image path or an `lv_image_dsc_t *`
+ */
+void lv_lottie_set_src(lv_obj_t * obj, const void * src);
+
+/**
  * Set the source for the animation as an array
  * @param obj       pointer to a lottie widget
  * @param src       the lottie animation converted to an nul terminated array

@@ -52,6 +52,7 @@ static void lottie_update(lv_lottie_t * lottie, int32_t v);
 const lv_obj_class_t lv_lottie_class = {
     .constructor_cb = lv_lottie_constructor,
     .destructor_cb = lv_lottie_destructor,
+    .event_cb = lv_lottie_event,
     .width_def = LV_DPI_DEF,
     .height_def = LV_DPI_DEF,
     .instance_size = sizeof(lv_lottie_t),
@@ -78,6 +79,8 @@ lv_obj_t * lv_lottie_create(lv_obj_t * parent)
     lv_obj_class_init_obj(obj);
     return obj;
 }
+
+//<lv_lottie src="a" auto_buf="true"/>
 
 void lv_lottie_set_buffer(lv_obj_t * obj, int32_t w, int32_t h, void * buf)
 {
@@ -129,10 +132,32 @@ void lv_lottie_set_draw_buf(lv_obj_t * obj, lv_draw_buf_t * draw_buf)
     anim_exec_cb(obj, (int32_t) f_current);
 }
 
+void lv_lottie_set_src(lv_obj_t * obj, const void * src)
+{
+    LV_CHECK_OBJ(obj, MY_CLASS, return);
+    LV_CHECK_ARG(src != NULL, return);
+
+    lv_image_src_t t = lv_image_src_get_type(src);
+    if(t == LV_IMAGE_SRC_FILE) {
+        lv_lottie_set_src_file(obj, src);
+    }
+    else if(t == LV_IMAGE_SRC_VARIABLE) {
+        const lv_image_dsc_t * dsc = src;
+        if(dsc->header.cf != LV_COLOR_FORMAT_RAW || dsc->header.cf != LV_COLOR_FORMAT_RAW_ALPHA) {
+            LV_LOG_WARN("Color format is `%d` but it should LV_COLOR_FORMAT_RAW or LV_COLOR_FORMAT_RAW_ALPHA", dsc->header.cf);
+        }
+        lv_lottie_set_src_data(obj, dsc->data, dsc->data_size);
+    }
+    else {
+        LV_LOG_WARN("Source type `%d` is unsupported", t);
+    }
+}
+
 void lv_lottie_set_src_data(lv_obj_t * obj, const void * src, size_t src_size)
 {
     LV_CHECK_OBJ(obj, MY_CLASS, return);
     LV_CHECK_ARG(src != NULL, return);
+    LV_CHECK_ARG(src_size > 0, return);
 
     lv_lottie_t * lottie = (lv_lottie_t *)obj;
     tvg_picture_load_data(lottie->tvg_paint, src, src_size, "lottie", true);
@@ -225,6 +250,30 @@ static void lv_lottie_destructor(const lv_obj_class_t * class_p, lv_obj_t * obj)
 
     tvg_animation_del(lottie->tvg_anim);
     tvg_canvas_destroy(lottie->tvg_canvas);
+}
+
+static void lv_lottie_event(const lv_obj_class_t * class_p, lv_event_t * e)
+{
+    LV_ASSERT(e != NULL);
+    LV_UNUSED(class_p);
+
+    lv_event_code_t code = lv_event_get_code(e);
+
+    /*Call the ancestor's event handler*/
+    lv_result_t res = lv_obj_event_base(MY_CLASS, e);
+    if(res != LV_RESULT_OK) return;
+
+    lv_obj_t * obj = lv_event_get_current_target(e);
+    lv_lottie_t * img = (lv_lottie_t *)obj;
+    lv_point_t pivot_px;
+    lv_image_get_pivot(obj, &pivot_px);
+
+    if(code == LV_EVENT_SIZE_CHANGED) {
+        if(lottie->auto_buf) {
+            lv_draw_buf_reshape(draw_buf, ARGB..., lv_obj_get_width, height, 0);
+        }
+
+    }
 }
 
 static void anim_exec_cb(void * var, int32_t v)
